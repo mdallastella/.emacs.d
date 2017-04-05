@@ -3,3 +3,9 @@
 
 # Packaging
 .cask
+elpa
+
+# Stuff
+backup
+autosave
+main.el
