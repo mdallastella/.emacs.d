@@ -10,3 +10,7 @@ backup
 autosave
 main.el
 emacs.el*
+.custom.el
+.historian
+history
+recentf
