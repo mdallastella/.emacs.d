@@ -49,17 +49,11 @@ when your users accidentally misconfigure a variable: [[https://github.com/Malab
 #+END_SRC
 
 ** Backup and autosave
-Directories where backup and autosaves files will be saved
+Maybe a little dangerous, but stops to make backups.
 
 #+BEGIN_SRC emacs-lisp
-(validate-setq
- backup-directory-alist '((".*" . "~/.emacs.d/backup"))
- version-control        t          ; Version number for backup files
- delete-old-versions    t)
-
-(validate-setq
- auto-save-list-file-prefix     "~/.emacs.d/autosave/"
- auto-save-file-name-transforms '((".*" "~/.emacs.d/autosave/" t)))
+(setq make-backup-files nil)
+(setq auto-save-default nil)
 #+END_SRC
 
 ** Various minor settings
@@ -97,6 +91,14 @@ Kill ring features
 		 kill-do-not-save-duplicates t     ; No duplicates in kill ring
 		 ;; Save the contents of the clipboard to kill ring before killing
 		 save-interprogram-paste-before-kill t)
+#+END_SRC
+
+Autosave buffers when they lose focus.
+
+#+BEGIN_SRC emacs-lisp
+(use-package super-save
+  :ensure t
+  :config (super-save-initialize))
 #+END_SRC
 
 
@@ -532,7 +534,8 @@ Clojure settings for Emacs
     :defer t
     :config
     (add-hook 'cider-mode-hook 'eldoc-mode)
-
+    (add-hook 'cider-repl-mode-hook #'smartparens-strict-mode)
+    (add-hook 'cider-repl-mode-hook #'rainbow-delimiters-mode)
     ;; Set up Figwheel in ClojureScript REPL
     (validate-setq
      cider-cljs-lein-repl
@@ -596,6 +599,7 @@ Clojure settings for Emacs
     :after clojure-mode)
 #+END_SRC
 
+
 ** Python
 Python configuration
 
@@ -623,7 +627,47 @@ Python configuration
     :defer t)
 #+END_SRC
 
-** TODO Web Development
+** Web Development
+I use web-mode, css-mode and js2 for web development.
+
+#+BEGIN_SRC emacs-lisp
+(use-package web-mode
+  :ensure t
+  :mode "\\.html\\'"
+  :config (setq web-mode-markup-indent-offset 2
+                web-mode-css-indent-offset 2
+                web-mode-code-indent-offset 2))
+#+END_SRC
+
+A better JavaScript support
+#+BEGIN_SRC emacs-lisp
+(use-package js2-mode
+  :ensure t
+  :mode "\\.js\\'"
+  :config
+  (progn
+    (setq-default js2-basic-offset 2)
+    (add-hook 'js2-mode-hook #'js2-highlight-unused-variables-mode)))
+#+END_SRC
+
+Better CSS support
+#+BEGIN_SRC emacs-lisp
+(use-package css-mode
+  :mode "\\.css\\'"
+  :config
+  (progn
+    (setq css-indent-offset 2)
+    (add-hook 'css-mode-hook
+              (lambda () (run-hooks 'prog-mode-hook)))))
+#+END_SRC
+
+Eldoc for CSS
+#+BEGIN_SRC emacs-lisp
+(use-package css-eldoc
+  :ensure t
+  :commands (turn-on-css-eldoc)
+  :init (add-hook 'css-mode-hook #'turn-on-css-eldoc))
+#+END_SRC
 
 ** Flycheck
 [[http://www.flycheck.org][Flycheck]] automatically checks buffers for errors while you type, and reports
@@ -646,7 +690,7 @@ list.
 #+END_SRC
 
 ** Magit configuration
-
+[[https://github.com/magit/magit][Magit]] - A Git porcelain inside Emacs.
 
 #+BEGIN_SRC emacs-lisp
   (use-package magit                      ; The best Git client out there
@@ -677,6 +721,30 @@ list.
       (my-kill-buffers "^\\*magit"))
 
     (bind-key "q" #'my-magit-quit-session magit-status-mode-map))
+#+END_SRC
+
+** Smartparens
+Smartparens - Minor mode for Emacs that deals with parens pairs and tries to be
+smart about it.
+
+#+BEGIN_SRC emacs-lisp
+(use-package smartparens                ; Parenthesis editing and balancing
+  :ensure t
+  :bind (("C-<right>" . sp-forward-slurp-sexp)
+         ("C-<left>" . sp-forward-barf-sexp))
+  :init
+  (progn
+    (smartparens-global-mode)
+    (show-smartparens-global-mode)
+    (sp-pair "'" nil :actions :rem)
+
+    (dolist (hook '(inferior-emacs-lisp-mode-hook
+                    emacs-lisp-mode-hook
+                    clojure-mode-hook))
+      (add-hook hook #'smartparens-strict-mode)))
+  :config (setq sp-autoskip-closing-pair 'always
+                ;; Don't kill entire symbol on C-k
+                sp-hybrid-kill-entire-symbol nil))
 #+END_SRC
 
 
