@@ -14,3 +14,4 @@ emacs.el*
 .historian
 history
 recentf
+company-statistics-cache.el

@@ -1,6 +1,6 @@
 #+TITLE: Marco Dalla Stella Emacs's configuration
 
-A literate based emacs configuration. I took inspiration fro various sources.
+A literate based Emacs configuration. I took inspiration from various sources.
 
 * General configuration
 ** User details
@@ -60,6 +60,43 @@ Directories where backup and autosaves files will be saved
 (validate-setq
  auto-save-list-file-prefix     "~/.emacs.d/autosave/"
  auto-save-file-name-transforms '((".*" "~/.emacs.d/autosave/" t)))
+#+END_SRC
+
+** Various minor settings
+Delete the selection instead of insert
+
+#+BEGIN_SRC emacs-lisp
+  (use-package delsel
+    :defer t
+    :init (delete-selection-mode))
+#+END_SRC
+
+Save point position in files
+
+#+BEGIN_SRC emacs-lisp
+  (use-package saveplace
+    :init (save-place-mode 1))
+#+END_SRC
+
+Auto-revert buffers of changed files
+
+#+BEGIN_SRC emacs-lisp
+  (use-package autorevert
+    :init (global-auto-revert-mode)
+    :config
+    (validate-setq auto-revert-verbose nil
+                   ;; Revert Dired buffers, too
+                   global-auto-revert-non-file-buffers t)
+    :diminish auto-revert-mode)
+#+END_SRC
+
+Kill ring features
+
+#+BEGIN_SRC emacs-lisp
+  (validate-setq kill-ring-max 200                 ; More killed items
+		 kill-do-not-save-duplicates t     ; No duplicates in kill ring
+		 ;; Save the contents of the clipboard to kill ring before killing
+		 save-interprogram-paste-before-kill t)
 #+END_SRC
 
 
@@ -403,8 +440,89 @@ completion candidates.
     :config (company-quickhelp-mode))
 #+END_SRC
 
+** Undo tree
+Treat undo history as a tree.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package undo-tree                  ; Show buffer changes as a tree
+    :ensure t
+    :init (global-undo-tree-mode)
+    :config (validate-setq undo-tree-visualizer-timestamps t)                          
+    :diminish undo-tree-mode)
+#+END_SRC
+
+** Aggressive indentation
+aggressive-indent-mode is a minor mode that keeps your code always
+indented.  It reindents after every change, making it more reliable
+than `electric-indent-mode'.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package aggressive-indent
+    :ensure t
+    :init (global-aggressive-indent-mode 1)
+    :config
+    ;; Free C-c C-q, used in Org and in CIDER
+    (unbind-key "C-c C-q" aggressive-indent-mode-map)
+
+    (add-to-list 'aggressive-indent-excluded-modes
+		 'cider-repl-mode))
+#+END_SRC
+
+** Easy kill
+Better kill text
+
+#+BEGIN_SRC emacs-lisp
+  (use-package easy-kill                  ; Better kill text
+    :ensure t
+    :bind (([remap kill-ring-save] . easy-kill)
+           ([remap mark-sexp]      . easy-mark)))
+#+END_SRC
+
 
 * Coding settings
+** Projectile
+Projectile is a project interaction library for Emacs. Its goal is to provide a
+nice set of features operating on a project level without introducing external
+dependencies (when feasible).
+
+#+BEGIN_SRC emacs-lisp
+  (use-package projectile
+    :ensure t
+    :init (projectile-mode)
+    :config
+    ;; Remove dead projects when Emacs is idle
+    (run-with-idle-timer 10 nil #'projectile-cleanup-known-projects)
+
+    (validate-setq
+     projectile-completion-system 'ivy
+     projectile-find-dir-includes-top-level t)
+
+    (projectile-register-project-type 'lein-cljs '("project.clj")
+                                      "lein cljsbuild once"
+                                      "lein cljsbuild test")
+    :diminish projectile-mode)
+#+END_SRC
+
+Ivy integration with Projectile
+
+#+BEGIN_SRC emacs-lisp
+  (use-package counsel-projectile
+    :ensure t
+    :bind (:map projectile-command-map
+		("p" . counsel-projectile)
+		("P" . counsel-projectile-switch-project)
+		("r" . counsel-projectile-rg)))
+#+END_SRC
+
+Search project with ripgrep
+
+#+BEGIN_SRC emacs-lisp
+  (use-package projectile-ripgrep         ; Search projects with ripgrep
+    :ensure t
+    :bind (:map projectile-command-map
+		("s r" . projectile-ripgrep)))
+#+END_SRC
+
 ** Clojure
 Clojure settings for Emacs
 #+BEGIN_SRC emacs-lisp
@@ -449,7 +567,7 @@ Clojure settings for Emacs
                    cider-repl-history-file
                    (locate-user-emacs-file "cider-repl-history")
                    cider-repl-display-help-banner nil ; Disable help banner
-                   cider-repl-pop-to-buffer-on-connect nil
+                   cider-repl-pop-to-buffer-on-connect t
                    cider-repl-result-prefix ";; => "))
 
   (use-package cider-stacktrace           ; Navigate stacktrace
@@ -506,6 +624,60 @@ Python configuration
 #+END_SRC
 
 ** TODO Web Development
+
+** Flycheck
+[[http://www.flycheck.org][Flycheck]] automatically checks buffers for errors while you type, and reports
+warnings and errors directly in the buffer and in an optional IDE-like error
+list.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package flycheck
+    :ensure t
+    :init (add-hook 'prog-mode-hook #'flycheck-mode) ; Only for code buffer
+    :config (validate-setq flycheck-standard-error-navigation nil
+			   flycheck-display-errors-function
+			   #'flycheck-display-error-messages-unless-error-list))
+
+  (use-package flycheck-clojure
+    :ensure t
+    :defer t
+    :after clojure-mode
+    :config :config (add-hook 'flycheck-mode-hook #'flycheck-clojrue-setup))
+#+END_SRC
+
+** Magit configuration
+
+
+#+BEGIN_SRC emacs-lisp
+  (use-package magit                      ; The best Git client out there
+    :ensure t
+    :bind (("C-c v c" . magit-clone)
+           ("C-c v C" . magit-checkout)
+           ("C-c v d" . magit-dispatch-popup)         
+           ("C-c v g" . magit-blame)
+           ("C-c v l" . magit-log-buffer-file)
+           ("C-c v p" . magit-pull)
+           ("C-c v v" . magit-status))
+    :config
+    (validate-setq magit-save-repository-buffers 'dontask
+                   magit-refs-show-commit-count 'all)
+
+    ;; Use Ivy
+    (validate-setq magit-completing-read-function 'ivy-completing-read)
+
+    ;; Show status buffer in fullscreen
+    (validate-setq magit-display-buffer-function
+                   #'magit-display-buffer-fullframe-status-v1)
+
+    ;; Kill Magit buffers when quitting `magit-status'
+    (defun my-magit-quit-session (&optional kill-buffer)
+      "Kill all Magit buffers on quit"
+      (interactive)
+      (magit-restore-window-configuration kill-buffer)
+      (my-kill-buffers "^\\*magit"))
+
+    (bind-key "q" #'my-magit-quit-session magit-status-mode-map))
+#+END_SRC
 
 
 * Keybindings

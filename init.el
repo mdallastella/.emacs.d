@@ -19,25 +19,35 @@
 (setq package-archives
       ;; Package archives, the usual suspects
       '(("GNU ELPA" . "http://elpa.gnu.org/packages/")
-        ("MELPA"    . "https://melpa.org/packages/")))
+        ("MELPA"    . "https://melpa.org/packages/")
+	("org"      . "http://orgmode.org/elpa/")))
 (package-initialize)
 
 (setq load-prefer-newer t)              ; Always load newer compiled files
 (setq ad-redefinition-action 'accept)   ; Silence advice redefinition warnings
 (setq message-log-max 10000)            ; Debugging
 
+;; Bootstrap use-package and dash
+(unless (and (package-installed-p 'use-package)
+             (package-installed-p 'dash))
+  (package-refresh-contents)
+  (package-install 'use-package)
+  (package-install 'dash))
+
 ;; Make sure Org is installed
 (unless (package-installed-p 'org)
   (package-refresh-contents)
   (package-install 'org))
 
-;; Org plus contrib needs to be loaded before any org related functionality is called
 (unless (package-installed-p 'org-plus-contrib)
   (package-refresh-contents)
   (package-install 'org-plus-contrib))
 
-;; Load config.org - my Emacs configuration
-(org-babel-load-file (concat user-emacs-directory "emacs.org"))
+;; Show a stacktrace whene an error occurs
+(setq stack-trace-on-error t)
+
+;; Load emacs.org - my Emacs configuration
+(org-babel-load-file (expand-file-name "emacs.org" user-emacs-directory))
 
 ;; My custom file
 (setq custom-file (expand-file-name ".custom.el" user-emacs-directory))
