@@ -699,7 +699,7 @@ list.
     :ensure t
     :defer t
     :after clojure-mode
-    :config :config (add-hook 'flycheck-mode-hook #'flycheck-clojrue-setup))
+    :config :config (add-hook 'flycheck-mode-hook #'flycheck-clojure-setup))
 #+END_SRC
 
 ** Magit configuration
