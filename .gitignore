@@ -15,3 +15,7 @@ emacs.el*
 history
 recentf
 company-statistics-cache.el
+*.log
+/smex-items
+/projectile-bookmarks.eld
+*-history
