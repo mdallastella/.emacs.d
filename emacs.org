@@ -257,6 +257,20 @@ Use `emacs-lisp-mode' instead of `lisp-interaction-mode' for scratch buffer
   (validate-setq initial-major-mode 'emacs-lisp-mode)
 #+END_SRC
 
+** Which-key
+[[https://github.com/justbur/emacs-which-key][Which-key]] – Emacs package that displays available keybindings in popup.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package which-key                  ; Show help popups for prefix keys
+    :ensure t
+    :init (which-key-mode)
+    :config
+    (validate-setq
+     which-key-idle-delay 0.4
+     which-key-sort-order 'which-key-prefix-then-key-order)
+     :diminish which-key-mode)
+#+END_SRC
+
 
 * Editing settings
 ** Set Command to Meta key on macOS
