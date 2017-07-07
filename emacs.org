@@ -163,9 +163,7 @@ Set unique buffer names.
   (show-paren-mode t)
   (use-package rainbow-delimiters
     :ensure t
-    :init
-    (progn
-      (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)))
+    :init (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
 #+END_SRC
 
 ** Disable annoying prompts and messages
@@ -494,6 +492,17 @@ Better kill text
            ([remap mark-sexp]      . easy-mark)))
 #+END_SRC
 
+** Remove trailing spaces on save
+#+BEGIN_SRC emacs-lisp
+  (use-package whitespace-cleanup-mode    ; Cleanup whitespace in buffers
+    :ensure t
+    :bind (("C-c t w" . whitespace-cleanup-mode)
+	   ("C-c x w" . whitespace-cleanup))
+    :init
+    (dolist (hook '(prog-mode-hook text-mode-hook conf-mode-hook))
+      (add-hook hook #'whitespace-cleanup-mode))
+    :diminish whitespace-cleanup-mode)
+#+END_SRC
 
 * Coding settings
 ** Projectile
@@ -695,11 +704,11 @@ list.
 			   flycheck-display-errors-function
 			   #'flycheck-display-error-messages-unless-error-list))
 
-  (use-package flycheck-clojure
-    :ensure t
-    :defer t
-    :after clojure-mode
-    :config :config (add-hook 'flycheck-mode-hook #'flycheck-clojure-setup))
+  ;; (use-package flycheck-clojure
+  ;;   :ensure t
+  ;;   :defer t
+  ;;   :after clojure-mode
+  ;;   :config (add-hook 'flycheck-mode-hook #'flycheck-clojure-setup))
 #+END_SRC
 
 ** Magit configuration
