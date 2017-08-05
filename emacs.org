@@ -269,6 +269,19 @@ Use `emacs-lisp-mode' instead of `lisp-interaction-mode' for scratch buffer
      :diminish which-key-mode)
 #+END_SRC
 
+** EyeBrowse
+
+Easy workspaces creation and switching
+
+#+BEGIN_SRC emacs-lisp
+  (use-package eyebrowse
+    :ensure t
+    :config (validate-setq eyebrowse-switch-back-and-forth t
+			   eyebrowse-wrap-around t
+			   eyebrowse-new-workspace t)
+    (eyebrowse-mode t))
+#+END_SRC
+
 
 * Editing settings
 ** Set Command to Meta key on macOS
@@ -503,6 +516,7 @@ Better kill text
       (add-hook hook #'whitespace-cleanup-mode))
     :diminish whitespace-cleanup-mode)
 #+END_SRC
+
 
 * Coding settings
 ** Projectile
