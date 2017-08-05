@@ -387,8 +387,8 @@ Use [[https://github.com/PythonNut/historian.el][ivy-historian]] too
   (use-package swiper                     ; Isearch with an overview
     :ensure t
     :bind (("C-c s s" . swiper-all)
-           :map isearch-mode-map
-           ("M-i" . swiper-from-isearch))
+	   :map isearch-mode-map
+	   ("M-i" . swiper-from-isearch))
     :config
     ;; Always recentre when leaving Swiper
     (validate-setq swiper-action-recenter t))
@@ -400,22 +400,22 @@ Use [[https://github.com/PythonNut/historian.el][ivy-historian]] too
     :ensure t
     :init (counsel-mode)
     :bind (("C-s"   . counsel-grep-or-swiper)
-           ("C-r"   . counsel-grep-or-swiper)
-           ("C-c u" . counsel-unicode-char)
-           ("C-c g" . counsel-git-grep)
-           ("C-c G" . counsel-git-log)
-           ("C-c k" . counsel-rg)
-           ("C-c r" . counsel-linux-app)
-           ("C-x l" . counsel-locate)
-           ("C-x i" . counsel-imenu)
-           ("C-x j" . counsel-bookmark)
-           ("C-c h h" . counsel-command-history)
-           ([remap execute-extended-command] . counsel-M-x)
-           ([remap find-file]                . counsel-find-file)
-           ([remap bookmark-jump]            . counsel-bookmark)
-           ([remap describe-function]        . counsel-describe-function)
-           ([remap describe-variable]        . counsel-describe-variable)
-           ([remap info-lookup-symbol]       . counsel-info-lookup-symbol))
+	   ("C-r"   . counsel-grep-or-swiper)
+	   ("C-c u" . counsel-unicode-char)
+	   ("C-c g" . counsel-git-grep)
+	   ("C-c G" . counsel-git-log)
+	   ("C-c k" . counsel-rg)
+	   ("C-c r" . counsel-linux-app)
+	   ("C-x l" . counsel-locate)
+	   ("C-x i" . counsel-imenu)
+	   ("C-x j" . counsel-bookmark)
+	   ("C-c h h" . counsel-command-history)
+	   ([remap execute-extended-command] . counsel-M-x)
+	   ([remap find-file]                . counsel-find-file)
+	   ([remap bookmark-jump]            . counsel-bookmark)
+	   ([remap describe-function]        . counsel-describe-function)
+	   ([remap describe-variable]        . counsel-describe-variable)
+	   ([remap info-lookup-symbol]       . counsel-info-lookup-symbol))
     :bind (:map read-expression-map
 		("C-r" . counsel-expression-history))
     :config
@@ -424,6 +424,8 @@ Use [[https://github.com/PythonNut/historian.el][ivy-historian]] too
      counsel-mode-override-describe-bindings t
      counsel-grep-post-action-hook '(recenter)
      counsel-find-file-at-point t
+     counsel-grep-base-command
+     "rg -i -M 120 --no-heading --line-number --color never '%s' %s"
      counsel-find-file-ignore-regexp
      (concat
       ;; File names beginning with # or .
