@@ -785,6 +785,17 @@ smart about it.
                 sp-hybrid-kill-entire-symbol nil))
 #+END_SRC
 
+** DevDocs.io
+
+[[http://devdocs.io/][DevDocs]] combines multiple API documentations in a fast, organized, and
+searchable interface.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package devdocs
+    :ensure t
+    :bind ("C-c s d" . devdocs-search))
+#+END_SRC
+
 
 * Keybindings
 ** Ctrl-z as undo
