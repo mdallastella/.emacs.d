@@ -205,26 +205,6 @@ Set unique buffer names.
     :init (add-hook 'prog-mode-hook #'highlight-numbers-mode))
 #+END_SRC
 
-** Mode line
-The default Mode Line is confusing and boring. Using spaceline that is a bit
-nicer.
-
-#+BEGIN_SRC emacs-lisp
-  (use-package all-the-icons
-    :ensure t)
-
-  (use-package spaceline
-    :ensure t
-    :init
-    (require 'spaceline-config)
-    (spaceline-spacemacs-theme))
-
-  (use-package spaceline-all-the-icons
-    :ensure t
-    :after spaceline
-    :config (spaceline-all-the-icons-theme))
-#+END_SRC
-
 ** Minibuffer settings
 Allow to read from the minibuffer while in minibuffer
 #+BEGIN_SRC emacs-lisp
