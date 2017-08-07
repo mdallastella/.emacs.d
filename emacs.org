@@ -206,21 +206,24 @@ Set unique buffer names.
 #+END_SRC
 
 ** Mode line
-The default Mode Line is confusing and boring. Using smart-mode-line it's a bit
+The default Mode Line is confusing and boring. Using spaceline that is a bit
 nicer.
 
 #+BEGIN_SRC emacs-lisp
-  (use-package smart-mode-line            ; Better mode-line
+  (use-package all-the-icons
+    :ensure t)
+
+  (use-package spaceline
     :ensure t
     :init
-    (progn
-      (setq sml/theme nil                 ; Let Solarized take care of the mode-line
-            sml/mode-width 'full
-            sml/no-confirm-load-theme t)
-      (sml/setup)))
-#+END_SRC
+    (require 'spaceline-config)
+    (spaceline-spacemacs-theme))
 
-#+RESULTS:
+  (use-package spaceline-all-the-icons
+    :ensure t
+    :after spaceline
+    :config (spaceline-all-the-icons-theme))
+#+END_SRC
 
 ** Minibuffer settings
 Allow to read from the minibuffer while in minibuffer
