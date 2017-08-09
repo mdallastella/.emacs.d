@@ -120,12 +120,13 @@ these off with the menu items now, it is just as easy to set them here.
 #+END_SRC
 
 ** Font setup
-I use the Input font.
+I use the Iosevka ExtraLight font.
 
 #+BEGIN_SRC emacs-lisp
   (set-face-attribute 'default nil
-                      :family "Input"
-                      :height 140)
+                      :family "Iosevka"
+		      :weight 'extra-light
+                      :height 160)
 #+END_SRC
 
 ** Theme
