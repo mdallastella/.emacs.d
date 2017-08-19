@@ -21,3 +21,5 @@ company-statistics-cache.el
 *-history
 /auto-save-list
 /places
+/eshell/lastdir
+/network-security.data

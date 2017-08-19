@@ -503,6 +503,18 @@ Better kill text
     :diminish whitespace-cleanup-mode)
 #+END_SRC
 
+** Copy as format
+Copy the current region and apply the right format required by some services.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package copy-as-format
+    :ensure t
+    :bind (("C-c y s" . copy-as-format-slack)
+	   ("C-c y l" . copy-as-format-gitlab)
+	   ("C-c y g" . copy-as-format-github)
+	   ("C-c y m" . copy-as-format-markdown)))
+#+END_SRC
+
 
 * Coding settings
 ** Projectile
@@ -562,7 +574,9 @@ Clojure settings for Emacs
     ;; Set up Figwheel in ClojureScript REPL
     (validate-setq
      cider-cljs-lein-repl
-     "(do (use 'figwheel-sidecar.repl-api) (start-figwheel!) (cljs-repl))"))
+     "(do (use 'figwheel-sidecar.repl-api) (start-figwheel!) (cljs-repl))")
+    :bind (:map cider-repl-mode-map
+		("C-c M-l" . cider-load-all-project-ns)))
 
   (use-package clojure-mode               ; Major mode for Clojure files
     :ensure t
@@ -589,12 +603,12 @@ Clojure settings for Emacs
     (add-hook 'cider-repl-mode-hook #'subword-mode)
 
     (validate-setq cider-repl-wrap-history t
-                   cider-repl-history-size 1000
-                   cider-repl-history-file
-                   (locate-user-emacs-file "cider-repl-history")
-                   cider-repl-display-help-banner nil ; Disable help banner
-                   cider-repl-pop-to-buffer-on-connect t
-                   cider-repl-result-prefix ";; => "))
+		   cider-repl-history-size 1000
+		   cider-repl-history-file
+		   (locate-user-emacs-file "cider-repl-history")
+		   cider-repl-display-help-banner nil ; Disable help banner
+		   cider-repl-pop-to-buffer-on-connect t
+		   cider-repl-result-prefix ";; => "))
 
   (use-package cider-stacktrace           ; Navigate stacktrace
     :ensure cider
@@ -611,9 +625,9 @@ Clojure settings for Emacs
     (add-hook 'clojure-mode-hook #'my-clojure-mode-hook)
     :config
     (validate-setq cljr-suppress-middleware-warnings t
-                   cljr-auto-sort-ns t
-                   cljr-favor-prefix-notation
-                   cljr-favor-private-functions)
+		   cljr-auto-sort-ns t
+		   cljr-favor-prefix-notation
+		   cljr-favor-private-functions)
     :diminish clj-refactor-mode)
 
   (use-package clojure-snippets           ; Yasnippets for Clojure
@@ -703,12 +717,6 @@ list.
     :config (validate-setq flycheck-standard-error-navigation nil
 			   flycheck-display-errors-function
 			   #'flycheck-display-error-messages-unless-error-list))
-
-  ;; (use-package flycheck-clojure
-  ;;   :ensure t
-  ;;   :defer t
-  ;;   :after clojure-mode
-  ;;   :config (add-hook 'flycheck-mode-hook #'flycheck-clojure-setup))
 #+END_SRC
 
 ** Magit configuration
@@ -770,7 +778,6 @@ smart about it.
 #+END_SRC
 
 ** DevDocs.io
-
 [[http://devdocs.io/][DevDocs]] combines multiple API documentations in a fast, organized, and
 searchable interface.
 
@@ -778,6 +785,17 @@ searchable interface.
   (use-package devdocs
     :ensure t
     :bind ("C-c s d" . devdocs-search))
+#+END_SRC
+
+** Github stuff
+[[https://github.com/defunkt/gist.el][gist.el]] – Share snippets of code using Gist.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package gist
+    :ensure t
+    :bind (("C-c C-g l" . gist-list)
+	   ("C-c C-g n" . gist-region-or-buffer)
+	   ("C-c C-g p" . gist-region-or-buffer-private)))
 #+END_SRC
 
 
