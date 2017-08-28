@@ -16,7 +16,7 @@ Ensure environment variables inside Emacs look the same as in the user's shell.
 
 #+BEGIN_SRC emacs-lisp
   (setq epg-gpg-program "/usr/local/bin/gpg")
-  (load-library "~/.emacs.d/.secrets.el.gpg")
+  (load-library "~/.emacs.d/.secrets.el")
 #+END_SRC
 
 ** User details
@@ -156,6 +156,21 @@ My favorite theme is Solarized (dark version):
 
 #+RESULTS:
 : t
+
+** Mode line
+Custom mode-line with [[https://github.com/Malabarba/smart-mode-line][smart-mode-line]]
+
+#+BEGIN_SRC emacs-lisp
+  (column-number-mode t)
+  (line-number-mode t)
+  (use-package smart-mode-line
+    :ensure t
+    :config (sml/setup)
+    (setq sml/theme 'respectful)
+    (setq sml/shorten-directory t)
+    (setq sml/shorten-modes t)
+    (setq sml/show-time t))
+#+END_SRC
 
 ** Uniquify
 Set unique buffer names.
