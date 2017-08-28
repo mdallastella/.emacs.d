@@ -3,12 +3,18 @@
 A literate based Emacs configuration. I took inspiration from various sources.
 
 * General configuration
+** Setting GPG and secrets
+
+#+BEGIN_SRC emacs-lisp
+(load-library "~/.emacs.d/.secrets.el.gpg")
+#+END_SRC
+
 ** User details
 My personal details.
 
 #+BEGIN_SRC emacs-lisp
   (setq user-full-name "Marco Dalla Stella")
-  (setq user-mail-address "marco@dallastella.name")
+  (setq user-mail-address private-user-mail-address)
 #+END_SRC
 
 ** Emacs server
@@ -753,6 +759,16 @@ list.
     (bind-key "q" #'my-magit-quit-session magit-status-mode-map))
 #+END_SRC
 
+** Git Timemachine
+[[https://github.com/pidu/git-timemachine][git-timemachine]] - Step through historic versions of git controlled file using
+everyone's favourite editor.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package git-timemachine
+    :ensure t
+    :bind ("C-c v t" . git-timemachine))
+#+END_SRC
+
 ** Smartparens
 Smartparens - Minor mode for Emacs that deals with parens pairs and tries to be
 smart about it.
@@ -796,6 +812,18 @@ searchable interface.
     :bind (("C-c C-g l" . gist-list)
 	   ("C-c C-g n" . gist-region-or-buffer)
 	   ("C-c C-g p" . gist-region-or-buffer-private)))
+#+END_SRC
+
+** Gitlab integration
+
+[[https://github.com/nlamirault/emacs-gitlab][emacs-gitlab]] - A Gitlab client for Emacs
+
+#+BEGIN_SRC emacs-lisp
+  (use-package gitlab
+    :ensure t
+    :config (validate-setq gitlab-host 7b-gitlab-host
+			   gitlab-username 7b-gitlab-username
+			   gitlab-password 7b-gitlab-password))
 #+END_SRC
 
 
