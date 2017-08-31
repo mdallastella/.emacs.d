@@ -537,6 +537,17 @@ Copy the current region and apply the right format required by some services.
 	   ("C-c y m" . copy-as-format-markdown)))
 #+END_SRC
 
+** Highlight symbol
+
+[[https://github.com/nschum/highlight-symbol.el][highlight-symbol.el]] - automatic and manual symbol highlighting for Emacs.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package highlight-symbol
+    :ensure t
+    :config (highlight-symbol-mode t)
+    (highlight-symbol-nav-mode t))
+#+END_SRC
+
 
 * Coding settings
 ** Projectile
