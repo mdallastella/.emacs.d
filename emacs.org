@@ -843,6 +843,11 @@ searchable interface.
     :bind (("C-c C-g l" . gist-list)
 	   ("C-c C-g n" . gist-region-or-buffer)
 	   ("C-c C-g p" . gist-region-or-buffer-private)))
+
+  (use-package magithub
+    :ensure t
+    :after magit
+    :config (magithub-feature-autoinject t))
 #+END_SRC
 
 ** Gitlab integration
@@ -893,3 +898,21 @@ Use Ctrl-z as undo
     (find-file (car recentf-list)))
   (bind-key "C-c f o" #'my-reopen-last-killed-buffer)
 #+END_SRC
+
+** Rebind split-window commands
+
+In order to have a more tmux-like keybindings, I remap split-window-below and
+split-window-right to C-c S-; and C-c S-5.
+
+#+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "C-x \"") 'split-window-below)
+  (global-set-key (kbd "C-x %") 'split-window-right)
+#+END_SRC
+
+
+* BEERWARE LICENSE
+
+"THE BEER-WARE LICENSE" (Revision 42): <marco@dallastella.name> wrote this
+file. As long as you retain this notice you can do whatever you want with this
+stuff. If we meet some day, and you think this stuff is worth it, you can buy me
+a beer in return Marco Dalla Stella.
