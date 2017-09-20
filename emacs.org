@@ -548,6 +548,49 @@ Copy the current region and apply the right format required by some services.
     (highlight-symbol-nav-mode t))
 #+END_SRC
 
+** Flyspell
+*** Flyspell configuration using [[https://hunspell.github.io][hunspell]].
+**** hunspell
+#+BEGIN_SRC emacs-lisp
+  (use-package ispell
+    :defer t
+    :config
+    (validate-setq
+     ispell-program-name (executable-find "hunspell")
+     ispell-dictionary "en_US"
+     ispell-choices-win-default-height 5)
+
+    (unless ispell-program-name
+      (warn "No spell checker available.  Plese install hunspell.")))
+#+END_SRC
+
+**** Flyspell
+
+#+BEGIN_SRC emacs-lisp
+  (use-package flyspell
+    :init
+    (add-hook 'prog-mode-hook #'flyspell-prog-mode)
+    (add-hook 'org-mode-hook #'flyspell-mode)
+    (add-hook 'text-mode-hook #'flyspell-mode)
+    :config
+    (validate-setq
+     flyspell-use-meta-tab nil
+     ;; Make Flyspell less chatty
+     flyspell-issue-welcome-flag nil
+     flyspell-issue-message-flag nil))
+
+  (use-package flyspell-correct-ivy       ; Better interface for corrections
+    :ensure t
+    :after flyspell
+    :bind (:map flyspell-mode-map
+		("C-c $" . flyspell-correct-word-generic)))
+
+  (use-package auto-correct               ; Automatically fix past corrections
+    :ensure t
+    :init (auto-correct-mode)
+    :diminish auto-correct-mode)
+#+END_SRC
+
 
 * Coding settings
 ** Projectile
