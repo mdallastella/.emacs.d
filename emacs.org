@@ -712,6 +712,15 @@ Clojure settings for Emacs
     :after clojure-mode)
 #+END_SRC
 
+*** org-babel-clojure
+Settings for use Clojure inside org-mode documents.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package ob-clojure
+    :config
+    (validate-setq org-babel-clojure-backend 'cider))
+#+END_SRC
+
 ** Python
 Python configuration
 
@@ -894,7 +903,6 @@ searchable interface.
 #+END_SRC
 
 ** Gitlab integration
-
 [[https://github.com/nlamirault/emacs-gitlab][emacs-gitlab]] - A Gitlab client for Emacs
 
 #+BEGIN_SRC emacs-lisp
@@ -903,6 +911,14 @@ searchable interface.
     :config (validate-setq gitlab-host 7b-gitlab-host
 			   gitlab-username 7b-gitlab-username
 			   gitlab-password 7b-gitlab-password))
+#+END_SRC
+
+** Docker
+Editing Dockerfiles and docker-compose.yml
+
+#+BEGIN_SRC emacs-lisp
+  (use-package dockerfile-mode)
+  (use-package docker-compose-mode)
 #+END_SRC
 
 
