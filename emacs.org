@@ -123,7 +123,8 @@ these off with the menu items now, it is just as easy to set them here.
       (horizontal-scroll-bar-mode -1))
     (blink-cursor-mode -1)
     (scroll-bar-mode -1)			; Scrollbars are waste screen estate
-    (tooltip-mode -1))
+    (tooltip-mode -1)
+    (menu-bar-mode -1))
 #+END_SRC
 
 ** Font setup
