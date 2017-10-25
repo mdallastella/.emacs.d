@@ -15,7 +15,7 @@ Ensure environment variables inside Emacs look the same as in the user's shell.
 ** Setting GPG and secrets
 
 #+BEGIN_SRC emacs-lisp
-  (setq epg-gpg-program "/usr/local/bin/gpg")
+  (setq epg-gpg-program "/usr/bin/gpg2")
   (load-library "~/.emacs.d/.secrets.el")
 #+END_SRC
 
@@ -917,8 +917,15 @@ searchable interface.
 Editing Dockerfiles and docker-compose.yml
 
 #+BEGIN_SRC emacs-lisp
-  (use-package dockerfile-mode)
-  (use-package docker-compose-mode)
+  (use-package dockerfile-mode :ensure t)
+  (use-package docker-compose-mode :ensure t)
+#+END_SRC
+
+** PHP (argh!) Mode
+Sometimes I have to do with ugly PHP...
+
+#+BEGIN_SRC emacs-lisp
+  (use-package php-mode :ensure t)
 #+END_SRC
 
 
