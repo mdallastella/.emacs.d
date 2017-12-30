@@ -9,13 +9,15 @@ Ensure environment variables inside Emacs look the same as in the user's shell.
 #+BEGIN_SRC emacs-lisp
   (use-package exec-path-from-shell
     :ensure t
-    :init (exec-path-from-shell-initialize))
+    :init
+    (setq exec-path-from-shell-check-startup-files nil)
+    (exec-path-from-shell-initialize))
 #+END_SRC
 
 ** Setting GPG and secrets
 
 #+BEGIN_SRC emacs-lisp
-  (setq epg-gpg-program "/usr/bin/gpg2")
+  (setq epg-gpg-program "/usr/bin/gpg")
   (load-library "~/.emacs.d/.secrets.el")
 #+END_SRC
 
@@ -132,8 +134,9 @@ I use the Iosevka font.
 
 #+BEGIN_SRC emacs-lisp
   (set-face-attribute 'default nil
-                      :family "Iosevka"
-                      :height 140)
+		      :family "Iosevka Term"
+		      :weight 'light
+		      :height 140)
 #+END_SRC
 
 ** Theme
@@ -981,4 +984,4 @@ split-window-right to C-c S-; and C-c S-5.
 "THE BEER-WARE LICENSE" (Revision 42): <marco@dallastella.name> wrote this
 file. As long as you retain this notice you can do whatever you want with this
 stuff. If we meet some day, and you think this stuff is worth it, you can buy me
-a beer in return Marco Dalla Stella.
+a beer in return.

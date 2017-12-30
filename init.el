@@ -29,10 +29,12 @@
 
 ;; Bootstrap use-package and dash
 (unless (and (package-installed-p 'use-package)
-             (package-installed-p 'dash))
+             (package-installed-p 'dash)
+	     (package-installed-p 'diminish))
   (package-refresh-contents)
   (package-install 'use-package)
-  (package-install 'dash))
+  (package-install 'dash)
+  (package-install 'diminish))
 
 ;; Make sure Org is installed
 (unless (package-installed-p 'org)
