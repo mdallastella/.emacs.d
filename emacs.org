@@ -140,25 +140,14 @@ I use the Iosevka font.
 #+END_SRC
 
 ** Theme
-My favorite theme is Solarized (dark version):
+My current favorite theme.
 
 #+BEGIN_SRC emacs-lisp
-(use-package solarized                      ; Default theme
-  :ensure solarized-theme
-  :config
-  (progn
-    (setq solarized-use-variable-pitch nil  ; Avoid all font-size changes
-          solarized-distinct-doc-face t     ; Make doc faces stand out more
-          solarized-scale-org-headlines nil ; Don't scale Org headlines
-          solarized-use-more-italic t       ; Use italic more often
-          solarized-use-less-bold t         ; Less bold, italic is enough
-          ;; Underline below the font bottomline instead of the baseline
-          x-underline-at-descent-line t)
-    (load-theme 'solarized-dark 'no-confirm)))
+  (use-package base16-theme
+    :ensure t
+    :config  
+    (load-theme 'base16-gruvbox-dark-pale 'no-confirm))
 #+END_SRC
-
-#+RESULTS:
-: t
 
 ** Mode line
 Custom mode-line with [[https://github.com/Malabarba/smart-mode-line][smart-mode-line]]
@@ -168,11 +157,13 @@ Custom mode-line with [[https://github.com/Malabarba/smart-mode-line][smart-mode
   (line-number-mode t)
   (use-package smart-mode-line
     :ensure t
-    :config (sml/setup)
-    (setq sml/theme 'respectful)
-    (setq sml/shorten-directory t)
-    (setq sml/shorten-modes t)
-    (setq sml/show-time t))
+    :disabled t
+    :init 
+    (sml/setup)
+    (setq sml/theme nil
+	  sml/no-confirm-load-theme t
+	  sml/shorten-directory t
+	  sml/shorten-modes t))
 #+END_SRC
 
 ** Uniquify
@@ -899,10 +890,10 @@ searchable interface.
 	   ("C-c C-g n" . gist-region-or-buffer)
 	   ("C-c C-g p" . gist-region-or-buffer-private)))
 
-  (use-package magithub
-    :ensure t
-    :after magit
-    :config (magithub-feature-autoinject t))
+  ;;(use-package magithub
+  ;;:ensure t
+  ;;:after magit
+  ;;:config (magithub-feature-autoinject t))
 #+END_SRC
 
 ** Gitlab integration
