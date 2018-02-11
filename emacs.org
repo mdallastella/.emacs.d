@@ -593,6 +593,17 @@ Copy the current region and apply the right format required by some services.
     :diminish auto-correct-mode)
 #+END_SRC
 
+** Todo.txt
+
+I started to use [[https://github.com/todotxt/todo.txt][Todo.txt]]
+
+#+BEGIN_SRC emacs-lisp
+  (use-package todotxt
+    :ensure t
+    :bind (("C-c t t" . todotxt))
+    :config (validate-setq todotxt-file "/home/mds/cloud/marco/todo.txt"))
+#+END_SRC
+
 
 * Coding settings
 ** Projectile
