@@ -290,6 +290,17 @@ Easy workspaces creation and switching
     (eyebrowse-mode t))
 #+END_SRC
 
+** org-mode
+
+Bullets as UTF-8 characters
+
+#+BEGIN_SRC emacs-lisp
+  (use-package org-bullets
+    :ensure t
+    :init (add-hook 'org-mode-hook #'org-bullets-mode)
+    :config (validate-setq org-bullets-bullet-list '("◉" "○" "●" "►" "◇" "◎")))
+#+END_SRC
+
 
 * Editing settings
 ** Set Command to Meta key on macOS
@@ -652,7 +663,7 @@ Search project with ripgrep
 ** Clojure
 Clojure settings for Emacs
 #+BEGIN_SRC emacs-lisp
-  ;;; Clojure
+    ;;; Clojure
   (use-package cider                      ; Clojure development environment
     :ensure t
     :defer t
@@ -660,10 +671,6 @@ Clojure settings for Emacs
     (add-hook 'cider-mode-hook 'eldoc-mode)
     (add-hook 'cider-repl-mode-hook #'smartparens-strict-mode)
     (add-hook 'cider-repl-mode-hook #'rainbow-delimiters-mode)
-    ;; Set up Figwheel in ClojureScript REPL
-    (validate-setq
-     cider-cljs-lein-repl
-     "(do (use 'figwheel-sidecar.repl-api) (start-figwheel!) (cljs-repl))")
     :bind (:map cider-repl-mode-map
 		("C-c M-l" . cider-load-all-project-ns)))
 
