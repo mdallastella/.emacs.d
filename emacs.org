@@ -661,9 +661,11 @@ Search project with ripgrep
 #+END_SRC
 
 ** Clojure
-Clojure settings for Emacs
+
+   Clojure settings for Emacs
+
 #+BEGIN_SRC emacs-lisp
-    ;;; Clojure
+  ;;; Clojure
   (use-package cider                      ; Clojure development environment
     :ensure t
     :defer t
@@ -915,22 +917,6 @@ searchable interface.
     :bind (("C-c C-g l" . gist-list)
 	   ("C-c C-g n" . gist-region-or-buffer)
 	   ("C-c C-g p" . gist-region-or-buffer-private)))
-
-  ;;(use-package magithub
-  ;;:ensure t
-  ;;:after magit
-  ;;:config (magithub-feature-autoinject t))
-#+END_SRC
-
-** Gitlab integration
-[[https://github.com/nlamirault/emacs-gitlab][emacs-gitlab]] - A Gitlab client for Emacs
-
-#+BEGIN_SRC emacs-lisp
-  (use-package gitlab
-    :ensure t
-    :config (validate-setq gitlab-host 7b-gitlab-host
-			   gitlab-username 7b-gitlab-username
-			   gitlab-password 7b-gitlab-password))
 #+END_SRC
 
 ** Docker
