@@ -782,6 +782,15 @@ Python configuration
     :defer t)
 #+END_SRC
 
+** Racket/Geiser
+Racket/Geiser configuration.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package geiser
+    :ensure t
+    :defer t)
+#+END_SRC
+
 ** Web Development
 I use web-mode, css-mode and js2 for web development.
 
