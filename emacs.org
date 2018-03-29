@@ -638,7 +638,7 @@ I use markdown and pandoc for note taking.
 #+END_SRC
 
 ** Autoinsert
-I'm lazy, so I need something to add different headers on my files.
+I'm lazy, so I need something to add different headers to my files.
 
 #+BEGIN_SRC emacs-lisp
   (use-package autoinsert
@@ -653,6 +653,8 @@ I'm lazy, so I need something to add different headers on my files.
 	"---\n"
 	"title: ''\n"
 	"author: '" (user-full-name) "'\n"
+	"date: " (format-time-string "%B %d, %Y") "\n"
+	"revision: 1.0"
 	"classoption: titlepage\n"
 	"---\n\n"))
     :config (validate-setq auto-insert-query nil))
