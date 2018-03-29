@@ -158,7 +158,7 @@ My current favorite theme.
 #+END_SRC
 
 ** Mode line
-Custom mode-line with [[https://github.com/Malabarba/smart-mode-line][smart-mode-line]]
+Custom mode-line with [[https://github.com/Malabarba/smart-mode-line][smart-mode-line]] and [[https://github.com/tarsius/minions][minions]].
 
 #+BEGIN_SRC emacs-lisp
   (column-number-mode t)
@@ -172,6 +172,10 @@ Custom mode-line with [[https://github.com/Malabarba/smart-mode-line][smart-mode
 	  sml/no-confirm-load-theme t
 	  sml/shorten-directory t
 	  sml/shorten-modes t))
+
+  (use-package minions
+    :ensure t
+    :init (minions-mode))
 #+END_SRC
 
 ** Uniquify
@@ -303,12 +307,6 @@ Bullets as UTF-8 characters
 
 
 * Editing settings
-** Set Command to Meta key on macOS
-#+BEGIN_SRC emacs-lisp
-  (setq mac-command-modifier 'meta)
-  (setq mac-option-modifier nil)
-#+END_SRC
-
 ** Windows navigation
 Use Ctrl-c Arrow for cycle throught windows, ignoring possible errors.
 
@@ -550,20 +548,32 @@ Copy the current region and apply the right format required by some services.
 	   ("C-c y m" . copy-as-format-markdown)))
 #+END_SRC
 
-** Highlight symbol
+** Highlight symbols
 
-[[https://github.com/nschum/highlight-symbol.el][highlight-symbol.el]] - automatic and manual symbol highlighting for Emacs.
+[[https://github.com/wolray/symbol-overlay][symbol-overlay.el]] - Highlight symbols with overlays while providing a keymap for
+various operations about highlighted symbols.
 
 #+BEGIN_SRC emacs-lisp
-  (use-package highlight-symbol
+  (use-package symbol-overlay             ; Highlight symbols
     :ensure t
-    :config (highlight-symbol-mode t)
-    (highlight-symbol-nav-mode t))
+    :bind (:map symbol-overlay-mode-map
+		("M-n" . symbol-overlay-jump-next)
+		("M-p" . symbol-overlay-jump-prev))
+    :init (dolist (hook '(prog-mode-hook html-mode-hook css-mode-hook))
+	    (add-hook hook #'symbol-overlay-mode)))
+#+END_SRC
+
+Custom regexp highlighting.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package hi-lock
+    :init (global-hi-lock-mode))
 #+END_SRC
 
 ** Flyspell
 *** Flyspell configuration using [[https://hunspell.github.io][hunspell]].
 **** hunspell
+
 #+BEGIN_SRC emacs-lisp
   (use-package ispell
     :defer t
@@ -605,7 +615,6 @@ Copy the current region and apply the right format required by some services.
 #+END_SRC
 
 ** Todo.txt
-
 I started to use [[https://github.com/todotxt/todo.txt][Todo.txt]]
 
 #+BEGIN_SRC emacs-lisp
@@ -613,6 +622,40 @@ I started to use [[https://github.com/todotxt/todo.txt][Todo.txt]]
     :ensure t
     :bind (("C-c t t" . todotxt))
     :config (validate-setq todotxt-file "/home/mds/cloud/marco/todo.txt"))
+#+END_SRC
+
+** Markdown and Pandoc
+I use markdown and pandoc for note taking.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package markdown-mode
+    :ensure t)
+
+  (use-package pandoc-mode
+    :ensure t
+    :config (add-hook 'pandoc-mode-hook 'pandoc-load-default-settings)
+    :init (add-hook 'markdown-mode-hook 'pandoc-mode))
+#+END_SRC
+
+** Autoinsert
+I'm lazy, so I need something to add different headers on my files.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package autoinsert
+    :init
+    (auto-insert-mode)
+    (define-auto-insert '("\\.org\\'" . "Org skeleton")
+      '("Short description: "
+	"#+startup: showall\n"
+	> _ \n \n))
+    (define-auto-insert '("\\.md\\'" . "Markdown/Pandoc skeleton")
+      '("Document details: "
+	"---\n"
+	"title: ''\n"
+	"author: '" (user-full-name) "'\n"
+	"classoption: titlepage\n"
+	"---\n\n"))
+    :config (validate-setq auto-insert-query nil))
 #+END_SRC
 
 
