@@ -862,7 +862,7 @@ A better JavaScript support
   :mode "\\.js\\'"
   :config
   (progn
-    (setq-default js2-basic-offset 2)
+    (setq-default js2-basic-offset 4)
     (add-hook 'js2-mode-hook #'js2-highlight-unused-variables-mode)))
 #+END_SRC
 
@@ -952,23 +952,24 @@ Smartparens - Minor mode for Emacs that deals with parens pairs and tries to be
 smart about it.
 
 #+BEGIN_SRC emacs-lisp
-(use-package smartparens                ; Parenthesis editing and balancing
-  :ensure t
-  :bind (("C-<right>" . sp-forward-slurp-sexp)
-         ("C-<left>" . sp-forward-barf-sexp))
-  :init
-  (progn
-    (smartparens-global-mode)
-    (show-smartparens-global-mode)
-    (sp-pair "'" nil :actions :rem)
+  (use-package smartparens                ; Parenthesis editing and balancing
+    :ensure t
+    :bind (("C-<right>" . sp-forward-slurp-sexp)
+	   ("C-<left>" . sp-forward-barf-sexp)
+	   ("C-c s m" . smartparens-strict-mode))
+    :init
+    (progn
+      (smartparens-global-mode)
+      (show-smartparens-global-mode)
+      (sp-pair "'" nil :actions :rem)
 
-    (dolist (hook '(inferior-emacs-lisp-mode-hook
-                    emacs-lisp-mode-hook
-                    clojure-mode-hook))
-      (add-hook hook #'smartparens-strict-mode)))
-  :config (setq sp-autoskip-closing-pair 'always
-                ;; Don't kill entire symbol on C-k
-                sp-hybrid-kill-entire-symbol nil))
+      (dolist (hook '(inferior-emacs-lisp-mode-hook
+		      emacs-lisp-mode-hook
+		      clojure-mode-hook))
+	(add-hook hook #'smartparens-strict-mode)))
+    :config (setq sp-autoskip-closing-pair 'always
+		  ;; Don't kill entire symbol on C-k
+		  sp-hybrid-kill-entire-symbol nil))
 #+END_SRC
 
 ** DevDocs.io
