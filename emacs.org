@@ -862,13 +862,14 @@ A better JavaScript support
   :mode "\\.js\\'"
   :config
   (progn
-    (setq-default js2-basic-offset 4)
+    (setq-default js2-basic-offset 2)
     (add-hook 'js2-mode-hook #'js2-highlight-unused-variables-mode)))
 #+END_SRC
 
-Better CSS support
+Better CSS support.
 #+BEGIN_SRC emacs-lisp
 (use-package css-mode
+  :ensure t
   :mode "\\.css\\'"
   :config
   (progn
@@ -877,12 +878,19 @@ Better CSS support
               (lambda () (run-hooks 'prog-mode-hook)))))
 #+END_SRC
 
-Eldoc for CSS
+Eldoc for CSS.
 #+BEGIN_SRC emacs-lisp
 (use-package css-eldoc
   :ensure t
   :commands (turn-on-css-eldoc)
   :init (add-hook 'css-mode-hook #'turn-on-css-eldoc))
+#+END_SRC
+
+JSON specific mode.
+#+BEGIN_SRC emacs-lisp
+  (use-package json-mode                  ; JSON editing
+    :ensure t
+    :mode "\\.json\\'")
 #+END_SRC
 
 ** Flycheck
