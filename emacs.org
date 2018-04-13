@@ -48,15 +48,8 @@ Start an Emacs server if it's not running.
 	      (server-mode)))
 #+END_SRC
 
-** MacTeX settings
-Setting path for LateX on macOS
-
-#+BEGIN_SRC emacs-lisp
-  (setenv "PATH" (concat (getenv "PATH") "/Library/TeX/Distributions/Programs/texbin"))
-#+END_SRC
-
 ** Use Validate package
-This library offers two functions that perform schema validation.  Use
+This library offers two functions that perform schema validation. Use
 this is your Elisp packages to provide very informative error messages
 when your users accidentally misconfigure a variable: [[https://github.com/Malabarba/validate.el][validate.el]]
 
@@ -312,6 +305,17 @@ Bullets as UTF-8 characters
     :config (validate-setq org-bullets-bullet-list '("◉" "○" "●" "►" "◇" "◎")))
 #+END_SRC
 
+** pdf-tools
+
+Better PDF support.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package pdf-tools
+    :ensure t
+    :demand t
+    :config (pdf-tools-install))
+#+END_SRC
+
 
 * Editing settings
 ** Windows navigation
@@ -340,13 +344,11 @@ Make tab key do indent first then completion.
 
 ** Misc variable settings
 Does anyone type =yes= anymore?
-
 #+BEGIN_SRC elisp
   (fset 'yes-or-no-p 'y-or-n-p)
 #+END_SRC
 
 Fix the scrolling to keep point in the center:
-
 #+BEGIN_SRC elisp
   (setq scroll-conservatively 10000
         scroll-preserve-screen-position t)
@@ -556,7 +558,6 @@ Copy the current region and apply the right format required by some services.
 #+END_SRC
 
 ** Highlight symbols
-
 [[https://github.com/wolray/symbol-overlay][symbol-overlay.el]] - Highlight symbols with overlays while providing a keymap for
 various operations about highlighted symbols.
 
@@ -713,8 +714,7 @@ Search project with ripgrep
 #+END_SRC
 
 ** Clojure
-
-   Clojure settings for Emacs
+Clojure settings for Emacs
 
 #+BEGIN_SRC emacs-lisp
   ;;; Clojure
@@ -1054,7 +1054,6 @@ Use Ctrl-z as undo
 #+END_SRC
 
 ** Rebind split-window commands
-
 In order to have a more tmux-like keybindings, I remap split-window-below and
 split-window-right to C-c S-; and C-c S-5.
 
