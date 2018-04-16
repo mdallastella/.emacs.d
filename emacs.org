@@ -1016,6 +1016,32 @@ Sometimes I have to do with ugly PHP...
   (use-package php-mode :ensure t)
 #+END_SRC
 
+** OCaml
+Simple OCaml setup
+
+#+BEGIN_SRC emacs-lisp
+  (use-package tuareg
+    :ensure t
+    :mode ((("\\.ml[ily]?$" . tuareg-mode)
+	    ("\\.topml$"    . tuareg-mode)))
+    :config (add-hook 'tuareg-mode-hook #'electric-pair-local-mode))
+
+  (use-package merlin
+    :ensure t
+    :config
+    (add-hook 'tuareg-mode-hook #'merlin-mode)
+    (add-hook 'merlin-mode-hook #'company-mode)
+    (validate-setq merlin-error-after-save nil))
+
+  (use-package utop
+    :ensure t
+    :config
+    (autoload 'utop-minor-mode "utop" "Minor mode for utop" t)
+    (add-hook 'tuareg-mode-hook 'utop-minor-mode)
+    (setq utop-command "opam config exec -- utop -emacs"
+	  utop-edit-command nil))
+#+END_SRC
+
 
 * Keybindings
 ** Ctrl-z as undo
