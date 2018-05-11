@@ -111,6 +111,29 @@ Autosave buffers when they lose focus.
   :config (super-save-initialize))
 #+END_SRC
 
+[[https://github.com/Malabarba/paradox][paradox]] - A better package manager interface
+
+#+BEGIN_SRC emacs-lisp
+  (use-package paradox
+    :ensure t
+    :bind (("C-c a p" . paradox-list-packages)
+	   ("C-c a P" . paradox-upgrade-packages))
+    :config
+    (validate-setq
+     paradox-github-token t             ; Don't ask for a token
+     paradox-execute-asynchronously nil ; No async updates
+     paradox-use-homepage-buttons nil   ; Hide download button
+     paradox-automatically-star nil     ; Don't star packages automatically
+     paradox-display-download-count t   ; Show all possible counts
+     paradox-display-star-count t)
+
+    ;; Don't need paradox report
+    (remove-hook 'paradox-after-execute-functions
+		 #'paradox--report-buffer-print)
+    (remove-hook 'paradox-after-execute-functions
+		 #'paradox--report-buffer-display-if-noquery))
+#+END_SRC
+
 
 * Interface settings
 ** Remove menus, bars and everything that's annoying
