@@ -958,8 +958,7 @@ list.
     (defun my-magit-quit-session (&optional kill-buffer)
       "Kill all Magit buffers on quit"
       (interactive)
-      (magit-restore-window-configuration kill-buffer)
-      (my-kill-buffers "^\\*magit"))
+      (magit-restore-window-configuration kill-buffer))
 
     (bind-key "q" #'my-magit-quit-session magit-status-mode-map))
 
