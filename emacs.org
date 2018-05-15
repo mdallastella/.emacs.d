@@ -638,11 +638,6 @@ Custom regexp highlighting.
     :after flyspell
     :bind (:map flyspell-mode-map
 		("C-c $" . flyspell-correct-word-generic)))
-
-  (use-package auto-correct               ; Automatically fix past corrections
-    :ensure t
-    :init (auto-correct-mode)
-    :diminish auto-correct-mode)
 #+END_SRC
 
 ** Todo.txt
