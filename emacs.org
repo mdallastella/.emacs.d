@@ -423,12 +423,20 @@ Configure a reasonable fill column and enable automatic filling
      ivy-use-ignore-default 'always))
 #+END_SRC
 
-Use [[https://github.com/PythonNut/historian.el][ivy-historian]] too
+Use [[https://github.com/PythonNut/historian.el][ivy-historian]] too:
 
 #+BEGIN_SRC emacs-lisp
   (use-package ivy-historian              ; Store minibuffer candidates
     :ensure t
     :init (ivy-historian-mode +1))
+#+END_SRC
+
+Use ivy-hydra:
+
+#+BEGIN_SRC emacs-lisp
+  (use-package ivy-hydra
+    :ensure t
+    :after ivy)
 #+END_SRC
 
 ** Swiper, Smex and counsel configuration
@@ -633,7 +641,8 @@ Custom regexp highlighting.
      flyspell-issue-welcome-flag nil
      flyspell-issue-message-flag nil))
 
-  (use-package flyspell-correct-ivy       ; Better interface for corrections
+  ; Better interface for corrections
+  (use-package flyspell-correct-ivy
     :ensure t
     :after flyspell
     :bind (:map flyspell-mode-map
