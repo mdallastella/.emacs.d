@@ -689,7 +689,7 @@ I'm lazy, so I need something to add different headers to my files.
 	"title: ''\n"
 	"author: '" (user-full-name) "'\n"
 	"date: " (format-time-string "%B %d, %Y") "\n"
-	"revision: 1.0"
+	"revision: 1.0\n"
 	"classoption: titlepage\n"
 	"---\n\n"))
     :config (validate-setq auto-insert-query nil))
