@@ -167,11 +167,19 @@ I use the Iosevka font.
 My current favorite theme.
 
 #+BEGIN_SRC emacs-lisp
-  (use-package base16-theme
+  (use-package solarized-theme
     :ensure t
-    :config  
-    (load-theme 'base16-gruvbox-dark-pale 'no-confirm))
+    :config
+    (validate-setq solarized-use-variable-pitch nil
+		   solarized-scale-org-headlines nil
+		   solarized-use-less-bold t
+		   solarized-use-more-italic t
+		   x-underline-at-descent-line t)
+    (load-theme 'solarized-dark 'no-confirm))
 #+END_SRC
+
+#+RESULTS:
+: t
 
 ** Mode line
 Custom mode-line with [[https://github.com/Malabarba/smart-mode-line][smart-mode-line]], [[https://github.com/tarsius/minions][minions]] and [[https://github.com/tarsius/moody][moody]].
@@ -670,6 +678,16 @@ I use markdown and pandoc for note taking.
     :ensure t
     :config (add-hook 'pandoc-mode-hook 'pandoc-load-default-settings)
     :init (add-hook 'markdown-mode-hook 'pandoc-mode))
+#+END_SRC
+
+** Olivetti mode
+[[https://github.com/rnkn/olivetti][Olivetti]] is a simple Emacs minor mode for a nice writing environment.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package olivetti
+    :ensure t
+    :config
+    (setq-default olivetti-body-width 80))
 #+END_SRC
 
 ** Autoinsert
