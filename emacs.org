@@ -4,7 +4,8 @@ A literate based Emacs configuration. I took inspiration from various sources.
 
 * General configuration
 ** Shell environment
-Ensure environment variables inside Emacs look the same as in the user's shell.
+   Ensure environment variables inside Emacs look the same as in the user's
+   shell.
 
 #+BEGIN_SRC emacs-lisp
   (use-package exec-path-from-shell
@@ -13,7 +14,7 @@ Ensure environment variables inside Emacs look the same as in the user's shell.
     (exec-path-from-shell-initialize))
 #+END_SRC
 
-I use keychain for ssh key management.
+  I use keychain for ssh key management.
 
 #+BEGIN_SRC emacs-lisp
   (use-package keychain-environment
@@ -30,7 +31,7 @@ I use keychain for ssh key management.
 #+END_SRC
 
 ** User details
-My personal details.
+   My personal details.
 
 #+BEGIN_SRC emacs-lisp
   (setq user-full-name "Marco Dalla Stella")
@@ -38,20 +39,19 @@ My personal details.
 #+END_SRC
 
 ** Emacs server
-Start an Emacs server if it's not running.
+   Start an Emacs server if it's not running.
 
 #+BEGIN_SRC emacs-lisp
   (use-package server
     :if (not noninteractive)
-    :defer t
     :config (unless (server-running-p)	; Start server only if it is not already running
 	      (server-mode)))
 #+END_SRC
 
 ** Use Validate package
-This library offers two functions that perform schema validation. Use
-this is your Elisp packages to provide very informative error messages
-when your users accidentally misconfigure a variable: [[https://github.com/Malabarba/validate.el][validate.el]]
+   This library offers two functions that perform schema validation. Use this is
+   your Elisp packages to provide very informative error messages when your
+   users accidentally misconfigure a variable: [[https://github.com/Malabarba/validate.el][validate.el]]
 
 #+BEGIN_SRC emacs-lisp
   (use-package validate
@@ -59,51 +59,52 @@ when your users accidentally misconfigure a variable: [[https://github.com/Malab
 #+END_SRC
 
 ** Various minor settings
-Delete the selection instead of insert
+   Delete the selection instead of insert
 
 #+BEGIN_SRC emacs-lisp
   (use-package delsel
-    :defer t
     :init (delete-selection-mode))
 #+END_SRC
 
-Save point position in files
+  Save point position in files
 
 #+BEGIN_SRC emacs-lisp
   (use-package saveplace
     :init (save-place-mode 1))
 #+END_SRC
 
-Auto-revert buffers of changed files
+  Auto-revert buffers of changed files
 
 #+BEGIN_SRC emacs-lisp
   (use-package autorevert
     :init (global-auto-revert-mode)
     :config
-    (validate-setq auto-revert-verbose nil
-                   ;; Revert Dired buffers, too
-                   global-auto-revert-non-file-buffers t)
+    (validate-setq
+     auto-revert-verbose nil
+     ;; Revert Dired buffers, too
+     global-auto-revert-non-file-buffers t)
     :diminish auto-revert-mode)
 #+END_SRC
 
-Kill ring features
+  Kill ring features
 
 #+BEGIN_SRC emacs-lisp
-  (validate-setq kill-ring-max 200                 ; More killed items
-		 kill-do-not-save-duplicates t     ; No duplicates in kill ring
-		 ;; Save the contents of the clipboard to kill ring before killing
-		 save-interprogram-paste-before-kill t)
+  (validate-setq
+   kill-ring-max 200                 ; More killed items
+   kill-do-not-save-duplicates t     ; No duplicates in kill ring
+   ;; Save the contents of the clipboard to kill ring before killing
+   save-interprogram-paste-before-kill t)
 #+END_SRC
 
-Autosave buffers when they lose focus.
+  Auto-save buffers when they lose focus.
 
 #+BEGIN_SRC emacs-lisp
-(use-package super-save
-  :ensure t
-  :config (super-save-initialize))
+  (use-package super-save
+    :ensure t
+    :config (super-save-initialize))
 #+END_SRC
 
-[[https://github.com/Malabarba/paradox][paradox]] - A better package manager interface
+  [[https://github.com/Malabarba/paradox][paradox]] - A better package manager interface.
 
 #+BEGIN_SRC emacs-lisp
   (use-package paradox
@@ -129,14 +130,14 @@ Autosave buffers when they lose focus.
 
 * Interface settings
 ** Remove menus, bars and everything that's annoying
-I don't like scrollbars nor bars. I've been using Emacs for many years, and
-appreciate a certain minimalist approach to its display. While you can turn
-these off with the menu items now, it is just as easy to set them here.
+   I don't like scrollbars nor bars. I've been using Emacs for many years, and
+   appreciate a certain minimalist approach to its display. While you can turn
+   these off with the menu items now, it is just as easy to set them here.
 
 #+BEGIN_SRC emacs-lisp
-  (setq initial-scratch-message "")	; Uh, I know what Scratch is for
+  (validate-setq initial-scratch-message "") ; Uh, I know what Scratch is for
   (when (window-system)
-    (tool-bar-mode -1)                    ; Toolbars were only cool with XEmacs
+    (tool-bar-mode -1)			; Toolbars were only cool with XEmacs
     (when (fboundp 'horizontal-scroll-bar-mode)
       (horizontal-scroll-bar-mode -1))
     (blink-cursor-mode -1)
@@ -146,27 +147,29 @@ these off with the menu items now, it is just as easy to set them here.
 #+END_SRC
 
 ** Font setup
-I use the Iosevka font.
+   I use the Iosevka font.
 
 #+BEGIN_SRC emacs-lisp
-  (set-face-attribute 'default nil
-		      :family "Iosevka Term"
-		      :weight 'light
-		      :height 140)
+  (set-face-attribute
+   'default nil
+   :family "Iosevka Term"
+   :weight 'light
+   :height 140)
 #+END_SRC
 
 ** Theme
-My current favorite theme.
+   My current favorite theme.
 
 #+BEGIN_SRC emacs-lisp
   (use-package solarized-theme
     :ensure t
     :config
-    (validate-setq solarized-use-variable-pitch nil
-		   solarized-scale-org-headlines nil
-		   solarized-use-less-bold t
-		   solarized-use-more-italic t
-		   x-underline-at-descent-line t)
+    (validate-setq
+     solarized-use-variable-pitch nil
+     solarized-scale-org-headlines nil
+     solarized-use-less-bold t
+     solarized-use-more-italic t
+     x-underline-at-descent-line t)
     (load-theme 'solarized-dark 'no-confirm))
 #+END_SRC
 
@@ -174,7 +177,7 @@ My current favorite theme.
 : t
 
 ** Mode line
-Custom mode-line with [[https://github.com/Malabarba/smart-mode-line][smart-mode-line]], [[https://github.com/tarsius/minions][minions]] and [[https://github.com/tarsius/moody][moody]].
+   Custom mode-line with [[https://github.com/Malabarba/smart-mode-line][smart-mode-line]], [[https://github.com/tarsius/minions][minions]] and [[https://github.com/tarsius/moody][moody]].
 
 #+BEGIN_SRC emacs-lisp
   (column-number-mode t)
@@ -182,7 +185,7 @@ Custom mode-line with [[https://github.com/Malabarba/smart-mode-line][smart-mode
   (use-package smart-mode-line
     :ensure t
     :disabled t
-    :init 
+    :init
     (sml/setup)
     (setq sml/theme nil
 	  sml/no-confirm-load-theme t
@@ -196,39 +199,45 @@ Custom mode-line with [[https://github.com/Malabarba/smart-mode-line][smart-mode
   (use-package moody
     :ensure t
     :config
-    (setq x-underline-at-descent-line t)
+    (validate-setq x-underline-at-descent-line t)
     (moody-replace-mode-line-buffer-identification)
     (moody-replace-vc-mode))
 #+END_SRC
 
 ** Uniquify
-Set unique buffer names.
+   Set unique buffer names.
 
 #+BEGIN_SRC emacs-lisp
   (use-package uniquify
-    :config (setq uniquify-buffer-name-style
-                  'post-forward uniquify-separator ":"))
+    :config
+    (setq uniquify-buffer-name-style
+	  'post-forward uniquify-separator ":"))
 #+END_SRC
 
 ** Show matching parenthesis
+
 #+BEGIN_SRC emacs-lisp
   (show-paren-mode t)
+
   (use-package rainbow-delimiters
     :ensure t
-    :init (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
+    :hook ((prog-mode clojure-mode cider-repl-mode) . rainbow-delimiters-mode))
 #+END_SRC
 
 ** Disable annoying prompts and messages
 
 #+BEGIN_SRC emacs-lisp
   (fset 'yes-or-no-p 'y-or-n-p)
-  (validate-setq kill-buffer-query-functions
-		 (remq 'process-kill-buffer-query-function
-                       kill-buffer-query-functions))
+  (validate-setq
+   kill-buffer-query-functions
+   (remq 'process-kill-buffer-query-function
+	 kill-buffer-query-functions))
 
-  (validate-setq ring-bell-function #'ignore
-		 inhibit-startup-screen t
-		 initial-scratch-message nil)
+  (validate-setq
+   ring-bell-function #'ignore
+   inhibit-startup-screen t
+   initial-scratch-message nil)
+
   (fset 'display-startup-echo-area-message #'ignore)
 #+END_SRC
 
@@ -237,7 +246,6 @@ Set unique buffer names.
 #+BEGIN_SRC emacs-lisp
   (use-package page-break-lines
     :ensure t
-    :defer t
     :init (global-page-break-lines-mode)
     :diminish page-break-lines-mode)
 #+END_SRC
@@ -253,45 +261,48 @@ Set unique buffer names.
 #+BEGIN_SRC emacs-lisp
   (use-package highlight-numbers
     :ensure t
-    :defer t
-    :init (add-hook 'prog-mode-hook #'highlight-numbers-mode))
+    :hook (prog-mode . highlight-numbers-mode))
 #+END_SRC
 
 ** Minibuffer settings
-Allow to read from the minibuffer while in minibuffer
+   Allow to read from the minibuffer while in minibuffer
+
 #+BEGIN_SRC emacs-lisp
   (validate-setq enable-recursive-minibuffers t)
 #+END_SRC
 
-Show the minibuffer depth (when larger than 1)
+  Show the minibuffer depth (when larger than 1).
+
 #+BEGIN_SRC emacs-lisp
   (minibuffer-depth-indicate-mode 1)
 #+END_SRC
 
-Never use dialogs for minibuffer input and store more history
+  Never use dialogs for minibuffer input and store more history.
+
 #+BEGIN_SRC emacs-lisp
   (validate-setq use-dialog-box nil
 		 history-length 1000)
 #+END_SRC
 
-Save minibuffer history
+  Save minibuffer history.
+
 #+BEGIN_SRC emacs-lisp
 (use-package savehist
   :init (savehist-mode t)
   :config
   (validate-setq savehist-save-minibuffer-history t
-                 savehist-autosave-interval 180))
+		 savehist-autosave-interval 180))
 #+END_SRC
 
 ** Scratch settings
-Use `emacs-lisp-mode' instead of `lisp-interaction-mode' for scratch buffer
+   Use `emacs-lisp-mode' instead of `lisp-interaction-mode' for scratch buffer.
 
 #+BEGIN_SRC emacs-lisp
   (validate-setq initial-major-mode 'emacs-lisp-mode)
 #+END_SRC
 
 ** Which-key
-[[https://github.com/justbur/emacs-which-key][Which-key]] – Emacs package that displays available keybindings in popup.
+   [[https://github.com/justbur/emacs-which-key][Which-key]] – Emacs package that displays available keybindings in popup.
 
 #+BEGIN_SRC emacs-lisp
   (use-package which-key                  ; Show help popups for prefix keys
@@ -306,31 +317,33 @@ Use `emacs-lisp-mode' instead of `lisp-interaction-mode' for scratch buffer
 
 ** EyeBrowse
 
-Easy workspaces creation and switching
+   Easy workspaces creation and switching.
 
 #+BEGIN_SRC emacs-lisp
   (use-package eyebrowse
     :ensure t
-    :config (validate-setq eyebrowse-switch-back-and-forth t
-			   eyebrowse-wrap-around t
-			   eyebrowse-new-workspace t)
+
+    :config
+    (validate-setq eyebrowse-switch-back-and-forth t
+		   eyebrowse-wrap-around t
+		   eyebrowse-new-workspace t)
     (eyebrowse-mode t))
 #+END_SRC
 
 ** org-mode
 
-Bullets as UTF-8 characters
+   Bullets as UTF-8 characters
 
 #+BEGIN_SRC emacs-lisp
   (use-package org-bullets
     :ensure t
-    :init (add-hook 'org-mode-hook #'org-bullets-mode)
+    :hook (org-mode . org-bullets-mode)
     :config (validate-setq org-bullets-bullet-list '("◉" "○" "●" "►" "◇" "◎")))
 #+END_SRC
 
 ** pdf-tools
 
-Better PDF support.
+   Better PDF support.
 
 #+BEGIN_SRC emacs-lisp
   (use-package pdf-tools
@@ -342,7 +355,7 @@ Better PDF support.
 
 * Editing settings
 ** Windows navigation
-Use Ctrl-c Arrow for cycle throught windows, ignoring possible errors.
+   Use Ctrl-c Arrow for cycle throught windows, ignoring possible errors.
 
 #+BEGIN_SRC emacs-lisp
   (global-set-key (kbd "C-c <left>")  'windmove-left)
@@ -351,8 +364,8 @@ Use Ctrl-c Arrow for cycle throught windows, ignoring possible errors.
   (global-set-key (kbd "C-c <down>")  'windmove-down)
 #+END_SRC
 ** Tabs vs Spaces
-I have learned to distrust tabs in my source code, so let's make sure
-that we only have spaces. See [[http://ergoemacs.org/emacs/emacs_tabs_space_indentation_setup.html][this discussion]] for details.
+   I have learned to distrust tabs in my source code, so let's make sure that we
+   only have spaces. See [[http://ergoemacs.org/emacs/emacs_tabs_space_indentation_setup.html][this discussion]] for details.
 
 #+BEGIN_SRC elisp
   (setq-default indent-tabs-mode nil)
@@ -366,33 +379,40 @@ Make tab key do indent first then completion.
 #+END_SRC
 
 ** Misc variable settings
-Does anyone type =yes= anymore?
+   Does anyone type =yes= anymore?
+
 #+BEGIN_SRC elisp
   (fset 'yes-or-no-p 'y-or-n-p)
 #+END_SRC
 
-Fix the scrolling to keep point in the center:
+  Fix the scrolling to keep point in the center:
+
 #+BEGIN_SRC elisp
-  (setq scroll-conservatively 10000
-        scroll-preserve-screen-position t)
+  (validate-setq scroll-conservatively 10000
+	scroll-preserve-screen-position t)
 #+END_SRC
 
-I've been using Emacs for too long to need to re-enable each feature bit-by-bit:
+  I've been using Emacs for too long to need to re-enable each feature
+  bit-by-bit:
+
 #+BEGIN_SRC elisp
-  (setq disabled-command-function nil)
+  (validate-setq disabled-command-function nil)
 #+END_SRC
 
-Store more history
+  Store more history
+
 #+BEGIN_SRC emacs-lisp
   (validate-setq history-length 1000)
 #+END_SRC
 
-Increase line-spacing (default 0)
+  Increase line-spacing (default 0)
+
 #+BEGIN_SRC emacs-lisp
   (setq-default line-spacing 0.2)
 #+END_SRC
 
-Configure a reasonable fill column and enable automatic filling
+  Configure a reasonable fill column and enable automatic filling
+
 #+BEGIN_SRC emacs-lisp
   (setq-default fill-column 80)
   (add-hook 'text-mode-hook #'auto-fill-mode)
@@ -400,15 +420,15 @@ Configure a reasonable fill column and enable automatic filling
 #+END_SRC
 
 ** Ivy configuration
-[[http://oremacs.com/swiper/][Ivy]] is an interactive interface for completion in Emacs.
+   [[http://oremacs.com/swiper/][Ivy]] is an interactive interface for completion in Emacs.
 
 #+BEGIN_SRC emacs-lisp
   (use-package ivy
     :ensure t
     :bind (("C-c C-r" . ivy-resume)
-           :map ivy-minibuffer-map
-           ("<return>" . ivy-alt-done)
-           ("C-o" . hydra-ivy/body))
+	   :map ivy-minibuffer-map
+	   ("<return>" . ivy-alt-done)
+	   ("C-o" . hydra-ivy/body))
     :init (ivy-mode 1)
     :config
     (validate-setq
@@ -423,7 +443,7 @@ Configure a reasonable fill column and enable automatic filling
      ivy-use-ignore-default 'always))
 #+END_SRC
 
-Use [[https://github.com/PythonNut/historian.el][ivy-historian]] too:
+  Use [[https://github.com/PythonNut/historian.el][ivy-historian]] too:
 
 #+BEGIN_SRC emacs-lisp
   (use-package ivy-historian              ; Store minibuffer candidates
@@ -431,7 +451,7 @@ Use [[https://github.com/PythonNut/historian.el][ivy-historian]] too:
     :init (ivy-historian-mode +1))
 #+END_SRC
 
-Use ivy-hydra:
+  Use ivy-hydra:
 
 #+BEGIN_SRC emacs-lisp
   (use-package ivy-hydra
@@ -440,6 +460,7 @@ Use ivy-hydra:
 #+END_SRC
 
 ** Swiper, Smex and counsel configuration
+
 #+BEGIN_SRC emacs-lisp
   (use-package swiper                     ; Isearch with an overview
     :ensure t
@@ -492,10 +513,10 @@ Use ivy-hydra:
     :diminish counsel-mode)
 #+END_SRC
 
-** Autocompletation with company
-[[http://company-mode.github.io/][Company]] is a text completion framework for Emacs. The name stands for "complete
-anything". It uses pluggable back-ends and front-ends to retrieve and display
-completion candidates.
+** Completion with company
+   [[http://company-mode.github.io/][Company]] is a text completion framework for Emacs. The name stands for
+   "complete anything". It uses pluggable back-ends and front-ends to retrieve
+   and display completion candidates.
 
 #+BEGIN_SRC emacs-lisp
     (use-package company                    ; Auto-completion
@@ -506,13 +527,13 @@ completion candidates.
 		  ("C-p" . company-select-previous))
       :config
       (validate-setq company-tooltip-align-annotations t
-                     company-tooltip-flip-when-above t
-                     ;; Easy navigation to candidates with M-<n>
-                     company-show-numbers t
-                     ;; Ignore case
-                     company-dabbrev-ignore-case t
-                     ;; Do not downcase completion
-                     company-dabbrev-downcase nil)
+		     company-tooltip-flip-when-above t
+		     ;; Easy navigation to candidates with M-<n>
+		     company-show-numbers t
+		     ;; Ignore case
+		     company-dabbrev-ignore-case t
+		     ;; Do not downcase completion
+		     company-dabbrev-downcase nil)
       :diminish company-mode)
 
   (use-package company-statistics         ; Show likelier candidates on top
@@ -527,20 +548,20 @@ completion candidates.
 #+END_SRC
 
 ** Undo tree
-Treat undo history as a tree.
+   Treat undo history as a tree.
 
 #+BEGIN_SRC emacs-lisp
   (use-package undo-tree                  ; Show buffer changes as a tree
     :ensure t
     :init (global-undo-tree-mode)
-    :config (validate-setq undo-tree-visualizer-timestamps t)                          
+    :config (validate-setq undo-tree-visualizer-timestamps t)
     :diminish undo-tree-mode)
 #+END_SRC
 
 ** Aggressive indentation
-aggressive-indent-mode is a minor mode that keeps your code always
-indented.  It reindents after every change, making it more reliable
-than `electric-indent-mode'.
+   aggressive-indent-mode is a minor mode that keeps your code always indented.
+   It re-indents after every change, making it more reliable than
+   `electric-indent-mode`.
 
 #+BEGIN_SRC emacs-lisp
   (use-package aggressive-indent
@@ -555,29 +576,28 @@ than `electric-indent-mode'.
 #+END_SRC
 
 ** Easy kill
-Better kill text
+   Better kill text.
 
 #+BEGIN_SRC emacs-lisp
   (use-package easy-kill                  ; Better kill text
     :ensure t
     :bind (([remap kill-ring-save] . easy-kill)
-           ([remap mark-sexp]      . easy-mark)))
+	   ([remap mark-sexp]      . easy-mark)))
 #+END_SRC
 
 ** Remove trailing spaces on save
+
 #+BEGIN_SRC emacs-lisp
   (use-package whitespace-cleanup-mode    ; Cleanup whitespace in buffers
     :ensure t
     :bind (("C-c t w" . whitespace-cleanup-mode)
 	   ("C-c x w" . whitespace-cleanup))
-    :init
-    (dolist (hook '(prog-mode-hook text-mode-hook conf-mode-hook))
-      (add-hook hook #'whitespace-cleanup-mode))
+    :hook ((prog-mode text-mode conf-mode) . whitespace-cleanup-mode)
     :diminish whitespace-cleanup-mode)
 #+END_SRC
 
 ** Copy as format
-Copy the current region and apply the right format required by some services.
+   Copy the current region and apply the right format required by some services.
 
 #+BEGIN_SRC emacs-lisp
   (use-package copy-as-format
@@ -589,17 +609,17 @@ Copy the current region and apply the right format required by some services.
 #+END_SRC
 
 ** Highlight symbols
-[[https://github.com/wolray/symbol-overlay][symbol-overlay.el]] - Highlight symbols with overlays while providing a keymap for
-various operations about highlighted symbols.
+   [[https://github.com/wolray/symbol-overlay][symbol-overlay.el]] - Highlight symbols with overlays while providing a keymap
+   for various operations about highlighted symbols.
 
 #+BEGIN_SRC emacs-lisp
   (use-package symbol-overlay             ; Highlight symbols
     :ensure t
-    :bind (:map symbol-overlay-mode-map
-		("M-n" . symbol-overlay-jump-next)
-		("M-p" . symbol-overlay-jump-prev))
-    :init (dolist (hook '(prog-mode-hook html-mode-hook css-mode-hook))
-	    (add-hook hook #'symbol-overlay-mode)))
+    :bind
+    (:map symbol-overlay-mode-map
+	  ("M-n" . symbol-overlay-jump-next)
+	  ("M-p" . symbol-overlay-jump-prev))
+    :hook ((prog-mode html-mode css-mode) . symbol-overlay-mode))
 #+END_SRC
 
 Custom regexp highlighting.
@@ -615,7 +635,6 @@ Custom regexp highlighting.
 
 #+BEGIN_SRC emacs-lisp
   (use-package ispell
-    :defer t
     :config
     (validate-setq
      ispell-program-name (executable-find "hunspell")
@@ -630,37 +649,26 @@ Custom regexp highlighting.
 
 #+BEGIN_SRC emacs-lisp
   (use-package flyspell
-    :init
-    (add-hook 'prog-mode-hook #'flyspell-prog-mode)
-    (add-hook 'org-mode-hook #'flyspell-mode)
-    (add-hook 'text-mode-hook #'flyspell-mode)
+    :hook
+    ((prog-mode org-mode text-mode) . flyspell-prog-mode)
+
     :config
-    (validate-setq
-     flyspell-use-meta-tab nil
-     ;; Make Flyspell less chatty
-     flyspell-issue-welcome-flag nil
-     flyspell-issue-message-flag nil))
+    (validate-setq flyspell-use-meta-tab nil
+		   ;; Make Flyspell less chatty
+		   flyspell-issue-welcome-flag nil
+		   flyspell-issue-message-flag nil))
 
   ; Better interface for corrections
   (use-package flyspell-correct-ivy
     :ensure t
     :after flyspell
-    :bind (:map flyspell-mode-map
-		("C-c $" . flyspell-correct-word-generic)))
-#+END_SRC
-
-** Todo.txt
-I started to use [[https://github.com/todotxt/todo.txt][Todo.txt]]
-
-#+BEGIN_SRC emacs-lisp
-  (use-package todotxt
-    :ensure t
-    :bind (("C-c t t" . todotxt))
-    :config (validate-setq todotxt-file "/home/mds/cloud/marco/todo.txt"))
+    :bind
+    (:map flyspell-mode-map
+	  ("C-c $" . flyspell-correct-word-generic)))
 #+END_SRC
 
 ** Markdown and Pandoc
-I use markdown and pandoc for note taking.
+   I use markdown and pandoc for note taking.
 
 #+BEGIN_SRC emacs-lisp
   (use-package markdown-mode
@@ -668,12 +676,12 @@ I use markdown and pandoc for note taking.
 
   (use-package pandoc-mode
     :ensure t
-    :config (add-hook 'pandoc-mode-hook 'pandoc-load-default-settings)
-    :init (add-hook 'markdown-mode-hook 'pandoc-mode))
+    :hook
+    ((pandoc-mode markdown-mode) . pandoc-load-default-settings))
 #+END_SRC
 
 ** Olivetti mode
-[[https://github.com/rnkn/olivetti][Olivetti]] is a simple Emacs minor mode for a nice writing environment.
+   [[https://github.com/rnkn/olivetti][Olivetti]] is a simple Emacs minor mode for a nice writing environment.
 
 #+BEGIN_SRC emacs-lisp
   (use-package olivetti
@@ -682,8 +690,8 @@ I use markdown and pandoc for note taking.
     (setq-default olivetti-body-width 80))
 #+END_SRC
 
-** Autoinsert
-I'm lazy, so I need something to add different headers to my files.
+** Auto-insert
+   I'm lazy, so I need something to add different headers to my files.
 
 #+BEGIN_SRC emacs-lisp
   (use-package autoinsert
@@ -702,15 +710,17 @@ I'm lazy, so I need something to add different headers to my files.
 	"revision: 1.0\n"
 	"classoption: titlepage\n"
 	"---\n\n"))
-    :config (validate-setq auto-insert-query nil))
+
+    :config
+    (validate-setq auto-insert-query nil))
 #+END_SRC
 
 
 * Coding settings
 ** Projectile
-Projectile is a project interaction library for Emacs. Its goal is to provide a
-nice set of features operating on a project level without introducing external
-dependencies (when feasible).
+   Projectile is a project interaction library for Emacs. Its goal is to provide
+   a nice set of features operating on a project level without introducing
+   external dependencies (when feasible).
 
 #+BEGIN_SRC emacs-lisp
   (use-package projectile
@@ -725,8 +735,8 @@ dependencies (when feasible).
      projectile-find-dir-includes-top-level t)
 
     (projectile-register-project-type 'lein-cljs '("project.clj")
-                                      :compile "lein cljsbuild once"
-                                      :test "lein cljsbuild test")
+				      :compile "lein cljsbuild once"
+				      :test "lein cljsbuild test")
     :diminish projectile-mode)
 #+END_SRC
 
@@ -751,21 +761,25 @@ Search project with ripgrep
 #+END_SRC
 
 ** Clojure
-Clojure settings for Emacs
+   Clojure settings for Emacs
 
 #+BEGIN_SRC emacs-lisp
-  ;;; Clojure
-
   (use-package cider                      ; Clojure development environment
     :ensure t
+
     :hook (cider-mode . eldoc-mode)
-    :config (validate-setq cider-offer-to-open-cljs-app-in-browser nil))
+
+    :config
+    (validate-setq
+     cider-offer-to-open-cljs-app-in-browser nil))
 
   (use-package cider-mode                 ; CIDER mode for REPL interaction
     :ensure cider
-    :defer t
-    :bind (:map cider-mode-map
-		("C-c M-l" . cider-load-all-project-ns))
+
+    :bind
+    (:map cider-mode-map
+	  ("C-c M-l" . cider-load-all-project-ns))
+
     :config
     (validate-setq
      cider-font-lock-dynamically t
@@ -774,10 +788,11 @@ Clojure settings for Emacs
 
   (use-package clojure-mode               ; Major mode for Clojure files
     :ensure t
-    :defer t
-    :init
-    (add-hook 'clojure-mode-hook #'cider-mode)
-    (add-hook 'clojure-mode-hook #'subword-mode)
+
+    :hook
+    ((clojure-mode . cider-mode)
+     (clojure-mode . subword-mode))
+
     :config
     ;; Fix indentation of some common macros
     (define-clojure-indent
@@ -793,39 +808,42 @@ Clojure settings for Emacs
 
   (use-package clojure-mode-extra-font-locking ; Font-locking for Clojure mode
     :ensure t
-    :defer t
     :after clojure-mode)
 
   (use-package nrepl-client               ; Client for Clojure nREPL
     :ensure cider
-    :defer t
-    :config (validate-setq nrepl-hide-special-buffers t))
+    :config
+    (validate-setq nrepl-hide-special-buffers t))
 
   (use-package cider-repl                 ; REPL interactions with CIDER
     :ensure cider
-    :defer t
-    :config
-    (add-hook 'cider-repl-mode-hook #'eldoc-mode)
-    (add-hook 'cider-repl-mode-hook #'subword-mode)
 
-    (validate-setq cider-repl-wrap-history t
-		   cider-repl-history-size 1000
-		   cider-repl-history-file
-		   (locate-user-emacs-file "cider-repl-history")
-		   cider-repl-display-help-banner nil ; Disable help banner
-		   cider-repl-pop-to-buffer-on-connect t
-		   cider-repl-result-prefix ";; => "))
+    :hook
+    ((cider-repl-mode . eldoc-mode)
+     (cider-repl-mode . subword-mode))
+
+    :config
+    (validate-setq
+     cider-repl-wrap-history t
+     cider-repl-history-size 1000
+     cider-repl-history-file
+     (locate-user-emacs-file "cider-repl-history")
+     cider-repl-display-help-banner nil ; Disable help banner
+     cider-repl-pop-to-buffer-on-connect t
+     cider-repl-result-prefix ";; => "))
 
   (use-package cider-stacktrace           ; Navigate stacktrace
-    :ensure cider
-    :defer t)
+    :ensure cider)
 
   (use-package clj-refactor               ; Refactoring utilities
     :ensure t
-    :hook (clojure-mode . (lambda ()
-			    (clj-refactor-mode 1)
-			    (yas-minor-mode 1)
-			    (cljr-add-keybindings-with-prefix "C-c RET")))
+
+    :hook
+    (clojure-mode . (lambda ()
+		      (clj-refactor-mode 1)
+		      (yas-minor-mode 1)
+		      (cljr-add-keybindings-with-prefix "C-c RET")))
+
     :config
     (validate-setq
      cljr-suppress-middleware-warnings t
@@ -840,14 +858,14 @@ Clojure settings for Emacs
      cljr-cljs-clojure-test-declaration
      "[cljs.test :refer-macros [deftest is use-fixtures]]")
 
-    (advice-add 'cljr-add-require-to-ns :after
-		(lambda (&rest _)
-		  (yas-next-field)
-		  (yas-next-field))))
+    (advice-add
+     'cljr-add-require-to-ns :after
+     (lambda (&rest _)
+       (yas-next-field)
+       (yas-next-field))))
 
   (use-package clojure-snippets           ; Yasnippets for Clojure
     :ensure t
-    :defer t
     :after clojure-mode)
 #+END_SRC
 
@@ -861,85 +879,85 @@ Settings for use Clojure inside org-mode documents.
 #+END_SRC
 
 ** Python
-Python configuration
+   Python configuration.
 
 #+BEGIN_SRC emacs-lisp
   (use-package python                     ; Python editing
-    :defer t
-    :config
+    :hook
     ;; PEP 8 compliant filling rules, 79 chars maximum
-    (add-hook 'python-mode-hook (lambda () (setq fill-column 79)))
-    (add-hook 'python-mode-hook #'subword-mode)
+    ((python-mode . (lambda () (setq fill-column 79)))
+     (python-mode . subword-mode))
 
+    :config
     (let ((ipython (executable-find "ipython")))
       (if ipython
-          (setq python-shell-interpreter ipython)
+	  (setq python-shell-interpreter ipython)
 	(warn "IPython is missing, falling back to default python"))))
 
   (use-package anaconda-mode              ; Powerful Python backend for Emacs
     :ensure t
-    :defer t
     :after python
-    :init (add-hook 'python-mode-hook #'anaconda-mode))
+    :hook (python-mode . anaconda-mode))
 
   (use-package pip-requirements           ; requirements.txt files
-    :ensure t
-    :defer t)
+    :ensure t)
 #+END_SRC
 
 ** Racket/Geiser
-Racket/Geiser configuration.
+   Racket/Geiser configuration.
 
 #+BEGIN_SRC emacs-lisp
   (use-package geiser
-    :ensure t
-    :defer t)
+    :ensure t)
 #+END_SRC
 
 ** Web Development
-I use web-mode, css-mode and js2 for web development.
+   I use web-mode, css-mode and js2 for web development.
 
 #+BEGIN_SRC emacs-lisp
-(use-package web-mode
-  :ensure t
-  :mode "\\.html\\'"
-  :config (setq web-mode-markup-indent-offset 2
-                web-mode-css-indent-offset 2
-                web-mode-code-indent-offset 2))
+  (use-package web-mode
+    :ensure t
+    :mode "\\.html\\'"
+    :config
+    (validate-setq web-mode-markup-indent-offset 2
+		   web-mode-css-indent-offset 2
+		   web-mode-code-indent-offset 2))
 #+END_SRC
 
-A better JavaScript support
+  js2 - A better JavaScript support
+
 #+BEGIN_SRC emacs-lisp
-(use-package js2-mode
-  :ensure t
-  :mode "\\.js\\'"
-  :config
-  (progn
-    (setq-default js2-basic-offset 2)
-    (add-hook 'js2-mode-hook #'js2-highlight-unused-variables-mode)))
+  (use-package js2-mode
+    :ensure t
+    :mode "\\.js\\'"
+    :hook (js2-mode . js2-highlight-unused-variables-mode)
+    :config
+    (setq-default js2-basic-offset 2))
 #+END_SRC
 
-Better CSS support.
+  Better CSS support.
+
 #+BEGIN_SRC emacs-lisp
-(use-package css-mode
-  :ensure t
-  :mode "\\.css\\'"
-  :config
-  (progn
-    (setq css-indent-offset 2)
-    (add-hook 'css-mode-hook
-              (lambda () (run-hooks 'prog-mode-hook)))))
+  (use-package css-mode
+    :ensure t
+    :mode "\\.css\\'"
+    :hook
+    (css-mode-hook . (lambda () (run-hooks 'prog-mode-hook)))
+    :config
+    (vaildate-setq css-indent-offset 2))
 #+END_SRC
 
-Eldoc for CSS.
+  Eldoc for CSS.
+
 #+BEGIN_SRC emacs-lisp
-(use-package css-eldoc
-  :ensure t
-  :commands (turn-on-css-eldoc)
-  :init (add-hook 'css-mode-hook #'turn-on-css-eldoc))
+  (use-package css-eldoc
+    :ensure t
+    :hook (css-mode . turn-on-css-eldoc)
+    :commands (turn-on-css-eldoc))
 #+END_SRC
 
-JSON specific mode.
+  JSON specific mode.
+
 #+BEGIN_SRC emacs-lisp
   (use-package json-mode                  ; JSON editing
     :ensure t
@@ -947,42 +965,48 @@ JSON specific mode.
 #+END_SRC
 
 ** Flycheck
-[[http://www.flycheck.org][Flycheck]] automatically checks buffers for errors while you type, and reports
-warnings and errors directly in the buffer and in an optional IDE-like error
-list.
+   [[http://www.flycheck.org][Flycheck]] automatically checks buffers for errors while you type, and reports
+   warnings and errors directly in the buffer and in an optional IDE-like error
+   list.
 
 #+BEGIN_SRC emacs-lisp
   (use-package flycheck
     :ensure t
-    :init (add-hook 'prog-mode-hook #'flycheck-mode) ; Only for code buffer
-    :config (validate-setq flycheck-standard-error-navigation nil
-			   flycheck-display-errors-function
-			   #'flycheck-display-error-messages-unless-error-list))
+    :hook (prog-mode . flycheck-mode)
+    :config
+    (validate-setq flycheck-standard-error-navigation nil
+		   flycheck-display-errors-function
+		   #'flycheck-display-error-messages-unless-error-list))
 #+END_SRC
 
 ** Magit configuration
-[[https://github.com/magit/magit][Magit]] - A Git porcelain inside Emacs.
+   [[https://github.com/magit/magit][Magit]] - A Git porcelain inside Emacs.
 
 #+BEGIN_SRC emacs-lisp
   (use-package magit                      ; The best Git client out there
     :ensure t
-    :bind (("C-c v c" . magit-clone)
-	   ("C-c v C" . magit-checkout)
-	   ("C-c v d" . magit-dispatch-popup)         
-	   ("C-c v g" . magit-blame)
-	   ("C-c v l" . magit-log-buffer-file)
-	   ("C-c v p" . magit-pull)
-	   ("C-c v v" . magit-status))
+    :bind
+    (("C-c v c" . magit-clone)
+     ("C-c v C" . magit-checkout)
+     ("C-c v d" . magit-dispatch-popup)
+     ("C-c v g" . magit-blame)
+     ("C-c v l" . magit-log-buffer-file)
+     ("C-c v p" . magit-pull)
+     ("C-c v v" . magit-status))
+
     :config
-    (validate-setq magit-save-repository-buffers 'dontask
-		   magit-refs-show-commit-count 'all)
+    (validate-setq
+     magit-save-repository-buffers 'dontask
+     magit-refs-show-commit-count 'all)
 
     ;; Use Ivy
-    (validate-setq magit-completing-read-function 'ivy-completing-read)
+    (validate-setq
+     magit-completing-read-function 'ivy-completing-read)
 
     ;; Show status buffer in fullscreen
-    (validate-setq magit-display-buffer-function
-		   #'magit-display-buffer-fullframe-status-v1)
+    (validate-setq
+     magit-display-buffer-function
+     #'magit-display-buffer-fullframe-status-v1)
 
     ;; Kill Magit buffers when quitting `magit-status'
     (defun my-magit-quit-session (&optional kill-buffer)
@@ -994,12 +1018,12 @@ list.
 
   (use-package magit-gitflow
     :ensure t
-    :config (add-hook 'magit-mode-hook 'turn-on-magit-gitflow))
+    :hook (magit-mode . turn-on-magit-gitflow))
 #+END_SRC
 
-** Git Timemachine
-[[https://github.com/pidu/git-timemachine][git-timemachine]] - Step through historic versions of git controlled file using
-everyone's favourite editor.
+** Git Time-machine
+   [[https://github.com/pidu/git-timemachine][git-timemachine]] - Step through historic versions of git controlled file using
+   everyone's favourite editor.
 
 #+BEGIN_SRC emacs-lisp
   (use-package git-timemachine
@@ -1008,33 +1032,33 @@ everyone's favourite editor.
 #+END_SRC
 
 ** Smartparens
-Smartparens - Minor mode for Emacs that deals with parens pairs and tries to be
-smart about it.
+   Smartparens - Minor mode for Emacs that deals with parens pairs and tries to
+   be smart about it.
 
 #+BEGIN_SRC emacs-lisp
   (use-package smartparens                ; Parenthesis editing and balancing
     :ensure t
-    :bind (("C-<right>" . sp-forward-slurp-sexp)
-	   ("C-<left>" . sp-forward-barf-sexp)
-	   ("C-c s m" . smartparens-strict-mode))
+    :bind
+    (("C-<right>" . sp-forward-slurp-sexp)
+     ("C-<left>" . sp-forward-barf-sexp)
+     ("C-c s m" . smartparens-strict-mode))
+
     :init
     (progn
       (smartparens-global-mode)
       (show-smartparens-global-mode)
-      (sp-pair "'" nil :actions :rem)
+      (smartparens-global-strict-mode)
+      (sp-pair "'" nil :actions :rem))
 
-      (dolist (hook '(inferior-emacs-lisp-mode-hook
-		      emacs-lisp-mode-hook
-		      clojure-mode-hook))
-	(add-hook hook #'smartparens-strict-mode)))
-    :config (setq sp-autoskip-closing-pair 'always
-		  ;; Don't kill entire symbol on C-k
-		  sp-hybrid-kill-entire-symbol nil))
+    :config
+    (validate-setq sp-autoskip-closing-pair 'always
+		   ;; Don't kill entire symbol on C-k
+		   sp-hybrid-kill-entire-symbol nil))
 #+END_SRC
 
 ** DevDocs.io
-[[http://devdocs.io/][DevDocs]] combines multiple API documentations in a fast, organized, and
-searchable interface.
+   [[http://devdocs.io/][DevDocs]] combines multiple API documentations in a fast, organized, and
+   searchable interface.
 
 #+BEGIN_SRC emacs-lisp
   (use-package devdocs
@@ -1043,107 +1067,79 @@ searchable interface.
 #+END_SRC
 
 ** Github stuff
-[[https://github.com/defunkt/gist.el][gist.el]] – Share snippets of code using Gist.
+   [[https://github.com/defunkt/gist.el][gist.el]] – Share snippets of code using Gist.
 
 #+BEGIN_SRC emacs-lisp
   (use-package gist
     :ensure t
-    :bind (("C-c C-g l" . gist-list)
-	   ("C-c C-g n" . gist-region-or-buffer)
-	   ("C-c C-g p" . gist-region-or-buffer-private)))
+    :bind
+    (("C-c C-g l" . gist-list)
+     ("C-c C-g n" . gist-region-or-buffer)
+     ("C-c C-g p" . gist-region-or-buffer-private)))
 #+END_SRC
 
 ** Docker
-Editing Dockerfiles and docker-compose.yml
+   Editing Dockerfiles and docker-compose.yml.
 
 #+BEGIN_SRC emacs-lisp
-  (use-package dockerfile-mode :ensure t)
-  (use-package docker-compose-mode :ensure t)
+  (use-package dockerfile-mode
+    :ensure t)
+
+  (use-package docker-compose-mode
+    :ensure t)
 #+END_SRC
 
 ** PHP (argh!) Mode
-Sometimes I have to do with ugly PHP...
+   Sometimes I have to do with ugly PHP...
 
 #+BEGIN_SRC emacs-lisp
-  (use-package php-mode :ensure t)
+  (use-package php-mode
+    :ensure t)
 #+END_SRC
 
-** OCaml
-Simple OCaml setup
-
-#+BEGIN_SRC emacs-lisp
-  (use-package tuareg
-    :ensure t
-    :mode ((("\\.ml[ily]?$" . tuareg-mode)
-	    ("\\.topml$"    . tuareg-mode)))
-    :config (add-hook 'tuareg-mode-hook #'electric-pair-local-mode))
-
-  (use-package merlin
-    :ensure t
-    :config
-    (add-hook 'tuareg-mode-hook #'merlin-mode)
-    (add-hook 'merlin-mode-hook #'company-mode)
-    (validate-setq merlin-error-after-save nil))
-
-  (use-package utop
-    :ensure t
-    :config
-    (autoload 'utop-minor-mode "utop" "Minor mode for utop" t)
-    (add-hook 'tuareg-mode-hook 'utop-minor-mode)
-    (setq utop-command "opam config exec -- utop -emacs"
-	  utop-edit-command nil))
-#+END_SRC
 
 
 * Keybindings
 ** Ctrl-z as undo
-Use Ctrl-z as undo
+   Use Ctrl-z as undo.
 
 #+BEGIN_SRC emacs-lisp
-(global-set-key (kbd "C-z") 'undo)
+  (global-set-key (kbd "C-z") 'undo)
 #+END_SRC
 
 ** Set C-x C-k to kill the current buffer
 
 #+BEGIN_SRC emacs-lisp
-(global-set-key (kbd "C-x C-k") 'kill-this-buffer)
+  (global-set-key (kbd "C-x C-k") 'kill-this-buffer)
 #+END_SRC
 
 ** Bind M-g to goto-line
 
 #+BEGIN_SRC emacs-lisp
-(global-set-key (kbd "M-g") 'goto-line)
+  (global-set-key (kbd "M-g") 'goto-line)
 #+END_SRC
 
 ** Comment and uncomment regions
 
 #+BEGIN_SRC emacs-lisp
-(global-set-key (kbd "C-c c c") 'comment-region)
-(global-set-key (kbd "C-c c u") 'uncomment-region)
-#+END_SRC
-** Reopen last killed buffer
+  (global-set-key (kbd "C-c c c") 'comment-region)
 
-#+BEGIN_SRC emacs-lisp
-  (defun my-reopen-last-killed-buffer ()
-    "Quickly reopen last killed buffer."
-    (interactive)
-    (find-file (car recentf-list)))
-  (bind-key "C-c f o" #'my-reopen-last-killed-buffer)
+  (global-set-key (kbd "C-c c u") 'uncomment-region)
 #+END_SRC
-
 ** Rebind split-window commands
-In order to have a more tmux-like keybindings, I remap split-window-below and
-split-window-right to C-c S-; and C-c S-5.
+   In order to have a more tmux-like keybindings, I remap split-window-below and
+   split-window-right to C-c S-; and C-c S-5.
 
 #+BEGIN_SRC emacs-lisp
   (global-set-key (kbd "C-x \"") 'split-window-below)
+
   (global-set-key (kbd "C-x %") 'split-window-right)
 #+END_SRC
 
 
 * BEERWARE LICENSE
 
-"THE BEER-WARE LICENSE" (Revision 42): <marco@dallastella.name> wrote this
-file. As long as you retain this notice you can do whatever you want with this
-stuff. If we meet some day, and you think this stuff is worth it, you can buy me
-a beer in return.
+  "THE BEER-WARE LICENSE" (Revision 42): <marco@dallastella.name> wrote this
+  file. As long as you retain this notice you can do whatever you want with this
+  stuff. If we meet some day, and you think this stuff is worth it, you can buy me
+  a beer in return.
