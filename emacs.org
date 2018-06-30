@@ -58,14 +58,6 @@ when your users accidentally misconfigure a variable: [[https://github.com/Malab
     :ensure t)
 #+END_SRC
 
-** Backup and autosave
-Maybe a little dangerous, but stops to make backups.
-
-#+BEGIN_SRC emacs-lisp
-(setq make-backup-files nil)
-(setq auto-save-default nil)
-#+END_SRC
-
 ** Various minor settings
 Delete the selection instead of insert
 
@@ -763,15 +755,22 @@ Clojure settings for Emacs
 
 #+BEGIN_SRC emacs-lisp
   ;;; Clojure
+
   (use-package cider                      ; Clojure development environment
     :ensure t
+    :hook (cider-mode . eldoc-mode)
+    :config (validate-setq cider-offer-to-open-cljs-app-in-browser nil))
+
+  (use-package cider-mode                 ; CIDER mode for REPL interaction
+    :ensure cider
     :defer t
+    :bind (:map cider-mode-map
+		("C-c M-l" . cider-load-all-project-ns))
     :config
-    (add-hook 'cider-mode-hook 'eldoc-mode)
-    (add-hook 'cider-repl-mode-hook #'smartparens-strict-mode)
-    (add-hook 'cider-repl-mode-hook #'rainbow-delimiters-mode)
-    :bind (:map cider-repl-mode-map
-		("C-c M-l" . cider-load-all-project-ns)))
+    (validate-setq
+     cider-font-lock-dynamically t
+     cider-invert-insert-eval-p t
+     cider-switch-to-repl-after-insert-p nil))
 
   (use-package clojure-mode               ; Major mode for Clojure files
     :ensure t
@@ -823,19 +822,28 @@ Clojure settings for Emacs
 
   (use-package clj-refactor               ; Refactoring utilities
     :ensure t
-    :defer t
-    :init
-    (defun my-clojure-mode-hook ()
-      (clj-refactor-mode 1)
-      (yas-minor-mode 1)                ; For adding require/use/import
-      (cljr-add-keybindings-with-prefix "C-c C-m"))
-    (add-hook 'clojure-mode-hook #'my-clojure-mode-hook)
+    :hook (clojure-mode . (lambda ()
+			    (clj-refactor-mode 1)
+			    (yas-minor-mode 1)
+			    (cljr-add-keybindings-with-prefix "C-c RET")))
     :config
-    (validate-setq cljr-suppress-middleware-warnings t
-		   cljr-auto-sort-ns t
-		   cljr-favor-prefix-notation
-		   cljr-favor-private-functions)
-    :diminish clj-refactor-mode)
+    (validate-setq
+     cljr-suppress-middleware-warnings t
+     cljr-add-ns-to-blank-clj-files t
+     cljr-auto-sort-ns t
+     cljr-favor-prefix-notation nil
+     cljr-favor-private-functions nil
+     cljr-warn-on-eval nil)
+
+    (validate-setq
+     cljr-clojure-test-declaration "[clojure.test :refer :all]"
+     cljr-cljs-clojure-test-declaration
+     "[cljs.test :refer-macros [deftest is use-fixtures]]")
+
+    (advice-add 'cljr-add-require-to-ns :after
+		(lambda (&rest _)
+		  (yas-next-field)
+		  (yas-next-field))))
 
   (use-package clojure-snippets           ; Yasnippets for Clojure
     :ensure t
