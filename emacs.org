@@ -1041,7 +1041,8 @@ Settings for use Clojure inside org-mode documents.
     :bind
     (("C-<right>" . sp-forward-slurp-sexp)
      ("C-<left>" . sp-forward-barf-sexp)
-     ("C-c s m" . smartparens-strict-mode))
+     ("C-c s m" . smartparens-strict-mode)
+     ("C-M-k" . sp-kill-sexp))
 
     :init
     (progn
