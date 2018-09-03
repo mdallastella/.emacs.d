@@ -2,7 +2,7 @@
 
 A literate based Emacs configuration. I took inspiration from various sources.
 
-* General configuration
+* General settings
 ** Shell environment
    Ensure environment variables inside Emacs look the same as in the user's
    shell.
@@ -10,7 +10,9 @@ A literate based Emacs configuration. I took inspiration from various sources.
 #+BEGIN_SRC emacs-lisp
   (use-package exec-path-from-shell
     :ensure t
-    :init
+    :config
+    (setq exec-path-from-shell-variables '("PATH")
+	  exec-path-from-shell-arguments '("-l"))
     (exec-path-from-shell-initialize))
 #+END_SRC
 
@@ -337,17 +339,6 @@ A literate based Emacs configuration. I took inspiration from various sources.
     :config (validate-setq org-bullets-bullet-list '("◉" "○" "●" "►" "◇" "◎")))
 #+END_SRC
 
-** pdf-tools
-
-   Better PDF support.
-
-#+BEGIN_SRC emacs-lisp
-  (use-package pdf-tools
-    :ensure t
-    :demand t
-    :config (pdf-tools-install))
-#+END_SRC
-
 
 * Editing settings
 ** Windows navigation
@@ -456,7 +447,6 @@ Make tab key do indent first then completion.
 #+END_SRC
 
 ** Swiper, Smex and counsel configuration
-
 #+BEGIN_SRC emacs-lisp
   (use-package swiper                     ; Isearch with an overview
     :ensure t
@@ -638,7 +628,7 @@ Custom regexp highlighting.
      ispell-choices-win-default-height 5)
 
     (unless ispell-program-name
-      (warn "No spell checker available.  Plese install hunspell.")))
+      (warn "No spell checker available. Please install hunspell.")))
 #+END_SRC
 
 **** Flyspell
@@ -661,29 +651,6 @@ Custom regexp highlighting.
     :bind
     (:map flyspell-mode-map
 	  ("C-c $" . flyspell-correct-word-generic)))
-#+END_SRC
-
-** Markdown and Pandoc
-   I use markdown and pandoc for note taking.
-
-#+BEGIN_SRC emacs-lisp
-  (use-package markdown-mode
-    :ensure t)
-
-  (use-package pandoc-mode
-    :ensure t
-    :hook
-    ((pandoc-mode markdown-mode) . pandoc-load-default-settings))
-#+END_SRC
-
-** Olivetti mode
-   [[https://github.com/rnkn/olivetti][Olivetti]] is a simple Emacs minor mode for a nice writing environment.
-
-#+BEGIN_SRC emacs-lisp
-  (use-package olivetti
-    :ensure t
-    :config
-    (setq-default olivetti-body-width 80))
 #+END_SRC
 
 ** Auto-insert
@@ -711,8 +678,49 @@ Custom regexp highlighting.
     (validate-setq auto-insert-query nil))
 #+END_SRC
 
-** Todo.txt for Emacs
 
+* Tools
+** Markdown and Pandoc
+   I use markdown and pandoc for note taking.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package markdown-mode
+    :ensure t)
+
+  (use-package pandoc-mode
+    :ensure t
+    :hook
+    ((pandoc-mode markdown-mode) . pandoc-load-default-settings))
+#+END_SRC
+
+** Olivetti mode
+   [[https://github.com/rnkn/olivetti][Olivetti]] is a simple Emacs minor mode for a nice writing environment.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package olivetti
+    :ensure t
+    :config
+    (setq-default olivetti-body-width 80))
+#+END_SRC
+
+** pdf-tools
+   Better PDF support.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package pdf-tools
+    :ensure t
+    :demand t
+    :config (pdf-tools-install))
+#+END_SRC
+
+** EPUB reader mode
+#+BEGIN_SRC emacs-lisp
+  (use-package nov
+    :ensure t
+    :mode ("\\.epub\\'" . nov-mode))
+#+END_SRC
+
+** Todo.txt for Emacs
 #+BEGIN_SRC emacs-lisp
   (use-package todotxt
     :ensure t
@@ -721,6 +729,7 @@ Custom regexp highlighting.
     :config
     (validate-setq todotxt-file "/home/mds/cloud/marco/todo.txt"))
 #+END_SRC
+
 
 
 * Coding settings
@@ -909,8 +918,8 @@ Settings for use Clojure inside org-mode documents.
     :ensure t)
 #+END_SRC
 
-** Racket/Geiser
-   Racket/Geiser configuration.
+** Geiser
+   Geiser configuration for Scheme.
 
 #+BEGIN_SRC emacs-lisp
   (use-package geiser
@@ -1104,6 +1113,37 @@ Settings for use Clojure inside org-mode documents.
     :ensure t)
 #+END_SRC
 
+** Ocaml
+#+BEGIN_SRC emacs-lisp
+  (use-package caml
+    :ensure t)
+
+  (use-package tuareg
+    :ensure t
+    :mode ("\\.ml[ily]?$" . tuareg-mode))
+
+  (use-package ocp-indent)
+
+  ;; Setup environment variables using opam
+  ;; (dolist (var (car (read-from-string (shell-command-to-string "opam config env --sexp"))))
+  ;; (setenv (car var) (cadr var)))
+
+  (use-package merlin
+    :config
+    (bind-keys :map merlin-mode-map
+	       ("M-." . merlin-locate)
+	       ("M-," . merlin-pop-stack))
+    ;; Start merlin on ocaml files
+    (add-hook 'tuareg-mode-hook 'merlin-mode t)
+    (add-hook 'caml-mode-hook 'merlin-mode t)
+    ;; Use opam switch to lookup ocamlmerlin binary
+    (setq merlin-command 'opam))
+
+  (use-package utop
+    :config
+    (add-hook 'tuareg-mode-hook 'utop-minor-mode))
+
+#+END_SRC
 
 
 * Keybindings
