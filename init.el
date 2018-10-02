@@ -18,9 +18,9 @@
 (setq package-enable-at-startup nil)
 (setq package-archives
       ;; Package archives, the usual suspects
-      '(("GNU ELPA" . "http://elpa.gnu.org/packages/")
-        ("MELPA"    . "https://melpa.org/packages/")
-	("org"      . "http://orgmode.org/elpa/")))
+      '(("GNU ELPA" . "https://elpa.gnu.org/packages/")
+	("org"      . "https://orgmode.org/elpa/")
+        ("MELPA"    . "https://melpa.org/packages/")))
 (package-initialize)
 
 (setq load-prefer-newer t)              ; Always load newer compiled files
