@@ -118,6 +118,7 @@ A literate based Emacs configuration. I took inspiration from various sources.
 		 #'paradox--report-buffer-display-if-noquery))
    #+END_SRC
 
+
 * Interface settings
 ** Remove menus, bars and everything that's annoying
    I don't like scrollbars nor bars. I've been using Emacs for many years, and
@@ -317,6 +318,7 @@ A literate based Emacs configuration. I took inspiration from various sources.
 		   eyebrowse-new-workspace t)
     (eyebrowse-mode t))
    #+END_SRC
+
 
 * Editing settings
 ** Windows navigation
@@ -657,6 +659,7 @@ A literate based Emacs configuration. I took inspiration from various sources.
     (validate-setq auto-insert-query nil))
    #+END_SRC
 
+
 * Tools
 ** Markdown and Pandoc
    I use markdown and pandoc for note taking.
@@ -697,6 +700,7 @@ A literate based Emacs configuration. I took inspiration from various sources.
     :ensure t
     :mode ("\\.epub\\'" . nov-mode))
    #+END_SRC
+
 
 * Coding settings
 ** Projectile
@@ -1082,37 +1086,6 @@ A literate based Emacs configuration. I took inspiration from various sources.
     :ensure t)
    #+END_SRC
 
-** Ocaml
-   #+BEGIN_SRC emacs-lisp
-  (use-package caml
-    :ensure t)
-
-  (use-package tuareg
-    :ensure t
-    :mode ("\\.ml[ily]?$" . tuareg-mode))
-
-  (use-package ocp-indent)
-
-  ;; Setup environment variables using opam
-  ;; (dolist (var (car (read-from-string (shell-command-to-string "opam config env --sexp"))))
-  ;; (setenv (car var) (cadr var)))
-
-  (use-package merlin
-    :config
-    (bind-keys :map merlin-mode-map
-	       ("M-." . merlin-locate)
-	       ("M-," . merlin-pop-stack))
-    ;; Start merlin on ocaml files
-    (add-hook 'tuareg-mode-hook 'merlin-mode t)
-    (add-hook 'caml-mode-hook 'merlin-mode t)
-    ;; Use opam switch to lookup ocamlmerlin binary
-    (setq merlin-command 'opam))
-
-  (use-package utop
-    :config
-    (add-hook 'tuareg-mode-hook 'utop-minor-mode))
-
-   #+END_SRC
 
 * Custom functions
 ** Indent whole buffer
@@ -1122,6 +1095,7 @@ A literate based Emacs configuration. I took inspiration from various sources.
     (interactive)
     (indent-region (point-min) (point-max)))
    #+END_SRC
+
 
 * Keybindings
 ** Ctrl-z as undo
