@@ -853,8 +853,6 @@ A literate based Emacs configuration. I took inspiration from various sources.
        :after clojure-mode)
    #+END_SRC
 
-   #+RESULTS:
-
 *** org-babel-clojure
     Settings for use Clojure inside org-mode documents.
 
@@ -1163,40 +1161,13 @@ A literate based Emacs configuration. I took inspiration from various sources.
    #+BEGIN_SRC emacs-lisp
   (global-set-key (kbd "C-c c i") 'indent-buffer)
    #+END_SRC
-
-* Productivity
-** Configure agendas
-   I use a customized version of [[https://en.wikipedia.org/wiki/Zen_Habits][ZTD]]
-
+** Global Todotxt
    #+BEGIN_SRC emacs-lisp
-     (setq org-default-notes-file "~/org/inbox.org")
-
-     (setq org-todo-keywords
-	   '((sequence
-	      "TODO(t)"
-	      "WAITING(w)"
-	      "|"
-	      "DONE(d)"
-	      "CANCELLED(c)")))
-
-     (setq org-agenda-files
-	   '("~/org/inbox.org"
-	     "~/org/ztd.org"
-	     "~/org/someday.org"
-	     "~/org/tickler.org"))
-
-     (setq org-refile-targets
-	   '((org-agenda-files :maxlevel . 3)))
-
-     (setq org-capture-templates
-	   '(("t" "Todo [inbox]" entry
-	      (file+headline "~/org/inbox.org" "Tasks")
-	      "* TODO %i%?")
-	     ("T" "Tickler" entry
-	      (file+headline "~/org/tickler.org" "Tickler")
-	      "* %i%? \n %U")))
+   (global-set-key (kbd "C-c t t") 'todotxt)
    #+END_SRC
 
+
+* Productivity
 ** org-mode visual
    Bullets as UTF-8 characters
 
@@ -1214,6 +1185,16 @@ A literate based Emacs configuration. I took inspiration from various sources.
     :config
     (validate-setq org-reveal-root "/home/mds/code/github/reveal.js"))
 #+END_SRC
+
+** Todotxt config
+   I use todotxt for my ZTD stuff.
+#+BEGIN_SRC emacs-lisp
+  (use-package todotxt
+    :ensure t
+    :config
+    (validate-setq todotxt-file "/home/mds/cloud/marco/todo.txt"))
+#+END_SRC
+
 
 * BEERWARE LICENSE
   "THE BEER-WARE LICENSE" (Revision 42): <marco@dallastella.name> wrote this
