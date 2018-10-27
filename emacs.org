@@ -7,76 +7,66 @@ A literate based Emacs configuration. I took inspiration from various sources.
    Ensure environment variables inside Emacs look the same as in the user's
    shell.
 
-#+BEGIN_SRC emacs-lisp
+   #+BEGIN_SRC emacs-lisp
   (use-package exec-path-from-shell
     :ensure t
     :config
     (setq exec-path-from-shell-variables '("PATH")
 	  exec-path-from-shell-arguments '("-l"))
     (exec-path-from-shell-initialize))
-#+END_SRC
-
-  I use keychain for ssh key management.
-
-#+BEGIN_SRC emacs-lisp
-  (use-package keychain-environment
-    :ensure t
-    :init
-    (keychain-refresh-environment))
-#+END_SRC
+   #+END_SRC
 
 ** Setting GPG and secrets
-
-#+BEGIN_SRC emacs-lisp
+   #+BEGIN_SRC emacs-lisp
   (load-library "~/.emacs.d/.secrets.el")
-#+END_SRC
+   #+END_SRC
 
 ** User details
    My personal details.
 
-#+BEGIN_SRC emacs-lisp
+   #+BEGIN_SRC emacs-lisp
   (setq user-full-name "Marco Dalla Stella")
   (setq user-mail-address private-user-mail-address)
-#+END_SRC
+   #+END_SRC
 
 ** Emacs server
    Start an Emacs server if it's not running.
 
-#+BEGIN_SRC emacs-lisp
+   #+BEGIN_SRC emacs-lisp
   (use-package server
     :if (not noninteractive)
     :config (unless (server-running-p)	; Start server only if it is not already running
 	      (server-mode)))
-#+END_SRC
+   #+END_SRC
 
 ** Use Validate package
    This library offers two functions that perform schema validation. Use this is
    your Elisp packages to provide very informative error messages when your
    users accidentally misconfigure a variable: [[https://github.com/Malabarba/validate.el][validate.el]]
 
-#+BEGIN_SRC emacs-lisp
+   #+BEGIN_SRC emacs-lisp
   (use-package validate
     :ensure t)
-#+END_SRC
+   #+END_SRC
 
 ** Various minor settings
    Delete the selection instead of insert
 
-#+BEGIN_SRC emacs-lisp
+   #+BEGIN_SRC emacs-lisp
   (use-package delsel
     :init (delete-selection-mode))
-#+END_SRC
+   #+END_SRC
 
-  Save point position in files
+   Save point position in files
 
-#+BEGIN_SRC emacs-lisp
+   #+BEGIN_SRC emacs-lisp
   (use-package saveplace
     :init (save-place-mode 1))
-#+END_SRC
+   #+END_SRC
 
-  Auto-revert buffers of changed files
+   Auto-revert buffers of changed files
 
-#+BEGIN_SRC emacs-lisp
+   #+BEGIN_SRC emacs-lisp
   (use-package autorevert
     :init (global-auto-revert-mode)
     :config
