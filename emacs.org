@@ -1087,6 +1087,24 @@ A literate based Emacs configuration. I took inspiration from various sources.
    #+END_SRC
 
 
+** Haskell
+   Interactive development for Haskell
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package intero
+       :ensure t
+       :config
+       (intero-global-mode)
+
+       (bind-keys :map intero-mode-map
+		  ("C-c i q" . intero-destroy)
+		  ("C-c i r" . intero-restart))
+
+       (bind-keys :map intero-repl-mode-map
+		  ("C-c i q" . intero-destroy)
+		  ("C-c i r" . intero-restart)))
+   #+END_SRC
+
 * Custom functions
 ** Indent whole buffer
    #+BEGIN_SRC emacs-lisp
