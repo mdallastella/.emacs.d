@@ -1105,6 +1105,7 @@ A literate based Emacs configuration. I took inspiration from various sources.
 		  ("C-c i r" . intero-restart)))
    #+END_SRC
 
+
 * Custom functions
 ** Indent whole buffer
    #+BEGIN_SRC emacs-lisp
@@ -1155,9 +1156,8 @@ A literate based Emacs configuration. I took inspiration from various sources.
    #+END_SRC
 ** Global Todotxt
    #+BEGIN_SRC emacs-lisp
-   (global-set-key (kbd "C-c t t") 'todotxt)
+     (global-set-key (kbd "C-c t t") (lambda () (interactive) (find-file "/home/mds/cloud/marco/todo.txt")))
    #+END_SRC
-
 
 * Productivity
 ** org-mode visual
