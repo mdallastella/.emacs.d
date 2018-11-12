@@ -750,20 +750,16 @@ A literate based Emacs configuration. I took inspiration from various sources.
    #+BEGIN_SRC emacs-lisp
      (use-package cider                      ; Clojure development environment
        :ensure t
-
        :hook (cider-mode . eldoc-mode)
-
        :bind
        (:map cider-mode-map
 	     ("C-c M-l" . cider-load-all-project-ns))
-
        :config
        (validate-setq
 	cider-offer-to-open-cljs-app-in-browser nil))
 
      (use-package cider-mode                 ; CIDER mode for REPL interaction
        :ensure cider
-
        :config
        (validate-setq
 	cider-font-lock-dynamically t
@@ -772,7 +768,6 @@ A literate based Emacs configuration. I took inspiration from various sources.
 
      (use-package clojure-mode               ; Major mode for Clojure files
        :ensure t
-
        :hook
        ((clojure-mode . cider-mode)
 	(clojure-mode . subword-mode))
@@ -801,14 +796,13 @@ A literate based Emacs configuration. I took inspiration from various sources.
 
      (use-package cider-repl                 ; REPL interactions with CIDER
        :ensure cider
-
        :hook
        ((cider-repl-mode . eldoc-mode)
 	(cider-repl-mode . subword-mode))
 
        :bind
        (:map cider-repl-mode-map
-	     ("C-c c b" . cider-repl-clean-buffer))
+	     ("C-c c b" . cider-repl-clear-buffer))
 
        :config
        (validate-setq
@@ -1156,8 +1150,9 @@ A literate based Emacs configuration. I took inspiration from various sources.
    #+END_SRC
 ** Global Todotxt
    #+BEGIN_SRC emacs-lisp
-     (global-set-key (kbd "C-c t t") (lambda () (interactive) (find-file "/home/mds/cloud/marco/todo.txt")))
+     (global-set-key (kbd "C-c t t") (lambda () (interactive) (find-file "/home/mds/cloud/mds/todo.txt")))
    #+END_SRC
+
 
 * Productivity
 ** org-mode visual
@@ -1183,8 +1178,10 @@ A literate based Emacs configuration. I took inspiration from various sources.
 #+BEGIN_SRC emacs-lisp
   (use-package todotxt
     :ensure t
+    :mode
+    ("todo.txt" . todotxt-mode)
     :config
-    (validate-setq todotxt-file "/home/mds/cloud/marco/todo.txt"))
+    (validate-setq todotxt-file "/home/mds/cloud/mds/todo.txt"))
 #+END_SRC
 
 
