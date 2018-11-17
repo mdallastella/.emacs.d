@@ -1185,6 +1185,19 @@ A literate based Emacs configuration. I took inspiration from various sources.
 #+END_SRC
 
 
+* Other
+** Mastodon
+   I maintain a Mastodon instance, [[https://functional.cafe][Functional cafè]], about functional
+   programming.
+#+BEGIN_SRC emacs-lisp
+  (use-package mastodon
+    :ensure t
+    :config
+    (validate-setq mastodon-instance-url
+		   "https://functional.cafe"))
+#+END_SRC
+
+
 * BEERWARE LICENSE
   "THE BEER-WARE LICENSE" (Revision 42): <marco@dallastella.name> wrote this
   file. As long as you retain this notice you can do whatever you want with this
