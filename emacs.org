@@ -5,15 +5,20 @@ A literate based Emacs configuration. I took inspiration from various sources.
 * General settings
 ** Shell environment
    Ensure environment variables inside Emacs look the same as in the user's
-   shell.
+   shell. Also, load keychain environment variables.
 
    #+BEGIN_SRC emacs-lisp
-  (use-package exec-path-from-shell
-    :ensure t
-    :config
-    (setq exec-path-from-shell-variables '("PATH")
-	  exec-path-from-shell-arguments '("-l"))
-    (exec-path-from-shell-initialize))
+     (use-package exec-path-from-shell
+       :ensure t
+       :config
+       (setq exec-path-from-shell-variables '("PATH")
+	     exec-path-from-shell-arguments '("-l"))
+       (exec-path-from-shell-initialize))
+
+     (use-package keychain-environent
+       :ensure t
+       :init
+       (keychain-refresh-environment))
    #+END_SRC
 
 ** Setting GPG and secrets
