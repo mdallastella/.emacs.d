@@ -619,10 +619,10 @@ A literate based Emacs configuration. I took inspiration from various sources.
 
 **** Flyspell
 
-     #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (use-package flyspell
-    :hook
-    ((prog-mode org-mode text-mode) . flyspell-prog-mode)
+    ;; :hook
+    ;; ((prog-mode text-mode) . flyspell-prog-mode)
 
     :config
     (validate-setq flyspell-use-meta-tab nil
@@ -637,7 +637,8 @@ A literate based Emacs configuration. I took inspiration from various sources.
     :bind
     (:map flyspell-mode-map
 	  ("C-c $" . flyspell-correct-word-generic)))
-     #+END_SRC
+#+END_SRC
+
 
 ** Auto-insert
    I'm lazy, so I need something to add different headers to my files.
