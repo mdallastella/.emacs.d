@@ -1179,15 +1179,38 @@ A literate based Emacs configuration. I took inspiration from various sources.
     (validate-setq org-reveal-root "/home/mds/code/github/reveal.js"))
 #+END_SRC
 
-** Todotxt config
-   I use todotxt for my ZTD stuff.
+** Configure agendas
+   I use a customized version of [[https://en.wikipedia.org/wiki/Zen_Habits][ZTD]]
+
 #+BEGIN_SRC emacs-lisp
-  (use-package todotxt
-    :ensure t
-    :mode
-    ("todo.txt" . todotxt-mode)
-    :config
-    (validate-setq todotxt-file "/home/mds/cloud/mds/todo.txt"))
+  (setq org-default-notes-file "~/cloud/mds/ztd/inbox.org")
+
+  (setq org-todo-keywords
+	'((sequence
+	   "TODO(t)"
+	   "WAITING(w)"
+	   "|"
+	   "DONE(d)"
+	   "CANCELLED(c)")))
+
+  (setq org-agenda-files
+	'("~/cloud/mds/ztd/inbox.org"
+	  "~/cloud/mds/ztd/ztd.org"
+	  "~/cloud/mds/ztd/tickler.org"))
+
+  (setq org-refile-targets
+	'((org-agenda-files :maxlevel . 3)))
+
+  (setq org-capture-templates
+	'(("t" "Todo [inbox]" entry
+	   (file+headline "~/cloud/mds/ztd/inbox.org" "Tasks")
+	   "* TODO %i%?")
+	  ("T" "Tickler" entry
+	   (file+headline "~/cloud/mds/ztd/tickler.org" "Tickler")
+	   "* %i%? \n %U")))
+
+  (define-key global-map (kbd "C-c o a") 'org-agenda)
+  (define-key global-map (kbd "C-c o c") 'org-capture)
 #+END_SRC
 
 
