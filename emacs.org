@@ -639,7 +639,6 @@ A literate based Emacs configuration. I took inspiration from various sources.
 	  ("C-c $" . flyspell-correct-word-generic)))
 #+END_SRC
 
-
 ** Auto-insert
    I'm lazy, so I need something to add different headers to my files.
 
@@ -1086,7 +1085,6 @@ A literate based Emacs configuration. I took inspiration from various sources.
     :ensure t)
    #+END_SRC
 
-
 ** Haskell
    Interactive development for Haskell
 
@@ -1113,50 +1111,6 @@ A literate based Emacs configuration. I took inspiration from various sources.
     "Apply `indent-region' to the entire buffer."
     (interactive)
     (indent-region (point-min) (point-max)))
-   #+END_SRC
-
-
-* Keybindings
-** Ctrl-z as undo
-   Use Ctrl-z as undo.
-
-   #+BEGIN_SRC emacs-lisp
-  (global-set-key (kbd "C-z") 'undo)
-   #+END_SRC
-
-** Set C-x C-k to kill the current buffer
-   #+BEGIN_SRC emacs-lisp
-  (global-set-key (kbd "C-x C-k") 'kill-this-buffer)
-   #+END_SRC
-
-** Bind M-g to goto-line
-   #+BEGIN_SRC emacs-lisp
-  (global-set-key (kbd "M-g") 'goto-line)
-   #+END_SRC
-
-** Comment and uncomment regions
-   #+BEGIN_SRC emacs-lisp
-  (global-set-key (kbd "C-c c c") 'comment-region)
-
-  (global-set-key (kbd "C-c c u") 'uncomment-region)
-   #+END_SRC
-
-** Rebind split-window commands
-   In order to have a more tmux-like keybindings, I remap split-window-below and
-   split-window-right to C-c S-; and C-c S-5.
-
-   #+BEGIN_SRC emacs-lisp
-  (global-set-key (kbd "C-x \"") 'split-window-below)
-
-  (global-set-key (kbd "C-x %") 'split-window-right)
-   #+END_SRC
-** Indent buffer
-   #+BEGIN_SRC emacs-lisp
-  (global-set-key (kbd "C-c c i") 'indent-buffer)
-   #+END_SRC
-** Global Todotxt
-   #+BEGIN_SRC emacs-lisp
-     (global-set-key (kbd "C-c t t") (lambda () (interactive) (find-file "/home/mds/cloud/mds/todo.txt")))
    #+END_SRC
 
 
@@ -1199,7 +1153,7 @@ A literate based Emacs configuration. I took inspiration from various sources.
 	  "~/cloud/mds/ztd/tickler.org"))
 
   (setq org-refile-targets
-	'((org-agenda-files :maxlevel . 3)))
+	'((org-agenda-files :maxlevel . 2)))
 
   (setq org-capture-templates
 	'(("t" "Todo [inbox]" entry
@@ -1208,9 +1162,54 @@ A literate based Emacs configuration. I took inspiration from various sources.
 	  ("T" "Tickler" entry
 	   (file+headline "~/cloud/mds/ztd/tickler.org" "Tickler")
 	   "* %i%? \n %U")))
+#+END_SRC
 
+
+* Keybindings
+** Ctrl-z as undo
+   Use Ctrl-z as undo.
+
+   #+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "C-z") 'undo)
+   #+END_SRC
+
+** Set C-x C-k to kill the current buffer
+   #+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "C-x C-k") 'kill-this-buffer)
+   #+END_SRC
+
+** Bind M-g to goto-line
+   #+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "M-g") 'goto-line)
+   #+END_SRC
+
+** Comment and uncomment regions
+   #+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "C-c c c") 'comment-region)
+
+  (global-set-key (kbd "C-c c u") 'uncomment-region)
+   #+END_SRC
+
+** Rebind split-window commands
+   In order to have a more tmux-like keybindings, I remap split-window-below and
+   split-window-right to C-c S-; and C-c S-5.
+
+   #+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "C-x \"") 'split-window-below)
+
+  (global-set-key (kbd "C-x %") 'split-window-right)
+   #+END_SRC
+
+** Indent buffer
+   #+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "C-c c i") 'indent-buffer)
+   #+END_SRC
+
+** org keybindings
+#+BEGIN_SRC emacs-lisp
   (define-key global-map (kbd "C-c o a") 'org-agenda)
   (define-key global-map (kbd "C-c o c") 'org-capture)
+  (define-key org-mode-map (kbd "C-c C-r") 'org-refile)
 #+END_SRC
 
 
