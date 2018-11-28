@@ -1137,7 +1137,12 @@ A literate based Emacs configuration. I took inspiration from various sources.
    I use a customized version of [[https://en.wikipedia.org/wiki/Zen_Habits][ZTD]]
 
 #+BEGIN_SRC emacs-lisp
-  (setq org-default-notes-file "~/cloud/mds/ztd/inbox.org")
+  (defvar my-org-default-dir "~/cloud/mds/ztd")
+  (defun add-org-default-dir (e)
+    (concat my-org-default-dir e))
+
+  (setq org-default-notes-file (add-org-default-dir "/ztd.org"))
+  (setq org-archive-location (add-org-default-dir "/archive.org::* From %s"))
 
   (setq org-todo-keywords
 	'((sequence
@@ -1148,19 +1153,26 @@ A literate based Emacs configuration. I took inspiration from various sources.
 	   "CANCELLED(c)")))
 
   (setq org-agenda-files
-	'("~/cloud/mds/ztd/inbox.org"
-	  "~/cloud/mds/ztd/ztd.org"
-	  "~/cloud/mds/ztd/tickler.org"))
+	(mapcar 'add-org-default-dir '("/ztd.org"
+				       "/someday.org"
+				       "/depot.org"
+				       "/tickler.org")))
 
   (setq org-refile-targets
 	'((org-agenda-files :maxlevel . 2)))
 
   (setq org-capture-templates
-	'(("t" "Todo [inbox]" entry
-	   (file+headline "~/cloud/mds/ztd/inbox.org" "Tasks")
+	'(("t" "Todo [ztd]" entry
+	   (file+headline (add-org-default-dir "/ztd.org") "Orphans")
 	   "* TODO %i%?")
+	  ("d" "Archive [depot]" entry
+	   (file+headline (add-org-default-dir "/depot.org") "Depot")
+	   "* %i%?")
+	  ("s" "Idea [someday]" entry
+	   (file+headline (add-org-default-dir "/someday.org") "Ideas")
+	   "* %i%?")
 	  ("T" "Tickler" entry
-	   (file+headline "~/cloud/mds/ztd/tickler.org" "Tickler")
+	   (file+headline (add-org-default-dir "/tickler.org") "Tickler")
 	   "* %i%? \n %U")))
 #+END_SRC
 
