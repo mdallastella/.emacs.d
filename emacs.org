@@ -1023,25 +1023,26 @@ A literate based Emacs configuration. I took inspiration from various sources.
    be smart about it.
 
    #+BEGIN_SRC emacs-lisp
-  (use-package smartparens                ; Parenthesis editing and balancing
-    :ensure t
-    :bind
-    (("C-<right>" . sp-forward-slurp-sexp)
-     ("C-<left>" . sp-forward-barf-sexp)
-     ("C-c s m" . smartparens-strict-mode)
-     ("C-M-k" . sp-kill-sexp))
+     (use-package smartparens                ; Parenthesis editing and balancing
+       :ensure t
+       :bind
+       (("C-<right>" . sp-forward-slurp-sexp)
+	("C-<left>" . sp-forward-barf-sexp)
+	("M-r" . sp-raise-sexp)
+	("C-c s m" . smartparens-strict-mode)
+	("C-M-k" . sp-kill-sexp))
 
-    :init
-    (progn
-      (smartparens-global-mode)
-      (show-smartparens-global-mode)
-      (smartparens-global-strict-mode)
-      (sp-pair "'" nil :actions :rem))
+       :init
+       (progn
+	 (smartparens-global-mode)
+	 (show-smartparens-global-mode)
+	 (smartparens-global-strict-mode)
+	 (sp-pair "'" nil :actions :rem))
 
-    :config
-    (validate-setq sp-autoskip-closing-pair 'always
-		   ;; Don't kill entire symbol on C-k
-		   sp-hybrid-kill-entire-symbol nil))
+       :config
+       (validate-setq sp-autoskip-closing-pair 'always
+		      ;; Don't kill entire symbol on C-k
+		      sp-hybrid-kill-entire-symbol nil))
    #+END_SRC
 
 ** DevDocs.io
