@@ -1104,6 +1104,13 @@ A literate based Emacs configuration. I took inspiration from various sources.
 		  ("C-c i r" . intero-restart)))
    #+END_SRC
 
+** Fennel
+   Fennel is a programming language that brings together the speed, simplicity,
+   and reach of Lua with the flexibility of a lisp syntax and macro system.
+#+BEGIN_SRC emacs-lisp
+  (use-package fennel-mode
+    :ensure t)
+#+END_SRC
 
 * Custom functions
 ** Indent whole buffer
