@@ -361,8 +361,8 @@ A literate based Emacs configuration. I took inspiration from various sources.
    Fix the scrolling to keep point in the center:
 
    #+BEGIN_SRC elisp
-  (validate-setq scroll-conservatively 10000
-	scroll-preserve-screen-position t)
+     (validate-setq scroll-conservatively 10000
+		    scroll-preserve-screen-position t)
    #+END_SRC
 
    I've been using Emacs for too long to need to re-enable each feature
@@ -732,12 +732,13 @@ A literate based Emacs configuration. I took inspiration from various sources.
    Ivy integration with Projectile
 
    #+BEGIN_SRC emacs-lisp
-  (use-package counsel-projectile
-    :ensure t
-    :bind (:map projectile-command-map
-		("p" . counsel-projectile)
-		("P" . counsel-projectile-switch-project)
-		("r" . counsel-projectile-rg)))
+     (use-package counsel-projectile
+       :ensure t
+       :bind (:map projectile-command-map
+		   ("p" . counsel-projectile)
+		   ("f" . counsel-projectile-find-file)
+		   ("P" . counsel-projectile-switch-project)
+		   ("r" . counsel-projectile-rg)))
    #+END_SRC
 
    Search project with ripgrep
@@ -1112,6 +1113,7 @@ A literate based Emacs configuration. I took inspiration from various sources.
     :ensure t)
 #+END_SRC
 
+
 * Custom functions
 ** Indent whole buffer
    #+BEGIN_SRC emacs-lisp
@@ -1204,16 +1206,6 @@ A literate based Emacs configuration. I took inspiration from various sources.
   (global-set-key (kbd "C-c c c") 'comment-region)
 
   (global-set-key (kbd "C-c c u") 'uncomment-region)
-   #+END_SRC
-
-** Rebind split-window commands
-   In order to have a more tmux-like keybindings, I remap split-window-below and
-   split-window-right to C-c S-; and C-c S-5.
-
-   #+BEGIN_SRC emacs-lisp
-  (global-set-key (kbd "C-x \"") 'split-window-below)
-
-  (global-set-key (kbd "C-x %") 'split-window-right)
    #+END_SRC
 
 ** Indent buffer
