@@ -80,3 +80,4 @@
 ;; Garbage collector - decrease threshold to 5 MB
 (add-hook 'after-init-hook (lambda () (setq gc-cons-threshold (* 5 1024 1024))))
 ;;; init.el ends here
+(put 'scroll-left 'disabled nil)
