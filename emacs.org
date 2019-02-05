@@ -1142,13 +1142,6 @@ A literate based Emacs configuration. I took inspiration from various sources.
     :config (validate-setq org-bullets-bullet-list '("◉" "○" "●" "►" "◇" "◎")))
    #+END_SRC
 
-** org-mode slides
-#+BEGIN_SRC emacs-lisp
-  (use-package ox-reveal
-    :ensure t
-    :config
-    (validate-setq org-reveal-root "/home/mds/code/github/reveal.js"))
-#+END_SRC
 
 ** Configure agendas
    I use a customized version of [[https://en.wikipedia.org/wiki/Zen_Habits][ZTD]]
