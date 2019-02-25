@@ -18,15 +18,24 @@ A literate based Emacs configuration. I took inspiration from various sources.
 
 ** Setting GPG and secrets
    #+BEGIN_SRC emacs-lisp
-  (load-library "~/.emacs.d/.secrets.el")
+     (use-package epa
+       :config
+       (epa-file-enable)
+       (setq epg-debug t
+	     epa-armor t))
+
+     (use-package epa-file
+       :after epa)
+
+     (load-library "~/.emacs.d/.secrets.el.gpg")
    #+END_SRC
 
 ** User details
    My personal details.
 
    #+BEGIN_SRC emacs-lisp
-  (setq user-full-name "Marco Dalla Stella")
-  (setq user-mail-address private-user-mail-address)
+  (setq user-full-name username)
+  (setq user-mail-address user-mail-address)
    #+END_SRC
 
 ** Emacs server

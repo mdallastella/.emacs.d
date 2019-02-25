@@ -23,6 +23,4 @@ company-statistics-cache.el
 /places
 /eshell/lastdir
 /network-security.data
-*.el.gpg
 var/*
-.secrets.el*
