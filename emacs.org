@@ -619,27 +619,26 @@ A literate based Emacs configuration. I took inspiration from various sources.
    #+END_SRC
 
 ** Flyspell
-*** Flyspell configuration using [[https://hunspell.github.io][hunspell]].
-**** hunspell
+*** Flyspell configuration using aspell.
+**** aspell
 
      #+BEGIN_SRC emacs-lisp
   (use-package ispell
     :config
     (validate-setq
-     ispell-program-name (executable-find "hunspell")
-     ispell-dictionary "en_GB"
-     ispell-choices-win-default-height 5)
+     ispell-program-name (executable-find "aspell")
+     ispell-dictionary "en_US")
 
     (unless ispell-program-name
-      (warn "No spell checker available. Please install hunspell.")))
+      (warn "No spell checker available. Please install aspell.")))
      #+END_SRC
 
 **** Flyspell
 
 #+BEGIN_SRC emacs-lisp
   (use-package flyspell
-    ;; :hook
-    ;; ((prog-mode text-mode) . flyspell-prog-mode)
+    :hook
+    ((prog-mode text-mode) . flyspell-prog-mode)
 
     :config
     (validate-setq flyspell-use-meta-tab nil
