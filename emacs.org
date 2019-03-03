@@ -14,6 +14,11 @@ A literate based Emacs configuration. I took inspiration from various sources.
        (setq exec-path-from-shell-variables '("PATH")
 	     exec-path-from-shell-arguments '("-l"))
        (exec-path-from-shell-initialize))
+
+     (use-package keychain-environment
+       :ensure t
+       :init
+       (keychain-refresh-environment))
    #+END_SRC
 
 ** Setting GPG and secrets
@@ -820,6 +825,8 @@ A literate based Emacs configuration. I took inspiration from various sources.
 
        :bind
        (:map cider-repl-mode-map
+	     ("RET" . cider-repl-newline-and-indent)
+	     ("C-RET" . cider-repl-return)
 	     ("C-c c b" . cider-repl-clear-buffer))
 
        :config
