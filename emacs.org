@@ -53,16 +53,6 @@ A literate based Emacs configuration. I took inspiration from various sources.
 	      (server-mode)))
    #+END_SRC
 
-** Use Validate package
-   This library offers two functions that perform schema validation. Use this is
-   your Elisp packages to provide very informative error messages when your
-   users accidentally misconfigure a variable: [[https://github.com/Malabarba/validate.el][validate.el]]
-
-   #+BEGIN_SRC emacs-lisp
-  (use-package validate
-    :ensure t)
-   #+END_SRC
-
 ** Various minor settings
    Delete the selection instead of insert
 
@@ -84,7 +74,7 @@ A literate based Emacs configuration. I took inspiration from various sources.
   (use-package autorevert
     :init (global-auto-revert-mode)
     :config
-    (validate-setq
+    (setq
      auto-revert-verbose nil
      ;; Revert Dired buffers, too
      global-auto-revert-non-file-buffers t)
@@ -94,7 +84,7 @@ A literate based Emacs configuration. I took inspiration from various sources.
    Kill ring features
 
    #+BEGIN_SRC emacs-lisp
-  (validate-setq
+  (setq
    kill-ring-max 200                 ; More killed items
    kill-do-not-save-duplicates t     ; No duplicates in kill ring
    ;; Save the contents of the clipboard to kill ring before killing
@@ -117,7 +107,7 @@ A literate based Emacs configuration. I took inspiration from various sources.
     :bind (("C-c a p" . paradox-list-packages)
 	   ("C-c a P" . paradox-upgrade-packages))
     :config
-    (validate-setq
+    (setq
      paradox-github-token t             ; Don't ask for a token
      paradox-execute-asynchronously nil ; No async updates
      paradox-use-homepage-buttons nil   ; Hide download button
@@ -140,7 +130,7 @@ A literate based Emacs configuration. I took inspiration from various sources.
    these off with the menu items now, it is just as easy to set them here.
 
    #+BEGIN_SRC emacs-lisp
-  (validate-setq initial-scratch-message "") ; Uh, I know what Scratch is for
+  (setq initial-scratch-message "") ; Uh, I know what Scratch is for
   (when (window-system)
     (tool-bar-mode -1)			; Toolbars were only cool with XEmacs
     (when (fboundp 'horizontal-scroll-bar-mode)
@@ -169,7 +159,7 @@ A literate based Emacs configuration. I took inspiration from various sources.
      (use-package solarized-theme
        :ensure t
        :config
-       (validate-setq
+       (setq
 	solarized-use-variable-pitch nil
 	solarized-scale-org-headlines nil
 	solarized-use-less-bold t
@@ -208,7 +198,7 @@ A literate based Emacs configuration. I took inspiration from various sources.
      (use-package moody
        :ensure t
        :config
-       (validate-setq x-underline-at-descent-line t)
+       (setq x-underline-at-descent-line t)
        (moody-replace-mode-line-buffer-identification)
        (moody-replace-vc-mode))
    #+END_SRC
@@ -235,12 +225,12 @@ A literate based Emacs configuration. I took inspiration from various sources.
 ** Disable annoying prompts and messages
    #+BEGIN_SRC emacs-lisp
   (fset 'yes-or-no-p 'y-or-n-p)
-  (validate-setq
+  (setq
    kill-buffer-query-functions
    (remq 'process-kill-buffer-query-function
 	 kill-buffer-query-functions))
 
-  (validate-setq
+  (setq
    ring-bell-function #'ignore
    inhibit-startup-screen t
    initial-scratch-message nil)
@@ -273,7 +263,7 @@ A literate based Emacs configuration. I took inspiration from various sources.
    Allow to read from the minibuffer while in minibuffer
 
    #+BEGIN_SRC emacs-lisp
-  (validate-setq enable-recursive-minibuffers t)
+  (setq enable-recursive-minibuffers t)
    #+END_SRC
 
    Show the minibuffer depth (when larger than 1).
@@ -285,7 +275,7 @@ A literate based Emacs configuration. I took inspiration from various sources.
    Never use dialogs for minibuffer input and store more history.
 
    #+BEGIN_SRC emacs-lisp
-  (validate-setq use-dialog-box nil
+  (setq use-dialog-box nil
 		 history-length 1000)
    #+END_SRC
 
@@ -295,7 +285,7 @@ A literate based Emacs configuration. I took inspiration from various sources.
 (use-package savehist
   :init (savehist-mode t)
   :config
-  (validate-setq savehist-save-minibuffer-history t
+  (setq savehist-save-minibuffer-history t
 		 savehist-autosave-interval 180))
    #+END_SRC
 
@@ -303,7 +293,7 @@ A literate based Emacs configuration. I took inspiration from various sources.
    Use `emacs-lisp-mode' instead of `lisp-interaction-mode' for scratch buffer.
 
    #+BEGIN_SRC emacs-lisp
-  (validate-setq initial-major-mode 'emacs-lisp-mode)
+  (setq initial-major-mode 'emacs-lisp-mode)
    #+END_SRC
 
 ** Which-key
@@ -314,7 +304,7 @@ A literate based Emacs configuration. I took inspiration from various sources.
     :ensure t
     :init (which-key-mode)
     :config
-    (validate-setq
+    (setq
      which-key-idle-delay 0.4
      which-key-sort-order 'which-key-prefix-then-key-order)
      :diminish which-key-mode)
@@ -328,7 +318,7 @@ A literate based Emacs configuration. I took inspiration from various sources.
     :ensure t
 
     :config
-    (validate-setq eyebrowse-switch-back-and-forth t
+    (setq eyebrowse-switch-back-and-forth t
 		   eyebrowse-wrap-around t
 		   eyebrowse-new-workspace t)
     (eyebrowse-mode t))
@@ -371,7 +361,7 @@ A literate based Emacs configuration. I took inspiration from various sources.
    Fix the scrolling to keep point in the center:
 
    #+BEGIN_SRC elisp
-     (validate-setq scroll-conservatively 10000
+     (setq scroll-conservatively 10000
 		    scroll-preserve-screen-position t)
    #+END_SRC
 
@@ -379,13 +369,13 @@ A literate based Emacs configuration. I took inspiration from various sources.
    bit-by-bit:
 
    #+BEGIN_SRC elisp
-  (validate-setq disabled-command-function nil)
+  (setq disabled-command-function nil)
    #+END_SRC
 
    Store more history
 
    #+BEGIN_SRC emacs-lisp
-  (validate-setq history-length 1000)
+  (setq history-length 1000)
    #+END_SRC
 
    Increase line-spacing (default 0)
@@ -414,7 +404,7 @@ A literate based Emacs configuration. I took inspiration from various sources.
 	   ("C-o" . hydra-ivy/body))
     :init (ivy-mode 1)
     :config
-    (validate-setq
+    (setq
      ivy-count-format "(%d/%d) "          ; Show current match and matches
      ivy-extra-directories nil            ; Do not show "./" and "../"
      ivy-virtual-abbreviate 'full         ; Show full file path
@@ -458,7 +448,7 @@ A literate based Emacs configuration. I took inspiration from various sources.
 	   ("M-i" . swiper-from-isearch))
     :config
     ;; Always recentre when leaving Swiper
-    (validate-setq swiper-action-recenter t))
+    (setq swiper-action-recenter t))
 
   (use-package smex                       ; Better M-x interface
     :ensure t)
@@ -486,7 +476,7 @@ A literate based Emacs configuration. I took inspiration from various sources.
     :bind (:map read-expression-map
 		("C-r" . counsel-expression-history))
     :config
-    (validate-setq
+    (setq
      counsel-bookmark-avoid-dired t
      counsel-mode-override-describe-bindings t
      counsel-grep-post-action-hook '(recenter)
@@ -515,7 +505,7 @@ A literate based Emacs configuration. I took inspiration from various sources.
 		  ("C-n" . company-select-next)
 		  ("C-p" . company-select-previous))
       :config
-      (validate-setq company-tooltip-align-annotations t
+      (setq company-tooltip-align-annotations t
 		     company-tooltip-flip-when-above t
 		     ;; Easy navigation to candidates with M-<n>
 		     company-show-numbers t
@@ -543,7 +533,7 @@ A literate based Emacs configuration. I took inspiration from various sources.
   (use-package undo-tree                  ; Show buffer changes as a tree
     :ensure t
     :init (global-undo-tree-mode)
-    :config (validate-setq undo-tree-visualizer-timestamps t)
+    :config (setq undo-tree-visualizer-timestamps t)
     :diminish undo-tree-mode)
    #+END_SRC
 
@@ -625,7 +615,7 @@ A literate based Emacs configuration. I took inspiration from various sources.
      #+BEGIN_SRC emacs-lisp
   (use-package ispell
     :config
-    (validate-setq
+    (setq
      ispell-program-name (executable-find "aspell")
      ispell-dictionary "en_US")
 
@@ -641,7 +631,7 @@ A literate based Emacs configuration. I took inspiration from various sources.
     ((prog-mode text-mode) . flyspell-prog-mode)
 
     :config
-    (validate-setq flyspell-use-meta-tab nil
+    (setq flyspell-use-meta-tab nil
 		   ;; Make Flyspell less chatty
 		   flyspell-issue-welcome-flag nil
 		   flyspell-issue-message-flag nil))
@@ -677,7 +667,7 @@ A literate based Emacs configuration. I took inspiration from various sources.
 	"---\n\n"))
 
     :config
-    (validate-setq auto-insert-query nil))
+    (setq auto-insert-query nil))
    #+END_SRC
 
 
@@ -737,7 +727,7 @@ A literate based Emacs configuration. I took inspiration from various sources.
 	  ("C-c p" . projectile-command-map))
     :init
     (projectile-mode +1)
-    (validate-setq
+    (setq
      projectile-completion-system 'ivy
      projectile-find-dir-includes-top-level t)
     (projectile-register-project-type 'lein-cljs '("project.clj")
@@ -777,13 +767,13 @@ A literate based Emacs configuration. I took inspiration from various sources.
        (:map cider-mode-map
 	     ("C-c M-l" . cider-load-all-project-ns))
        :config
-       (validate-setq
+       (setq
 	cider-offer-to-open-cljs-app-in-browser nil))
 
      (use-package cider-mode                 ; CIDER mode for REPL interaction
        :ensure cider
        :config
-       (validate-setq
+       (setq
 	cider-font-lock-dynamically t
 	cider-invert-insert-eval-p t
 	cider-switch-to-repl-after-insert-p nil))
@@ -814,7 +804,7 @@ A literate based Emacs configuration. I took inspiration from various sources.
      (use-package nrepl-client               ; Client for Clojure nREPL
        :ensure cider
        :config
-       (validate-setq nrepl-hide-special-buffers t))
+       (setq nrepl-hide-special-buffers t))
 
      (use-package cider-repl                 ; REPL interactions with CIDER
        :ensure cider
@@ -829,7 +819,7 @@ A literate based Emacs configuration. I took inspiration from various sources.
 	     ("C-c c b" . cider-repl-clear-buffer))
 
        :config
-       (validate-setq
+       (setq
 	cider-repl-wrap-history t
 	cider-repl-history-size 1000
 	cider-repl-history-file
@@ -847,7 +837,7 @@ A literate based Emacs configuration. I took inspiration from various sources.
 			 (cljr-add-keybindings-with-prefix "C-c RET")))
 
        :config
-       (validate-setq
+       (setq
 	cljr-suppress-middleware-warnings t
 	cljr-add-ns-to-blank-clj-files t
 	cljr-auto-sort-ns t
@@ -855,7 +845,7 @@ A literate based Emacs configuration. I took inspiration from various sources.
 	cljr-favor-private-functions nil
 	cljr-warn-on-eval nil)
 
-       (validate-setq
+       (setq
 	cljr-clojure-test-declaration "[clojure.test :refer :all]"
 	cljr-cljs-clojure-test-declaration
 	"[cljs.test :refer-macros [deftest is use-fixtures]]")
@@ -877,7 +867,7 @@ A literate based Emacs configuration. I took inspiration from various sources.
     #+BEGIN_SRC emacs-lisp
   (use-package ob-clojure
     :config
-    (validate-setq org-babel-clojure-backend 'cider))
+    (setq org-babel-clojure-backend 'cider))
     #+END_SRC
 
 ** Python
@@ -924,7 +914,7 @@ A literate based Emacs configuration. I took inspiration from various sources.
     :ensure t
     :mode "\\.html\\'"
     :config
-    (validate-setq web-mode-markup-indent-offset 2
+    (setq web-mode-markup-indent-offset 2
 		   web-mode-css-indent-offset 2
 		   web-mode-code-indent-offset 2))
    #+END_SRC
@@ -979,7 +969,7 @@ A literate based Emacs configuration. I took inspiration from various sources.
     :ensure t
     :hook (prog-mode . flycheck-mode)
     :config
-    (validate-setq flycheck-standard-error-navigation nil
+    (setq flycheck-standard-error-navigation nil
 		   flycheck-display-errors-function
 		   #'flycheck-display-error-messages-unless-error-list))
    #+END_SRC
@@ -1000,16 +990,16 @@ A literate based Emacs configuration. I took inspiration from various sources.
      ("C-c v v" . magit-status))
 
     :config
-    (validate-setq
+    (setq
      magit-save-repository-buffers 'dontask
      magit-refs-show-commit-count 'all)
 
     ;; Use Ivy
-    (validate-setq
+    (setq
      magit-completing-read-function 'ivy-completing-read)
 
     ;; Show status buffer in fullscreen
-    (validate-setq
+    (setq
      magit-display-buffer-function
      #'magit-display-buffer-fullframe-status-v1)
 
@@ -1058,7 +1048,7 @@ A literate based Emacs configuration. I took inspiration from various sources.
 	 (sp-pair "'" nil :actions :rem))
 
        :config
-       (validate-setq sp-autoskip-closing-pair 'always
+       (setq sp-autoskip-closing-pair 'always
 		      ;; Don't kill entire symbol on C-k
 		      sp-hybrid-kill-entire-symbol nil))
    #+END_SRC
@@ -1149,7 +1139,7 @@ A literate based Emacs configuration. I took inspiration from various sources.
   (use-package org-bullets
     :ensure t
     :hook (org-mode . org-bullets-mode)
-    :config (validate-setq org-bullets-bullet-list '("◉" "○" "●" "►" "◇" "◎")))
+    :config (setq org-bullets-bullet-list '("◉" "○" "●" "►" "◇" "◎")))
    #+END_SRC
 
 
@@ -1239,7 +1229,7 @@ A literate based Emacs configuration. I took inspiration from various sources.
   (use-package mastodon
     :ensure t
     :config
-    (validate-setq mastodon-instance-url
+    (setq mastodon-instance-url
 		   "https://functional.cafe"))
 #+END_SRC
 
