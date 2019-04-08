@@ -902,7 +902,7 @@ A literate based Emacs configuration. I took inspiration from various sources.
      (use-package geiser
        :ensure t
        :config
-       (setq geiser-active-implementations '(chez racket)
+       (setq geiser-active-implementations '(chez chicken)
 	     geiser-chez-binary "/usr/bin/chez-scheme"))
    #+END_SRC
 
