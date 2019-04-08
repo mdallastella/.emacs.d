@@ -147,7 +147,7 @@ A literate based Emacs configuration. I took inspiration from various sources.
    #+BEGIN_SRC emacs-lisp
   (set-face-attribute
    'default nil
-   :family "Iosevka Term SS01"
+   :family "Iosevka SS01"
    :weight 'light
    :height 140)
    #+END_SRC
@@ -1053,16 +1053,6 @@ A literate based Emacs configuration. I took inspiration from various sources.
 		      sp-hybrid-kill-entire-symbol nil))
    #+END_SRC
 
-** DevDocs.io
-   [[http://devdocs.io/][DevDocs]] combines multiple API documentations in a fast, organized, and
-   searchable interface.
-
-   #+BEGIN_SRC emacs-lisp
-  (use-package devdocs
-    :ensure t
-    :bind ("C-c s d" . devdocs-search))
-   #+END_SRC
-
 ** Github stuff
    [[https://github.com/defunkt/gist.el][gist.el]] – Share snippets of code using Gist.
 
@@ -1141,7 +1131,6 @@ A literate based Emacs configuration. I took inspiration from various sources.
     :hook (org-mode . org-bullets-mode)
     :config (setq org-bullets-bullet-list '("◉" "○" "●" "►" "◇" "◎")))
    #+END_SRC
-
 
 ** Configure agendas
    I use a customized version of [[https://en.wikipedia.org/wiki/Zen_Habits][ZTD]]
