@@ -942,7 +942,7 @@ A literate based Emacs configuration. I took inspiration from various sources.
     :hook
     (css-mode-hook . (lambda () (run-hooks 'prog-mode-hook)))
     :config
-    (vaildate-setq css-indent-offset 2))
+    (setq css-indent-offset 2))
    #+END_SRC
 
    Eldoc for CSS.
