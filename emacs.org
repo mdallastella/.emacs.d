@@ -903,7 +903,10 @@ A literate based Emacs configuration. I took inspiration from various sources.
        :ensure t
        :config
        (setq geiser-active-implementations '(chez chicken)
-	     geiser-chez-binary "/usr/bin/chez-scheme"))
+	     geiser-chez-binary "/usr/bin/chez-scheme"
+	     geiser-chicken-binary "chicken-csi"
+	     geiser-implementations-alist
+	     '(((regexp "\\.scm$") chicken))))
    #+END_SRC
 
 ** Web Development
