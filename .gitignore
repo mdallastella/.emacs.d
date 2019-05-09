@@ -24,3 +24,4 @@ company-statistics-cache.el
 /eshell/lastdir
 /network-security.data
 var/*
+/etc/transient/values.el

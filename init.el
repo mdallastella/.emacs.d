@@ -19,36 +19,29 @@
 (setq package-archives
       ;; Package archives, the usual suspects
       '(("GNU ELPA" . "https://elpa.gnu.org/packages/")
-	("org"      . "https://orgmode.org/elpa/")
         ("MELPA"    . "https://melpa.org/packages/")))
 (package-initialize)
 
-(setq load-prefer-newer t)              ; Always load newer compiled files
-(setq ad-redefinition-action 'accept)   ; Silence advice redefinition warnings
-(setq message-log-max 10000)            ; Debugging
+(setq load-prefer-newer t)               ; Always load newer compiled files
+(setq ad-redefinition-action 'accept)    ; Silence advice redefinition warnings
+(setq message-log-max 10000)             ; Debugging
 
 ;; Bootstrap use-package and dash
 (unless (and (package-installed-p 'use-package)
              (package-installed-p 'dash)
-	     (package-installed-p 'diminish)
 	     (package-installed-p 'no-littering))
   (package-refresh-contents)
   (package-install 'use-package)
   (package-install 'dash)
-  (package-install 'diminish)
   (package-install 'no-littering))
 
-;; Make sure Org is installed
-(unless (package-installed-p 'org)
-  (package-refresh-contents)
-  (package-install 'org))
+(defun literef-package-desc(pkg)
+  (car (cdr (assq pkg package-archive-contents))))
 
-(unless (package-installed-p 'org-plus-contrib)
-  (package-refresh-contents)
-  (package-install 'org-plus-contrib))
+;; Load orgmode
+(package-install (literef-package-desc 'org) 'dont-select)
 
-;; Show a stacktrace whene an error occurs
-(setq stack-trace-on-error t)
+(use-package org :ensure t)
 
 ;; Keep .emacs.d clean
 (use-package no-littering
