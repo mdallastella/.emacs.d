@@ -35,13 +35,10 @@
   (package-install 'dash)
   (package-install 'no-littering))
 
-(defun literef-package-desc(pkg)
-  (car (cdr (assq pkg package-archive-contents))))
-
-;; Load orgmode
-(package-install (literef-package-desc 'org) 'dont-select)
-
-(use-package org :ensure t)
+;; I need org-mode
+(unless (package-installed-p 'org)
+  (package-refresh-contents)
+  (package-install 'org))
 
 ;; Keep .emacs.d clean
 (use-package no-littering
