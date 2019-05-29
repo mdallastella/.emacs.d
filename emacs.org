@@ -1019,6 +1019,14 @@ A literate based Emacs configuration. I took inspiration from various sources.
     :hook (magit-mode . turn-on-magit-gitflow))
    #+END_SRC
 
+   [[https://github.com/magit/forge][Forge]] -Work with Git forges from the comfort of Magit
+
+#+begin_src emacs-lisp
+  (use-package forge
+    :ensure t
+    :after magit)
+#+end_src
+
 ** Git Time-machine
    [[https://github.com/pidu/git-timemachine][git-timemachine]] - Step through historic versions of git controlled file using
    everyone's favourite editor.
