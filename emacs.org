@@ -7,7 +7,7 @@ A literate based Emacs configuration. I took inspiration from various sources.
    Ensure environment variables inside Emacs look the same as in the user's
    shell. Also, load keychain environment variables.
 
-   #+BEGIN_SRC emacs-lisp
+   #+begin_src emacs-lisp
      (use-package exec-path-from-shell
        :ensure t
        :config
@@ -19,10 +19,10 @@ A literate based Emacs configuration. I took inspiration from various sources.
        :ensure t
        :init
        (keychain-refresh-environment))
-   #+END_SRC
+   #+end_src
 
 ** Setting GPG and secrets
-   #+BEGIN_SRC emacs-lisp
+   #+begin_src emacs-lisp
      (use-package epa
        :config
        (epa-file-enable)
@@ -33,44 +33,44 @@ A literate based Emacs configuration. I took inspiration from various sources.
        :after epa)
 
      (load-library "~/.emacs.d/.secrets.el.gpg")
-   #+END_SRC
+   #+end_src
 
 ** User details
    My personal details.
 
-   #+BEGIN_SRC emacs-lisp
+   #+begin_src emacs-lisp
   (setq user-full-name username)
   (setq user-mail-address user-mail-address)
-   #+END_SRC
+   #+end_src
 
 ** Emacs server
    Start an Emacs server if it's not running.
 
-   #+BEGIN_SRC emacs-lisp
+   #+begin_src emacs-lisp
   (use-package server
     :if (not noninteractive)
     :config (unless (server-running-p)	; Start server only if it is not already running
 	      (server-mode)))
-   #+END_SRC
+   #+end_src
 
 ** Various minor settings
    Delete the selection instead of insert
 
-   #+BEGIN_SRC emacs-lisp
+   #+begin_src emacs-lisp
   (use-package delsel
     :init (delete-selection-mode))
-   #+END_SRC
+   #+end_src
 
    Save point position in files
 
-   #+BEGIN_SRC emacs-lisp
+   #+begin_src emacs-lisp
   (use-package saveplace
     :init (save-place-mode 1))
-   #+END_SRC
+   #+end_src
 
    Auto-revert buffers of changed files
 
-   #+BEGIN_SRC emacs-lisp
+   #+begin_src emacs-lisp
   (use-package autorevert
     :init (global-auto-revert-mode)
     :config
@@ -79,29 +79,29 @@ A literate based Emacs configuration. I took inspiration from various sources.
      ;; Revert Dired buffers, too
      global-auto-revert-non-file-buffers t)
     :diminish auto-revert-mode)
-   #+END_SRC
+   #+end_src
 
    Kill ring features
 
-   #+BEGIN_SRC emacs-lisp
+   #+begin_src emacs-lisp
   (setq
    kill-ring-max 200                 ; More killed items
    kill-do-not-save-duplicates t     ; No duplicates in kill ring
    ;; Save the contents of the clipboard to kill ring before killing
    save-interprogram-paste-before-kill t)
-   #+END_SRC
+   #+end_src
 
    Auto-save buffers when they lose focus.
 
-   #+BEGIN_SRC emacs-lisp
+   #+begin_src emacs-lisp
      (use-package super-save
        :ensure t
        :config (super-save-mode 1))
-   #+END_SRC
+   #+end_src
 
    [[https://github.com/Malabarba/paradox][paradox]] - A better package manager interface.
 
-   #+BEGIN_SRC emacs-lisp
+   #+begin_src emacs-lisp
   (use-package paradox
     :ensure t
     :bind (("C-c a p" . paradox-list-packages)
@@ -120,7 +120,7 @@ A literate based Emacs configuration. I took inspiration from various sources.
 		 #'paradox--report-buffer-print)
     (remove-hook 'paradox-after-execute-functions
 		 #'paradox--report-buffer-display-if-noquery))
-   #+END_SRC
+   #+end_src
 
 
 * Interface settings
@@ -129,7 +129,7 @@ A literate based Emacs configuration. I took inspiration from various sources.
    appreciate a certain minimalist approach to its display. While you can turn
    these off with the menu items now, it is just as easy to set them here.
 
-   #+BEGIN_SRC emacs-lisp
+   #+begin_src emacs-lisp
   (setq initial-scratch-message "") ; Uh, I know what Scratch is for
   (when (window-system)
     (tool-bar-mode -1)			; Toolbars were only cool with XEmacs
@@ -139,23 +139,23 @@ A literate based Emacs configuration. I took inspiration from various sources.
     (scroll-bar-mode -1)			; Scrollbars are waste screen estate
     (tooltip-mode -1)
     (menu-bar-mode -1))
-   #+END_SRC
+   #+end_src
 
 ** Font setup
    I use the Iosevka font.
 
-   #+BEGIN_SRC emacs-lisp
+   #+begin_src emacs-lisp
   (set-face-attribute
    'default nil
    :family "Iosevka SS01"
    :weight 'light
    :height 140)
-   #+END_SRC
+   #+end_src
 
 ** Theme
    My current favorite theme.
 
-   #+BEGIN_SRC emacs-lisp
+   #+begin_src emacs-lisp
      (use-package solarized-theme
        :ensure t
        :config
@@ -172,12 +172,12 @@ A literate based Emacs configuration. I took inspiration from various sources.
 	 (set-face-attribute 'mode-line-inactive nil :underline line)
 	 (set-face-attribute 'mode-line nil :box nil)
 	 (set-face-attribute 'mode-line-inactive nil :box nil)))
-   #+END_SRC
+   #+end_src
 
 ** Mode line
    Custom mode-line with [[https://github.com/Malabarba/smart-mode-line][smart-mode-line]], [[https://github.com/tarsius/minions][minions]] and [[https://github.com/tarsius/moody][moody]].
 
-   #+BEGIN_SRC emacs-lisp
+   #+begin_src emacs-lisp
      (column-number-mode t)
      (line-number-mode t)
      (use-package smart-mode-line
@@ -201,29 +201,36 @@ A literate based Emacs configuration. I took inspiration from various sources.
        (setq x-underline-at-descent-line t)
        (moody-replace-mode-line-buffer-identification)
        (moody-replace-vc-mode))
-   #+END_SRC
+   #+end_src
+
+** Frame title
+   Show the current buffer name and the full path of the file on the app
+   title bar.
+   #+begin_src emacs-lisp
+     (setq-default frame-title-format "%b (%f)")
+   #+end_src
 
 ** Uniquify
    Set unique buffer names.
 
-   #+BEGIN_SRC emacs-lisp
+   #+begin_src emacs-lisp
   (use-package uniquify
     :config
     (setq uniquify-buffer-name-style
 	  'post-forward uniquify-separator ":"))
-   #+END_SRC
+   #+end_src
 
 ** Show matching parenthesis
-   #+BEGIN_SRC emacs-lisp
+   #+begin_src emacs-lisp
   (show-paren-mode t)
 
   (use-package rainbow-delimiters
     :ensure t
     :hook ((prog-mode clojure-mode cider-repl-mode) . rainbow-delimiters-mode))
-   #+END_SRC
+   #+end_src
 
 ** Disable annoying prompts and messages
-   #+BEGIN_SRC emacs-lisp
+   #+begin_src emacs-lisp
   (fset 'yes-or-no-p 'y-or-n-p)
   (setq
    kill-buffer-query-functions
@@ -236,70 +243,70 @@ A literate based Emacs configuration. I took inspiration from various sources.
    initial-scratch-message nil)
 
   (fset 'display-startup-echo-area-message #'ignore)
-   #+END_SRC
+   #+end_src
 
 ** Better looking break lines
-   #+BEGIN_SRC emacs-lisp
+   #+begin_src emacs-lisp
   (use-package page-break-lines
     :ensure t
     :init (global-page-break-lines-mode)
     :diminish page-break-lines-mode)
-   #+END_SRC
+   #+end_src
 
 ** Prettify symbols
-   #+BEGIN_SRC emacs-lisp
+   #+begin_src emacs-lisp
   (global-prettify-symbols-mode 1)
-   #+END_SRC
+   #+end_src
 
 ** Fontify number literals
 
-   #+BEGIN_SRC emacs-lisp
+   #+begin_src emacs-lisp
   (use-package highlight-numbers
     :ensure t
     :hook (prog-mode . highlight-numbers-mode))
-   #+END_SRC
+   #+end_src
 
 ** Minibuffer settings
    Allow to read from the minibuffer while in minibuffer
 
-   #+BEGIN_SRC emacs-lisp
+   #+begin_src emacs-lisp
   (setq enable-recursive-minibuffers t)
-   #+END_SRC
+   #+end_src
 
    Show the minibuffer depth (when larger than 1).
 
-   #+BEGIN_SRC emacs-lisp
+   #+begin_src emacs-lisp
   (minibuffer-depth-indicate-mode 1)
-   #+END_SRC
+   #+end_src
 
    Never use dialogs for minibuffer input and store more history.
 
-   #+BEGIN_SRC emacs-lisp
+   #+begin_src emacs-lisp
   (setq use-dialog-box nil
 		 history-length 1000)
-   #+END_SRC
+   #+end_src
 
    Save minibuffer history.
 
-   #+BEGIN_SRC emacs-lisp
+   #+begin_src emacs-lisp
 (use-package savehist
   :init (savehist-mode t)
   :config
   (setq savehist-save-minibuffer-history t
 		 savehist-autosave-interval 180))
-   #+END_SRC
+   #+end_src
 
 ** Scratch settings
    Use `emacs-lisp-mode' instead of `lisp-interaction-mode' for scratch buffer.
 
-   #+BEGIN_SRC emacs-lisp
+   #+begin_src emacs-lisp
   (setq initial-major-mode 'emacs-lisp-mode)
-   #+END_SRC
+   #+end_src
 
 ** Which-key
    [[https://github.com/justbur/emacs-which-key][Which-key]] – Emacs package that displays available keybindings in popup.
 
-   #+BEGIN_SRC emacs-lisp
+   #+begin_src emacs-lisp
   (use-package which-key                  ; Show help popups for prefix keys
     :ensure t
     :init (which-key-mode)
@@ -308,12 +315,12 @@ A literate based Emacs configuration. I took inspiration from various sources.
      which-key-idle-delay 0.4
      which-key-sort-order 'which-key-prefix-then-key-order)
      :diminish which-key-mode)
-   #+END_SRC
+   #+end_src
 
 ** EyeBrowse
    Easy workspaces creation and switching.
 
-   #+BEGIN_SRC emacs-lisp
+   #+begin_src emacs-lisp
   (use-package eyebrowse
     :ensure t
 
@@ -322,80 +329,80 @@ A literate based Emacs configuration. I took inspiration from various sources.
 		   eyebrowse-wrap-around t
 		   eyebrowse-new-workspace t)
     (eyebrowse-mode t))
-   #+END_SRC
+   #+end_src
 
 
 * Editing settings
 ** Windows navigation
    Use Ctrl-c Arrow for cycle throught windows, ignoring possible errors.
 
-   #+BEGIN_SRC emacs-lisp
+   #+begin_src emacs-lisp
   (global-set-key (kbd "C-c C-<left>")  'windmove-left)
   (global-set-key (kbd "C-c C-<right>") 'windmove-right)
   (global-set-key (kbd "C-c C-<up>")    'windmove-up)
   (global-set-key (kbd "C-c C-<down>")  'windmove-down)
-   #+END_SRC
+   #+end_src
 
 ** Tabs vs Spaces
    I have learned to distrust tabs in my source code, so let's make sure that we
    only have spaces. See [[http://ergoemacs.org/emacs/emacs_tabs_space_indentation_setup.html][this discussion]] for details.
 
-   #+BEGIN_SRC elisp
+   #+begin_src elisp
   (setq-default indent-tabs-mode nil)
   (setq tab-width 2)
-   #+END_SRC
+   #+end_src
 
    Make tab key do indent first then completion.
 
-   #+BEGIN_SRC elisp
+   #+begin_src elisp
   (setq-default tab-always-indent 'complete)
-   #+END_SRC
+   #+end_src
 
 ** Misc variable settings
    Does anyone type =yes= anymore?
 
-   #+BEGIN_SRC elisp
+   #+begin_src elisp
   (fset 'yes-or-no-p 'y-or-n-p)
-   #+END_SRC
+   #+end_src
 
    Fix the scrolling to keep point in the center:
 
-   #+BEGIN_SRC elisp
+   #+begin_src elisp
      (setq scroll-conservatively 10000
 		    scroll-preserve-screen-position t)
-   #+END_SRC
+   #+end_src
 
    I've been using Emacs for too long to need to re-enable each feature
    bit-by-bit:
 
-   #+BEGIN_SRC elisp
+   #+begin_src elisp
   (setq disabled-command-function nil)
-   #+END_SRC
+   #+end_src
 
    Store more history
 
-   #+BEGIN_SRC emacs-lisp
+   #+begin_src emacs-lisp
   (setq history-length 1000)
-   #+END_SRC
+   #+end_src
 
    Increase line-spacing (default 0)
 
-   #+BEGIN_SRC emacs-lisp
+   #+begin_src emacs-lisp
   (setq-default line-spacing 0.2)
-   #+END_SRC
+   #+end_src
 
    Configure a reasonable fill column and enable automatic filling
 
-   #+BEGIN_SRC emacs-lisp
+   #+begin_src emacs-lisp
   (setq-default fill-column 80)
   (add-hook 'text-mode-hook #'auto-fill-mode)
   (diminish 'auto-fill-function)
-   #+END_SRC
+   #+end_src
 
 ** Ivy configuration
    [[http://oremacs.com/swiper/][Ivy]] is an interactive interface for completion in Emacs.
 
-   #+BEGIN_SRC emacs-lisp
+   #+begin_src emacs-lisp
   (use-package ivy
     :ensure t
     :bind (("C-c C-r" . ivy-resume)
@@ -414,33 +421,33 @@ A literate based Emacs configuration. I took inspiration from various sources.
      ivy-use-virtual-buffers t
      ;; Always ignore buffers set in `ivy-ignore-buffers'
      ivy-use-ignore-default 'always))
-   #+END_SRC
+   #+end_src
 
    Use [[https://github.com/PythonNut/historian.el][ivy-historian]] too:
 
-   #+BEGIN_SRC emacs-lisp
+   #+begin_src emacs-lisp
   (use-package ivy-historian              ; Store minibuffer candidates
     :ensure t
     :init (ivy-historian-mode +1))
-   #+END_SRC
+   #+end_src
 
    Use ivy-hydra:
 
-   #+BEGIN_SRC emacs-lisp
+   #+begin_src emacs-lisp
   (use-package ivy-hydra
     :ensure t
     :after ivy)
-   #+END_SRC
+   #+end_src
 
 ** wgrep
    Use wgrep for editing searches.
-   #+BEGIN_SRC emacs-lisp
+   #+begin_src emacs-lisp
      (use-package wgrep
        :ensure t)
-   #+END_SRC
+   #+end_src
 
 ** Swiper, Smex and counsel configuration
-   #+BEGIN_SRC emacs-lisp
+   #+begin_src emacs-lisp
   (use-package swiper                     ; Isearch with an overview
     :ensure t
     :bind (("C-c s s" . swiper-all)
@@ -490,14 +497,14 @@ A literate based Emacs configuration. I took inspiration from various sources.
       ;; File names ending with # or ~
       "\\|\\(?:\\`.+?[#~]\\'\\)"))
     :diminish counsel-mode)
-   #+END_SRC
+   #+end_src
 
 ** Completion with company
    [[http://company-mode.github.io/][Company]] is a text completion framework for Emacs. The name stands for
    "complete anything". It uses pluggable back-ends and front-ends to retrieve
    and display completion candidates.
 
-   #+BEGIN_SRC emacs-lisp
+   #+begin_src emacs-lisp
     (use-package company                    ; Auto-completion
       :ensure t
       :init (global-company-mode)
@@ -524,25 +531,25 @@ A literate based Emacs configuration. I took inspiration from various sources.
     :ensure t
     :after company
     :config (company-quickhelp-mode))
-   #+END_SRC
+   #+end_src
 
 ** Undo tree
    Treat undo history as a tree.
 
-   #+BEGIN_SRC emacs-lisp
+   #+begin_src emacs-lisp
   (use-package undo-tree                  ; Show buffer changes as a tree
     :ensure t
     :init (global-undo-tree-mode)
     :config (setq undo-tree-visualizer-timestamps t)
     :diminish undo-tree-mode)
-   #+END_SRC
+   #+end_src
 
 ** Aggressive indentation
    aggressive-indent-mode is a minor mode that keeps your code always indented.
    It re-indents after every change, making it more reliable than
    `electric-indent-mode`.
 
-   #+BEGIN_SRC emacs-lisp
+   #+begin_src emacs-lisp
   (use-package aggressive-indent
     :ensure t
     :init (global-aggressive-indent-mode 1)
@@ -552,46 +559,46 @@ A literate based Emacs configuration. I took inspiration from various sources.
 
     (add-to-list 'aggressive-indent-excluded-modes
 		 'cider-repl-mode))
-   #+END_SRC
+   #+end_src
 
 ** Easy kill
    Better kill text.
 
-   #+BEGIN_SRC emacs-lisp
+   #+begin_src emacs-lisp
   (use-package easy-kill                  ; Better kill text
     :ensure t
     :bind (([remap kill-ring-save] . easy-kill)
 	   ([remap mark-sexp]      . easy-mark)))
-   #+END_SRC
+   #+end_src
 
 ** Remove trailing spaces on save
 
-   #+BEGIN_SRC emacs-lisp
+   #+begin_src emacs-lisp
   (use-package whitespace-cleanup-mode    ; Cleanup whitespace in buffers
     :ensure t
     :bind (("C-c t w" . whitespace-cleanup-mode)
 	   ("C-c x w" . whitespace-cleanup))
     :hook ((prog-mode text-mode conf-mode) . whitespace-cleanup-mode)
     :diminish whitespace-cleanup-mode)
-   #+END_SRC
+   #+end_src
 
 ** Copy as format
    Copy the current region and apply the right format required by some services.
 
-   #+BEGIN_SRC emacs-lisp
+   #+begin_src emacs-lisp
   (use-package copy-as-format
     :ensure t
     :bind (("C-c y s" . copy-as-format-slack)
 	   ("C-c y l" . copy-as-format-gitlab)
 	   ("C-c y g" . copy-as-format-github)
 	   ("C-c y m" . copy-as-format-markdown)))
-   #+END_SRC
+   #+end_src
 
 ** Highlight symbols
    [[https://github.com/wolray/symbol-overlay][symbol-overlay.el]] - Highlight symbols with overlays while providing a keymap
    for various operations about highlighted symbols.
 
-   #+BEGIN_SRC emacs-lisp
+   #+begin_src emacs-lisp
   (use-package symbol-overlay             ; Highlight symbols
     :ensure t
     :bind
@@ -599,20 +606,20 @@ A literate based Emacs configuration. I took inspiration from various sources.
 	  ("M-n" . symbol-overlay-jump-next)
 	  ("M-p" . symbol-overlay-jump-prev))
     :hook ((prog-mode html-mode css-mode) . symbol-overlay-mode))
-   #+END_SRC
+   #+end_src
 
    Custom regexp highlighting.
 
-   #+BEGIN_SRC emacs-lisp
+   #+begin_src emacs-lisp
   (use-package hi-lock
     :init (global-hi-lock-mode))
-   #+END_SRC
+   #+end_src
 
 ** Flyspell
 *** Flyspell configuration using aspell.
 **** aspell
 
-     #+BEGIN_SRC emacs-lisp
+     #+begin_src emacs-lisp
   (use-package ispell
     :config
     (setq
@@ -621,11 +628,11 @@ A literate based Emacs configuration. I took inspiration from various sources.
 
     (unless ispell-program-name
       (warn "No spell checker available. Please install aspell.")))
-     #+END_SRC
+     #+end_src
 
 **** Flyspell
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package flyspell
     :hook
     ((prog-mode text-mode) . flyspell-prog-mode)
@@ -643,12 +650,12 @@ A literate based Emacs configuration. I took inspiration from various sources.
     :bind
     (:map flyspell-mode-map
 	  ("C-c $" . flyspell-correct-word-generic)))
-#+END_SRC
+#+end_src
 
 ** Auto-insert
    I'm lazy, so I need something to add different headers to my files.
 
-   #+BEGIN_SRC emacs-lisp
+   #+begin_src emacs-lisp
   (use-package autoinsert
     :init
     (auto-insert-mode)
@@ -668,14 +675,14 @@ A literate based Emacs configuration. I took inspiration from various sources.
 
     :config
     (setq auto-insert-query nil))
-   #+END_SRC
+   #+end_src
 
 
 * Tools
 ** Markdown and Pandoc
    I use markdown and pandoc for note taking.
 
-   #+BEGIN_SRC emacs-lisp
+   #+begin_src emacs-lisp
   (use-package markdown-mode
     :ensure t)
 
@@ -683,34 +690,34 @@ A literate based Emacs configuration. I took inspiration from various sources.
     :ensure t
     :hook
     ((pandoc-mode markdown-mode) . pandoc-load-default-settings))
-   #+END_SRC
+   #+end_src
 
 ** Olivetti mode
    [[https://github.com/rnkn/olivetti][Olivetti]] is a simple Emacs minor mode for a nice writing environment.
 
-   #+BEGIN_SRC emacs-lisp
+   #+begin_src emacs-lisp
   (use-package olivetti
     :ensure t
     :config
     (setq-default olivetti-body-width 80))
-   #+END_SRC
+   #+end_src
 
 ** pdf-tools
    Better PDF support.
 
-   #+BEGIN_SRC emacs-lisp
+   #+begin_src emacs-lisp
   (use-package pdf-tools
     :ensure t
     :demand t
     :config (pdf-tools-install))
-   #+END_SRC
+   #+end_src
 
 ** EPUB reader mode
-   #+BEGIN_SRC emacs-lisp
+   #+begin_src emacs-lisp
   (use-package nov
     :ensure t
     :mode ("\\.epub\\'" . nov-mode))
-   #+END_SRC
+   #+end_src
 
 
 * Coding settings
@@ -719,7 +726,7 @@ A literate based Emacs configuration. I took inspiration from various sources.
    a nice set of features operating on a project level without introducing
    external dependencies (when feasible).
 
-   #+BEGIN_SRC emacs-lisp
+   #+begin_src emacs-lisp
   (use-package projectile
     :ensure t
     :bind
@@ -733,11 +740,11 @@ A literate based Emacs configuration. I took inspiration from various sources.
     (projectile-register-project-type 'lein-cljs '("project.clj")
 				      :compile "lein cljsbuild once"
 				      :test "lein cljsbuild test"))
-   #+END_SRC
+   #+end_src
 
    Ivy integration with Projectile
 
-   #+BEGIN_SRC emacs-lisp
+   #+begin_src emacs-lisp
      (use-package counsel-projectile
        :ensure t
        :bind (:map projectile-command-map
@@ -745,21 +752,21 @@ A literate based Emacs configuration. I took inspiration from various sources.
 		   ("f" . counsel-projectile-find-file)
 		   ("P" . counsel-projectile-switch-project)
 		   ("r" . counsel-projectile-rg)))
-   #+END_SRC
+   #+end_src
 
    Search project with ripgrep
 
-   #+BEGIN_SRC emacs-lisp
+   #+begin_src emacs-lisp
   (use-package projectile-ripgrep         ; Search projects with ripgrep
     :ensure t
     :bind (:map projectile-command-map
 		("s r" . projectile-ripgrep)))
-   #+END_SRC
+   #+end_src
 
 ** Clojure
    Clojure settings for Emacs
 
-   #+BEGIN_SRC emacs-lisp
+   #+begin_src emacs-lisp
      (use-package cider                      ; Clojure development environment
        :ensure t
        :hook (cider-mode . eldoc-mode)
@@ -859,21 +866,21 @@ A literate based Emacs configuration. I took inspiration from various sources.
      (use-package clojure-snippets           ; Yasnippets for Clojure
        :ensure t
        :after clojure-mode)
-   #+END_SRC
+   #+end_src
 
 *** org-babel-clojure
     Settings for use Clojure inside org-mode documents.
 
-    #+BEGIN_SRC emacs-lisp
+    #+begin_src emacs-lisp
   (use-package ob-clojure
     :config
     (setq org-babel-clojure-backend 'cider))
-    #+END_SRC
+    #+end_src
 
 ** Python
    Python configuration.
 
-   #+BEGIN_SRC emacs-lisp
+   #+begin_src emacs-lisp
   (use-package python                     ; Python editing
     :hook
     ;; PEP 8 compliant filling rules, 79 chars maximum
@@ -893,12 +900,12 @@ A literate based Emacs configuration. I took inspiration from various sources.
 
   (use-package pip-requirements           ; requirements.txt files
     :ensure t)
-   #+END_SRC
+   #+end_src
 
 ** Geiser
    Geiser configuration for Scheme.
 
-   #+BEGIN_SRC emacs-lisp
+   #+begin_src emacs-lisp
      (use-package geiser
        :ensure t
        :config
@@ -907,12 +914,12 @@ A literate based Emacs configuration. I took inspiration from various sources.
 	     geiser-chicken-binary "chicken-csi"
 	     geiser-implementations-alist
 	     '(((regexp "\\.scm$") chicken))))
-   #+END_SRC
+   #+end_src
 
 ** Web Development
    I use web-mode, css-mode and js2 for web development.
 
-   #+BEGIN_SRC emacs-lisp
+   #+begin_src emacs-lisp
   (use-package web-mode
     :ensure t
     :mode "\\.html\\'"
@@ -920,22 +927,32 @@ A literate based Emacs configuration. I took inspiration from various sources.
     (setq web-mode-markup-indent-offset 2
 		   web-mode-css-indent-offset 2
 		   web-mode-code-indent-offset 2))
-   #+END_SRC
+   #+end_src
 
    js2 - A better JavaScript support
 
-   #+BEGIN_SRC emacs-lisp
+   #+begin_src emacs-lisp
   (use-package js2-mode
     :ensure t
     :mode "\\.js\\'"
     :hook (js2-mode . js2-highlight-unused-variables-mode)
     :config
     (setq-default js2-basic-offset 2))
-   #+END_SRC
+   #+end_src
+
+   Typescript support with [[https://github.com/ananthakumaran/tide][tide]]
+
+   #+begin_src emacs-lisp
+     (use-package tide
+       :ensure t
+       :after (typescript-mode company flycheck)
+       :hook ((typescript-mode . tide-setup)
+	      (typescript-mode . tide-hl-identifier-mode)))
+   #+end_src
 
    Better CSS support.
 
-   #+BEGIN_SRC emacs-lisp
+   #+begin_src emacs-lisp
   (use-package css-mode
     :ensure t
     :mode "\\.css\\'"
@@ -943,31 +960,31 @@ A literate based Emacs configuration. I took inspiration from various sources.
     (css-mode-hook . (lambda () (run-hooks 'prog-mode-hook)))
     :config
     (setq css-indent-offset 2))
-   #+END_SRC
+   #+end_src
 
    Eldoc for CSS.
 
-   #+BEGIN_SRC emacs-lisp
+   #+begin_src emacs-lisp
   (use-package css-eldoc
     :ensure t
     :hook (css-mode . turn-on-css-eldoc)
     :commands (turn-on-css-eldoc))
-   #+END_SRC
+   #+end_src
 
    JSON specific mode.
 
-   #+BEGIN_SRC emacs-lisp
+   #+begin_src emacs-lisp
   (use-package json-mode                  ; JSON editing
     :ensure t
     :mode "\\.json\\'")
-   #+END_SRC
+   #+end_src
 
 ** Flycheck
    [[http://www.flycheck.org][Flycheck]] automatically checks buffers for errors while you type, and reports
    warnings and errors directly in the buffer and in an optional IDE-like error
    list.
 
-   #+BEGIN_SRC emacs-lisp
+   #+begin_src emacs-lisp
   (use-package flycheck
     :ensure t
     :hook (prog-mode . flycheck-mode)
@@ -975,12 +992,12 @@ A literate based Emacs configuration. I took inspiration from various sources.
     (setq flycheck-standard-error-navigation nil
 		   flycheck-display-errors-function
 		   #'flycheck-display-error-messages-unless-error-list))
-   #+END_SRC
+   #+end_src
 
 ** Magit configuration
    [[https://github.com/magit/magit][Magit]] - A Git porcelain inside Emacs.
 
-   #+BEGIN_SRC emacs-lisp
+   #+begin_src emacs-lisp
   (use-package magit                      ; The best Git client out there
     :ensure t
     :bind
@@ -1017,7 +1034,7 @@ A literate based Emacs configuration. I took inspiration from various sources.
   (use-package magit-gitflow
     :ensure t
     :hook (magit-mode . turn-on-magit-gitflow))
-   #+END_SRC
+   #+end_src
 
    [[https://github.com/magit/forge][Forge]] -Work with Git forges from the comfort of Magit
 
@@ -1031,17 +1048,17 @@ A literate based Emacs configuration. I took inspiration from various sources.
    [[https://github.com/pidu/git-timemachine][git-timemachine]] - Step through historic versions of git controlled file using
    everyone's favourite editor.
 
-   #+BEGIN_SRC emacs-lisp
+   #+begin_src emacs-lisp
   (use-package git-timemachine
     :ensure t
     :bind ("C-c v t" . git-timemachine))
-   #+END_SRC
+   #+end_src
 
 ** Smartparens
    Smartparens - Minor mode for Emacs that deals with parens pairs and tries to
    be smart about it.
 
-   #+BEGIN_SRC emacs-lisp
+   #+begin_src emacs-lisp
      (use-package smartparens                ; Parenthesis editing and balancing
        :ensure t
        :bind
@@ -1062,43 +1079,43 @@ A literate based Emacs configuration. I took inspiration from various sources.
        (setq sp-autoskip-closing-pair 'always
 		      ;; Don't kill entire symbol on C-k
 		      sp-hybrid-kill-entire-symbol nil))
-   #+END_SRC
+   #+end_src
 
 ** Github stuff
    [[https://github.com/defunkt/gist.el][gist.el]] – Share snippets of code using Gist.
 
-   #+BEGIN_SRC emacs-lisp
+   #+begin_src emacs-lisp
   (use-package gist
     :ensure t
     :bind
     (("C-c C-g l" . gist-list)
      ("C-c C-g n" . gist-region-or-buffer)
      ("C-c C-g p" . gist-region-or-buffer-private)))
-   #+END_SRC
+   #+end_src
 
 ** Docker
    Editing Dockerfiles and docker-compose.yml.
 
-   #+BEGIN_SRC emacs-lisp
+   #+begin_src emacs-lisp
   (use-package dockerfile-mode
     :ensure t)
 
   (use-package docker-compose-mode
     :ensure t)
-   #+END_SRC
+   #+end_src
 
 ** PHP (argh!) Mode
    Sometimes I have to do with ugly PHP...
 
-   #+BEGIN_SRC emacs-lisp
+   #+begin_src emacs-lisp
   (use-package php-mode
     :ensure t)
-   #+END_SRC
+   #+end_src
 
 ** Haskell
    Interactive development for Haskell
 
-   #+BEGIN_SRC emacs-lisp
+   #+begin_src emacs-lisp
      (use-package intero
        :ensure t
        :config
@@ -1111,15 +1128,15 @@ A literate based Emacs configuration. I took inspiration from various sources.
        (bind-keys :map intero-repl-mode-map
 		  ("C-c i q" . intero-destroy)
 		  ("C-c i r" . intero-restart)))
-   #+END_SRC
+   #+end_src
 
 ** Fennel
    Fennel is a programming language that brings together the speed, simplicity,
    and reach of Lua with the flexibility of a lisp syntax and macro system.
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package fennel-mode
     :ensure t)
-#+END_SRC
+#+end_src
 
 ** EditorConfig
    Add support to [[https://editorconfig.org/][EditorConfig]]
@@ -1133,29 +1150,29 @@ A literate based Emacs configuration. I took inspiration from various sources.
 
 * Custom functions
 ** Indent whole buffer
-   #+BEGIN_SRC emacs-lisp
+   #+begin_src emacs-lisp
   (defun indent-buffer ()
     "Apply `indent-region' to the entire buffer."
     (interactive)
     (indent-region (point-min) (point-max)))
-   #+END_SRC
+   #+end_src
 
 
 * Productivity
 ** org-mode visual
    Bullets as UTF-8 characters
 
-   #+BEGIN_SRC emacs-lisp
+   #+begin_src emacs-lisp
   (use-package org-bullets
     :ensure t
     :hook (org-mode . org-bullets-mode)
     :config (setq org-bullets-bullet-list '("◉" "○" "●" "►" "◇" "◎")))
-   #+END_SRC
+   #+end_src
 
 ** Configure agendas
    I use a customized version of [[https://en.wikipedia.org/wiki/Zen_Habits][ZTD]]
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (defvar my-org-default-dir "~/cloud/mds/ztd")
   (defun add-org-default-dir (e)
     (concat my-org-default-dir e))
@@ -1189,58 +1206,84 @@ A literate based Emacs configuration. I took inspiration from various sources.
 	   (file+headline ,(add-org-default-dir "/someday") "Ideas") "* %i%?")
 	  ("T" "Tickler" entry
 	   (file+headline ,(add-org-default-dir "/tickler.org") "Tickler") "* %i%? \n %U")))
-#+END_SRC
+#+end_src
+
+** Todoist integration
+#+begin_src emacs-lisp
+  (use-package todoist
+    :config (setq todoist-token personal-todoist-token)
+    :bind (:map todoist-mode-map
+		("n" . (lambda () (interactive)
+			 (let ((current-prefix-arg 4))
+			   (call-interactively #'todoist-new-task))))
+		("c" . todoist-close-task)
+		("d" . todoist-delete-task)
+		("u" . todoist-update-task)))
+#+end_src
+
+** Keyfreq
+   Track Emacs commands frequency.
+   #+begin_src emacs-lisp
+     (use-package keyfreq
+       :init
+       (keyfreq-mode 1)
+       (keyfreq-autosave-mode 1))
+   #+end_src
 
 
-* Keybindings
+* Global keybindings
 ** Ctrl-z as undo
    Use Ctrl-z as undo.
 
-   #+BEGIN_SRC emacs-lisp
+   #+begin_src emacs-lisp
   (global-set-key (kbd "C-z") 'undo)
-   #+END_SRC
+   #+end_src
 
 ** Set C-x C-k to kill the current buffer
-   #+BEGIN_SRC emacs-lisp
+   #+begin_src emacs-lisp
   (global-set-key (kbd "C-x C-k") 'kill-this-buffer)
-   #+END_SRC
+   #+end_src
 
 ** Bind M-g to goto-line
-   #+BEGIN_SRC emacs-lisp
+   #+begin_src emacs-lisp
   (global-set-key (kbd "M-g") 'goto-line)
-   #+END_SRC
+   #+end_src
 
 ** Comment and uncomment regions
-   #+BEGIN_SRC emacs-lisp
+   #+begin_src emacs-lisp
   (global-set-key (kbd "C-c c c") 'comment-region)
-
   (global-set-key (kbd "C-c c u") 'uncomment-region)
-   #+END_SRC
+   #+end_src
 
 ** Indent buffer
-   #+BEGIN_SRC emacs-lisp
+   #+begin_src emacs-lisp
   (global-set-key (kbd "C-c c i") 'indent-buffer)
-   #+END_SRC
+   #+end_src
 
 ** org keybindings
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (define-key global-map (kbd "C-c o a") 'org-agenda)
   (define-key global-map (kbd "C-c o c") 'org-capture)
   (define-key org-mode-map (kbd "C-c C-r") 'org-refile)
-#+END_SRC
+#+end_src
+
+** Todoist
+#+begin_src emacs-lisp
+  (global-set-key (kbd "C-c t t") 'todoist)
+#+end_src
 
 
 * Other
 ** Mastodon
    I maintain a Mastodon instance, [[https://functional.cafe][Functional cafè]], about functional
    programming.
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package mastodon
     :ensure t
     :config
     (setq mastodon-instance-url
 		   "https://functional.cafe"))
-#+END_SRC
+#+end_src
 
 
 * BEERWARE LICENSE
