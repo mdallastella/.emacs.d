@@ -1169,47 +1169,8 @@ A literate based Emacs configuration. I took inspiration from various sources.
     :config (setq org-bullets-bullet-list '("◉" "○" "●" "►" "◇" "◎")))
    #+end_src
 
-** Configure agendas
-   I use a customized version of [[https://en.wikipedia.org/wiki/Zen_Habits][ZTD]]
-
-#+begin_src emacs-lisp
-  (defvar my-org-default-dir "~/cloud/mds/ztd")
-  (defun add-org-default-dir (e)
-    (concat my-org-default-dir e))
-
-  (setq org-default-notes-file (add-org-default-dir "/ztd.org"))
-  (setq org-archive-location (add-org-default-dir "/archive.org::* From %s"))
-
-  (setq org-todo-keywords
-	'((sequence
-	   "TODO(t)"
-	   "WAITING(w)"
-	   "|"
-	   "DONE(d)"
-	   "CANCELLED(c)")))
-
-  (setq org-agenda-files
-	(mapcar 'add-org-default-dir '("/ztd.org"
-				       "/someday.org"
-				       "/depot.org"
-				       "/tickler.org")))
-
-  (setq org-refile-targets
-	'((org-agenda-files :maxlevel . 1)))
-
-  (setq org-capture-templates
-	`(("t" "Todo [ztd]" entry
-	   (file+headline ,(add-org-default-dir "/ztd.org") "Orphans") "* TODO %i%?")
-	  ("d" "Archive [depot]" entry
-	   (file+headline ,(add-org-default-dir "/depot.org") "Depot") "* %i%?")
-	  ("s" "Idea [someday]" entry
-	   (file+headline ,(add-org-default-dir "/someday") "Ideas") "* %i%?")
-	  ("T" "Tickler" entry
-	   (file+headline ,(add-org-default-dir "/tickler.org") "Tickler") "* %i%? \n %U")))
-#+end_src
-
 ** Todoist integration
-#+begin_src emacs-lisp
+  #+begin_src emacs-lisp
   (use-package todoist
     :config (setq todoist-token personal-todoist-token)
     :bind (:map todoist-mode-map
@@ -1219,7 +1180,7 @@ A literate based Emacs configuration. I took inspiration from various sources.
 		("c" . todoist-close-task)
 		("d" . todoist-delete-task)
 		("u" . todoist-update-task)))
-#+end_src
+  #+end_src
 
 ** Keyfreq
    Track Emacs commands frequency.
@@ -1260,30 +1221,26 @@ A literate based Emacs configuration. I took inspiration from various sources.
   (global-set-key (kbd "C-c c i") 'indent-buffer)
    #+end_src
 
-** org keybindings
-#+begin_src emacs-lisp
-  (define-key global-map (kbd "C-c o a") 'org-agenda)
-  (define-key global-map (kbd "C-c o c") 'org-capture)
-  (define-key org-mode-map (kbd "C-c C-r") 'org-refile)
-#+end_src
-
 ** Todoist
-#+begin_src emacs-lisp
+   Todoist shortcut
+
+  #+begin_src emacs-lisp
   (global-set-key (kbd "C-c t t") 'todoist)
-#+end_src
+  #+end_src
 
 
 * Other
 ** Mastodon
    I maintain a Mastodon instance, [[https://functional.cafe][Functional cafè]], about functional
    programming.
-#+begin_src emacs-lisp
+
+   #+begin_src emacs-lisp
   (use-package mastodon
     :ensure t
     :config
     (setq mastodon-instance-url
 		   "https://functional.cafe"))
-#+end_src
+   #+end_src
 
 
 * BEERWARE LICENSE
