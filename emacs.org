@@ -343,6 +343,15 @@ A literate based Emacs configuration. I took inspiration from various sources.
   (global-set-key (kbd "C-c C-<down>")  'windmove-down)
    #+end_src
 
+** Jumping around
+   Use [[https://github.com/abo-abo/avy][Avy]] for jumping around in a buffer.
+   #+begin_src emacs-lisp
+     (use-package avy
+       :ensure t
+       :bind* (("C-:" . avy-goto-line)
+	       ("C-;" . avy-goto-char-2)))
+   #+end_src
+
 ** Tabs vs Spaces
    I have learned to distrust tabs in my source code, so let's make sure that we
    only have spaces. See [[http://ergoemacs.org/emacs/emacs_tabs_space_indentation_setup.html][this discussion]] for details.
