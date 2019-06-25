@@ -321,14 +321,14 @@ A literate based Emacs configuration. I took inspiration from various sources.
    Easy workspaces creation and switching.
 
    #+begin_src emacs-lisp
-  (use-package eyebrowse
-    :ensure t
-
-    :config
-    (setq eyebrowse-switch-back-and-forth t
-		   eyebrowse-wrap-around t
-		   eyebrowse-new-workspace t)
-    (eyebrowse-mode t))
+     (use-package eyebrowse
+       :ensure t
+       :config
+       (setq eyebrowse-keymap-prefix (kbd "C-c w")
+	     eyebrowse-switch-back-and-forth t
+	     eyebrowse-wrap-around t
+	     eyebrowse-new-workspace t)
+       (eyebrowse-mode t))
    #+end_src
 
 
