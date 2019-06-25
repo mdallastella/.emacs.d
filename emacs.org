@@ -334,7 +334,7 @@ A literate based Emacs configuration. I took inspiration from various sources.
 
 * Editing settings
 ** Windows navigation
-   Use Ctrl-c Arrow for cycle throught windows, ignoring possible errors.
+   Use Ctrl-c Ctrl-Arrow for cycle throught windows, ignoring possible errors.
 
    #+begin_src emacs-lisp
   (global-set-key (kbd "C-c C-<left>")  'windmove-left)
