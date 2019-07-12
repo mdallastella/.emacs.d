@@ -1158,15 +1158,6 @@ A literate based Emacs configuration. I took inspiration from various sources.
     :ensure t)
 #+end_src
 
-** EditorConfig
-   Add support to [[https://editorconfig.org/][EditorConfig]]
-#+begin_src emacs-lisp
-  (use-package editorconfig
-    :ensure t
-    :config
-    (editorconfig-mode 1))
-#+end_src
-
 
 * Custom functions
 ** Indent whole buffer
