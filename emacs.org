@@ -714,21 +714,11 @@ A literate based Emacs configuration. I took inspiration from various sources.
     (setq-default olivetti-body-width 80))
    #+end_src
 
-** pdf-tools
-   Better PDF support.
-
-   #+begin_src emacs-lisp
-  (use-package pdf-tools
-    :ensure t
-    :demand t
-    :config (pdf-tools-install))
-   #+end_src
-
 ** EPUB reader mode
    #+begin_src emacs-lisp
-  (use-package nov
-    :ensure t
-    :mode ("\\.epub\\'" . nov-mode))
+     (use-package nov
+       :ensure t
+       :mode ("\\.epub\\'" . nov-mode))
    #+end_src
 
 
