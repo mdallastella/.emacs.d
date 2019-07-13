@@ -628,19 +628,19 @@ A literate based Emacs configuration. I took inspiration from various sources.
    #+end_src
 
 ** Flyspell
-*** Flyspell configuration using aspell.
-**** aspell
+*** Flyspell configuration using hunspell.
+**** hunspell
 
-     #+begin_src emacs-lisp
+#+begin_src emacs-lisp
   (use-package ispell
+    :defer t
     :config
     (setq
-     ispell-program-name (executable-find "aspell")
+     ispell-program-name (executable-find "hunspell")
      ispell-dictionary "en_US")
-
     (unless ispell-program-name
-      (warn "No spell checker available. Please install aspell.")))
-     #+end_src
+      (warn "No spell checker available. Please install hunspell.")))
+#+end_src
 
 **** Flyspell
 
@@ -648,20 +648,19 @@ A literate based Emacs configuration. I took inspiration from various sources.
   (use-package flyspell
     :hook
     ((prog-mode text-mode) . flyspell-prog-mode)
-
     :config
     (setq flyspell-use-meta-tab nil
-		   ;; Make Flyspell less chatty
-		   flyspell-issue-welcome-flag nil
-		   flyspell-issue-message-flag nil))
+	  ;; Make Flyspell less chatty
+	  flyspell-issue-welcome-flag nil
+	  flyspell-issue-message-flag nil))
 
-  ; Better interface for corrections
-  (use-package flyspell-correct-ivy
-    :ensure t
-    :after flyspell
-    :bind
-    (:map flyspell-mode-map
-	  ("C-c $" . flyspell-correct-word-generic)))
+   ; Better interface for corrections
+   (use-package flyspell-correct-ivy
+     :ensure t
+     :after flyspell
+     :bind
+     (:map flyspell-mode-map
+	   ("C-c $" . flyspell-correct-word-generic)))
 #+end_src
 
 ** Auto-insert
