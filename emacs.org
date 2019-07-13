@@ -432,14 +432,6 @@ A literate based Emacs configuration. I took inspiration from various sources.
      ivy-use-ignore-default 'always))
    #+end_src
 
-   Use [[https://github.com/PythonNut/historian.el][ivy-historian]] too:
-
-   #+begin_src emacs-lisp
-  (use-package ivy-historian              ; Store minibuffer candidates
-    :ensure t
-    :init (ivy-historian-mode +1))
-   #+end_src
-
    Use ivy-hydra:
 
    #+begin_src emacs-lisp
