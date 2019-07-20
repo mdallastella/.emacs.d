@@ -336,6 +336,28 @@ A literate based Emacs configuration. I took inspiration from various sources.
     (eyebrowse-mode t))
 #+end_src
 
+** Spacebar
+
+   Spacebar provides workspaces with an interface similar to vim
+   tabs. Workspaces can display any buffer, but retain their own split
+   layout. Spacebar is a user interface built on eyebrowse, which manages the
+   workspaces.
+
+#+begin_src emacs-lisp
+  (use-package spacebar
+    :ensure t
+    :after projectile
+    :bind-keymap ("C-c w" . spacebar-command-map)
+    :config
+    (setq spacebar-window-height 1)
+    (spacebar-mode)
+    (spacebar-projectile-init)
+    (set-face-attribute
+     'spacebar-inactive nil :inherit font-lock-comment-face)
+    (set-face-attribute
+     'spacebar-active nil :height 1.0))
+#+end_src
+
 
 * Editing settings
 ** Windows navigation
