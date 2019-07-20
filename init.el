@@ -19,7 +19,9 @@
 (setq package-archives
       ;; Package archives, the usual suspects
       '(("GNU ELPA" . "https://elpa.gnu.org/packages/")
-        ("MELPA"    . "https://melpa.org/packages/")))
+        ("MELPA"    . "https://melpa.org/packages/")
+	("org"      . "http://orgmode.org/elpa/")))
+(add-to-list 'load-path "~/.emacs.d/lisp/")
 (package-initialize)
 
 (setq load-prefer-newer t)               ; Always load newer compiled files
