@@ -140,11 +140,10 @@ A literate based Emacs configuration. I took inspiration from various sources.
    I use the Iosevka font.
 
 #+begin_src emacs-lisp
-  (set-face-attribute
-   'default nil
-   :family "Iosevka SS01"
-   :weight 'light
-   :height 140)
+  (set-face-attribute 'default nil
+		      :family "Iosevka SS01"
+		      :weight 'light
+		      :height 140)
 #+end_src
 
 ** Theme
@@ -235,7 +234,7 @@ A literate based Emacs configuration. I took inspiration from various sources.
 
   (use-package rainbow-delimiters
     :ensure t
-    :hook ((prog-mode clojure-mode cider-repl-mode) . rainbow-delimiters-mode))
+    :hook ((prog-mode cider-repl-mode) . rainbow-delimiters-mode))
 #+end_src
 
 ** Disable annoying prompts and messages
@@ -363,21 +362,22 @@ A literate based Emacs configuration. I took inspiration from various sources.
 ** Windows navigation
    Use Ctrl-c Ctrl-Arrow for cycle throught windows, ignoring possible errors.
 
-   #+begin_src emacs-lisp
+#+begin_src emacs-lisp
   (global-set-key (kbd "C-c C-<left>")  'windmove-left)
   (global-set-key (kbd "C-c C-<right>") 'windmove-right)
   (global-set-key (kbd "C-c C-<up>")    'windmove-up)
   (global-set-key (kbd "C-c C-<down>")  'windmove-down)
-   #+end_src
+#+end_src
 
 ** Jumping around
    Use [[https://github.com/abo-abo/avy][Avy]] for jumping around in a buffer.
-   #+begin_src emacs-lisp
-     (use-package avy
-       :ensure t
-       :bind* (("C-:" . avy-goto-line)
-	       ("C-;" . avy-goto-char-2)))
-   #+end_src
+
+#+begin_src emacs-lisp
+  (use-package avy
+    :ensure t
+    :bind* (("C-:" . avy-goto-line)
+	    ("C-;" . avy-goto-char-2)))
+#+end_src
 
 ** Tabs vs Spaces
    I have learned to distrust tabs in my source code, so let's make sure that we
@@ -397,47 +397,47 @@ A literate based Emacs configuration. I took inspiration from various sources.
 ** Misc variable settings
    Does anyone type =yes= anymore?
 
-   #+begin_src elisp
+#+begin_src elisp
   (fset 'yes-or-no-p 'y-or-n-p)
-   #+end_src
+#+end_src
 
    Fix the scrolling to keep point in the center:
 
-   #+begin_src elisp
-     (setq scroll-conservatively 10000
-		    scroll-preserve-screen-position t)
-   #+end_src
+#+begin_src elisp
+  (setq scroll-conservatively 10000
+	scroll-preserve-screen-position t)
+#+end_src
 
    I've been using Emacs for too long to need to re-enable each feature
    bit-by-bit:
 
-   #+begin_src elisp
+#+begin_src elisp
   (setq disabled-command-function nil)
-   #+end_src
+#+end_src
 
    Store more history
 
-   #+begin_src emacs-lisp
+#+begin_src emacs-lisp
   (setq history-length 1000)
-   #+end_src
+#+end_src
 
    Increase line-spacing (default 0)
 
-   #+begin_src emacs-lisp
+#+begin_src emacs-lisp
   (setq-default line-spacing 0.2)
-   #+end_src
+#+end_src
 
    Configure a reasonable fill column and enable automatic filling
 
-   #+begin_src emacs-lisp
+#+begin_src emacs-lisp
   (setq-default fill-column 80)
   (add-hook 'text-mode-hook #'auto-fill-mode)
-   #+end_src
+#+end_src
 
 ** Ivy configuration
    [[http://oremacs.com/swiper/][Ivy]] is an interactive interface for completion in Emacs.
 
-   #+begin_src emacs-lisp
+#+begin_src emacs-lisp
   (use-package ivy
     :ensure t
     :bind (("C-c C-r" . ivy-resume)
@@ -445,197 +445,203 @@ A literate based Emacs configuration. I took inspiration from various sources.
 	   ("<return>" . ivy-alt-done)
 	   ("C-o" . hydra-ivy/body))
     :init (ivy-mode 1)
-    :config
-    (setq
-     ivy-count-format "(%d/%d) "          ; Show current match and matches
-     ivy-extra-directories nil            ; Do not show "./" and "../"
-     ivy-virtual-abbreviate 'full         ; Show full file path
-     ;; Jump back to first candidate when on the last one
-     ivy-wrap t
-     ;; Show recently killed buffers when calling `ivy-switch-buffer'
-     ivy-use-virtual-buffers t
-     ;; Always ignore buffers set in `ivy-ignore-buffers'
-     ivy-use-ignore-default 'always))
-   #+end_src
+    :config (setq ivy-count-format "(%d/%d) "          ; Show current match and matches
+		  ivy-extra-directories nil            ; Do not show "./" and "../"
+		  ivy-virtual-abbreviate 'abbreviate   ; Show full file path
+		  ;; Jump back to first candidate when on the last one
+		  ivy-wrap t
+		  ;; Show recently killed buffers when calling `ivy-switch-buffer'
+		  ivy-use-virtual-buffers t
+		  ;; Always ignore buffers set in `ivy-ignore-buffers'
+		  ivy-use-ignore-default 'always))
+#+end_src
 
    Use ivy-hydra:
 
-   #+begin_src emacs-lisp
+#+begin_src emacs-lisp
   (use-package ivy-hydra
     :ensure t
     :after ivy)
-   #+end_src
+#+end_src
 
    Ivy Posframe
-   #+begin_src emacs-lisp
-     (use-package ivy-posframe
-       :ensure t
-       :init
-       (ivy-posframe-mode 1)
-       :config
-       (setq ivy-posframe-display-functions-alist
-	     '((t . ivy-posframe-display-at-frame-center))))
-   #+end_src
+
+#+begin_src emacs-lisp
+  (use-package ivy-posframe
+    :ensure t
+    :init
+    (ivy-posframe-mode 1)
+    :config
+    (setq ivy-posframe-display-functions-alist
+	  '((t . ivy-posframe-display-at-frame-center))))
+#+end_src
 
 ** wgrep
    Use wgrep for editing searches.
-   #+begin_src emacs-lisp
-     (use-package wgrep
-       :ensure t)
-   #+end_src
 
-** Swiper, Smex and counsel configuration
-   #+begin_src emacs-lisp
-     (use-package smex                       ; Better M-x interface
-       :ensure t)
+#+begin_src emacs-lisp
+  (use-package wgrep
+    :ensure t)
+#+end_src
 
-     (use-package counsel                    ; Completion functions with Ivy
-       :ensure t
-       :init (counsel-mode)
-       :bind (("C-c u" . counsel-unicode-char)
-	      ("C-c g" . counsel-git-grep)
-	      ("C-c G" . counsel-git-log)
-	      ("C-c k" . counsel-rg)
-	      ("C-c r" . counsel-linux-app)
-	      ("C-x l" . counsel-locate)
-	      ("C-x i" . counsel-imenu)
-	      ("C-x j" . counsel-bookmark)
-	      ("C-c h h" . counsel-command-history)
-	      ([remap execute-extended-command] . counsel-M-x)
-	      ([remap find-file]                . counsel-find-file)
-	      ([remap bookmark-jump]            . counsel-bookmark)
-	      ([remap describe-function]        . counsel-describe-function)
-	      ([remap describe-variable]        . counsel-describe-variable)
-	      ([remap info-lookup-symbol]       . counsel-info-lookup-symbol))
-       :bind (:map read-expression-map
-		   ("C-r" . counsel-expression-history))
-       :config
-       (setq counsel-bookmark-avoid-dired t
-	     counsel-mode-override-describe-bindings t
-	     counsel-grep-post-action-hook '(recenter)
-	     counsel-find-file-at-point t
-	     counsel-grep-base-command
-	     "rg -i -M 120 --no-heading --line-number --color never '%s' %s"
-	     counsel-find-file-ignore-regexp
-	     (concat
-	      ;; File names beginning with # or .
-	      "\\(?:\\`[#.]\\)"
-	      ;; File names ending with # or ~
-	      "\\|\\(?:\\`.+?[#~]\\'\\)")))
-   #+end_src
+** Amx and Counsel configuration
+
+#+begin_src emacs-lisp
+  (use-package amx			; Better M-x interface
+    :ensure t)
+
+  (use-package counsel                    ; Completion functions with Ivy
+    :ensure t
+    :init (counsel-mode)
+    :bind (("C-c u" . counsel-unicode-char)
+	   ("C-c g" . counsel-git-grep)
+	   ("C-c G" . counsel-git-log)
+	   ("C-c k" . counsel-rg)
+	   ("C-c r" . counsel-linux-app)
+	   ("C-x l" . counsel-locate)
+	   ("C-x i" . counsel-imenu)
+	   ("C-x j" . counsel-bookmark)
+	   ("C-c h h" . counsel-command-history)
+	   ([remap execute-extended-command] . counsel-M-x)
+	   ([remap find-file]                . counsel-find-file)
+	   ([remap bookmark-jump]            . counsel-bookmark)
+	   ([remap describe-function]        . counsel-describe-function)
+	   ([remap describe-variable]        . counsel-describe-variable)
+	   ([remap info-lookup-symbol]       . counsel-info-lookup-symbol))
+    :bind (:map read-expression-map
+		("C-r" . counsel-expression-history))
+    :config (setq counsel-bookmark-avoid-dired t
+		  counsel-mode-override-describe-bindings t
+		  counsel-grep-post-action-hook '(recenter)
+		  counsel-find-file-at-point t
+		  counsel-grep-base-command
+		  "rg -i -M 120 --no-heading --line-number --color never '%s' %s"
+		  counsel-find-file-ignore-regexp
+		  (concat
+		   ;; File names beginning with # or .
+		   "\\(?:\\`[#.]\\)"
+		   ;; File names ending with # or ~
+		   "\\|\\(?:\\`.+?[#~]\\'\\)")))
+#+end_src
 
 ** Completion with company
    [[http://company-mode.github.io/][Company]] is a text completion framework for Emacs. The name stands for
    "complete anything". It uses pluggable back-ends and front-ends to retrieve
    and display completion candidates.
 
-   #+begin_src emacs-lisp
-    (use-package company                    ; Auto-completion
-      :ensure t
-      :init (global-company-mode)
-      :bind (:map company-active-map
-		  ("C-n" . company-select-next)
-		  ("C-p" . company-select-previous))
-      :config
-      (setq company-tooltip-align-annotations t
-		     company-tooltip-flip-when-above t
-		     ;; Easy navigation to candidates with M-<n>
-		     company-show-numbers t
-		     ;; Ignore case
-		     company-dabbrev-ignore-case t
-		     ;; Do not downcase completion
-		     company-dabbrev-downcase nil))
+#+begin_src emacs-lisp
+  (use-package company
+    :ensure t
+    :init (global-company-mode)
+    :bind (:map company-active-map
+		("C-n" . company-select-next)
+		("C-p" . company-select-previous))
+    :config (setq company-tooltip-align-annotations t
+		  company-tooltip-flip-when-above t
+		  ;; Easy navigation to candidates with M-<n>
+		  company-show-numbers t
+		  ;; Ignore case
+		  company-dabbrev-ignore-case t
+		  ;; Do not downcase completion
+		  company-dabbrev-downcase nil))
+#+end_src
 
-  (use-package company-statistics         ; Show likelier candidates on top
+***  Show likelier candidates on top
+
+#+begin_src emacs-lisp
+  (use-package company-statistics
     :ensure t
     :after company
     :config (company-statistics-mode))
+#+end_src
 
-  (use-package company-quickhelp          ; Show help in tooltip
+*** Show help in tooltip
+
+#+begin_src emacs-lisp
+  (use-package company-quickhelp
     :ensure t
     :after company
     :config (company-quickhelp-mode))
-   #+end_src
+#+end_src
 
 ** Undo tree
    Treat undo history as a tree.
 
-   #+begin_src emacs-lisp
-  (use-package undo-tree                  ; Show buffer changes as a tree
+#+begin_src emacs-lisp
+  (use-package undo-tree
     :ensure t
     :init (global-undo-tree-mode)
     :config (setq undo-tree-visualizer-timestamps t))
-   #+end_src
+#+end_src
 
 ** Aggressive indentation
    aggressive-indent-mode is a minor mode that keeps your code always indented.
    It re-indents after every change, making it more reliable than
    `electric-indent-mode`.
 
-   #+begin_src emacs-lisp
+#+begin_src emacs-lisp
   (use-package aggressive-indent
     :ensure t
     :init (global-aggressive-indent-mode 1)
     :config
     ;; Free C-c C-q, used in Org and in CIDER
     (unbind-key "C-c C-q" aggressive-indent-mode-map)
-
     (add-to-list 'aggressive-indent-excluded-modes
 		 'cider-repl-mode))
-   #+end_src
+#+end_src
 
 ** Easy kill
    Better kill text.
 
-   #+begin_src emacs-lisp
-  (use-package easy-kill                  ; Better kill text
+#+begin_src emacs-lisp
+  (use-package easy-kill
     :ensure t
     :bind (([remap kill-ring-save] . easy-kill)
 	   ([remap mark-sexp]      . easy-mark)))
-   #+end_src
+#+end_src
 
 ** Remove trailing spaces on save
+   Cleanup whitespace in buffers
 
-   #+begin_src emacs-lisp
-  (use-package whitespace-cleanup-mode    ; Cleanup whitespace in buffers
+#+begin_src emacs-lisp
+  (use-package whitespace-cleanup-mode
     :ensure t
     :bind (("C-c t w" . whitespace-cleanup-mode)
 	   ("C-c x w" . whitespace-cleanup))
     :hook ((prog-mode text-mode conf-mode) . whitespace-cleanup-mode))
-   #+end_src
+#+end_src
 
 ** Copy as format
    Copy the current region and apply the right format required by some services.
 
-   #+begin_src emacs-lisp
+#+begin_src emacs-lisp
   (use-package copy-as-format
     :ensure t
     :bind (("C-c y s" . copy-as-format-slack)
 	   ("C-c y l" . copy-as-format-gitlab)
 	   ("C-c y g" . copy-as-format-github)
 	   ("C-c y m" . copy-as-format-markdown)))
-   #+end_src
+#+end_src
 
 ** Highlight symbols
    [[https://github.com/wolray/symbol-overlay][symbol-overlay.el]] - Highlight symbols with overlays while providing a keymap
    for various operations about highlighted symbols.
 
-   #+begin_src emacs-lisp
-  (use-package symbol-overlay             ; Highlight symbols
+#+begin_src emacs-lisp
+  (use-package symbol-overlay
     :ensure t
-    :bind
-    (:map symbol-overlay-mode-map
-	  ("M-n" . symbol-overlay-jump-next)
-	  ("M-p" . symbol-overlay-jump-prev))
+    :bind (:map symbol-overlay-mode-map
+		("M-n" . symbol-overlay-jump-next)
+		("M-p" . symbol-overlay-jump-prev))
     :hook ((prog-mode html-mode css-mode) . symbol-overlay-mode))
-   #+end_src
+#+end_src
 
    Custom regexp highlighting.
 
-   #+begin_src emacs-lisp
+#+begin_src emacs-lisp
   (use-package hi-lock
     :init (global-hi-lock-mode))
-   #+end_src
+#+end_src
 
 ** Flyspell
 *** Flyspell configuration using hunspell.
@@ -676,7 +682,7 @@ A literate based Emacs configuration. I took inspiration from various sources.
 ** Auto-insert
    I'm lazy, so I need something to add different headers to my files.
 
-   #+begin_src emacs-lisp
+#+begin_src emacs-lisp
   (use-package autoinsert
     :init
     (auto-insert-mode)
@@ -696,7 +702,7 @@ A literate based Emacs configuration. I took inspiration from various sources.
 
     :config
     (setq auto-insert-query nil))
-   #+end_src
+#+end_src
 
 
 * Tools
