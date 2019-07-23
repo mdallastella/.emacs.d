@@ -176,18 +176,21 @@ A literate based Emacs configuration. I took inspiration from various sources.
   (line-number-mode t)
 #+end_src
 
-*** smart-mode-line
+*** mode-line
 
 #+begin_src emacs-lisp
-  (use-package smart-mode-line
-    :ensure t
-    :disabled t
-    :init
-    (sml/setup)
-    (setq sml/theme nil
-	  sml/no-confirm-load-theme t
-	  sml/shorten-directory t
-	  sml/shorten-modes t))
+  (setq-default mode-line-format
+		'("%e"
+		  mode-line-front-space
+		  mode-line-mule-info
+		  mode-line-client
+		  mode-line-modified
+		  mode-line-remote
+		  mode-line-frame-identification
+		  mode-line-buffer-identification " " mode-line-position
+		  (vc-mode vc-mode)
+		  " " mode-line-modes
+		  mode-line-end-spaces))
 #+end_src
 
 *** minions
