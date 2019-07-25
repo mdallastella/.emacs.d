@@ -379,7 +379,9 @@ A literate based Emacs configuration. I took inspiration from various sources.
   (use-package avy
     :ensure t
     :bind* (("C-:" . avy-goto-line)
-	    ("C-;" . avy-goto-char-2)))
+	    ("C-;" . avy-goto-char-2))
+    :bind (:map isearch-mode-map
+		("C-'" . avy-isearch)))
 #+end_src
 
 ** Tabs vs Spaces
