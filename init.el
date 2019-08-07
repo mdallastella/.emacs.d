@@ -42,6 +42,9 @@
   (package-refresh-contents)
   (package-install 'org))
 
+(use-package gnutls
+  :config (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3"))
+
 ;; Keep .emacs.d clean
 (use-package no-littering
   :ensure t
@@ -60,6 +63,9 @@
 	`((".*" . ,(no-littering-expand-var-file-name "backup/")))
 	auto-save-file-name-transforms
 	`((".*" ,(no-littering-expand-var-file-name "auto-save/") t))))
+
+(use-package gnu-elpa-keyring-update
+  :ensure t)
 
 ;; Load emacs.org - my Emacs configuration
 (org-babel-load-file (expand-file-name "emacs.org" user-emacs-directory))
