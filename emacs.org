@@ -461,7 +461,7 @@ A literate based Emacs configuration. I took inspiration from various sources.
 		  ivy-use-ignore-default 'always))
 #+end_src
 
-   Use ivy-hydra:
+*** ivy-hydra
 
 #+begin_src emacs-lisp
   (use-package ivy-hydra
@@ -469,7 +469,7 @@ A literate based Emacs configuration. I took inspiration from various sources.
     :after ivy)
 #+end_src
 
-   Ivy Posframe
+*** ivy-posframe
 
 #+begin_src emacs-lisp
   (use-package ivy-posframe
@@ -479,6 +479,14 @@ A literate based Emacs configuration. I took inspiration from various sources.
     :config
     (setq ivy-posframe-display-functions-alist
 	  '((t . ivy-posframe-display-at-frame-center))))
+#+end_src
+
+*** ivy-rich
+#+begin_src emacs-lisp
+  (use-package ivy-rich
+    :config (setcdr (assq t ivy-format-functions-alist)
+		    #'ivy-format-function-line)
+    :init (ivy-rich-mode 1))
 #+end_src
 
 ** wgrep
@@ -542,31 +550,19 @@ A literate based Emacs configuration. I took inspiration from various sources.
 		("C-n" . company-select-next)
 		("C-p" . company-select-previous))
     :config (setq company-tooltip-align-annotations t
-		  company-tooltip-flip-when-above t
-		  ;; Easy navigation to candidates with M-<n>
-		  company-show-numbers t
 		  ;; Ignore case
 		  company-dabbrev-ignore-case t
 		  ;; Do not downcase completion
 		  company-dabbrev-downcase nil))
 #+end_src
 
-***  Show likelier candidates on top
+*** Show likelier candidates on top
 
 #+begin_src emacs-lisp
   (use-package company-statistics
     :ensure t
     :after company
     :config (company-statistics-mode))
-#+end_src
-
-*** Show help in tooltip
-
-#+begin_src emacs-lisp
-  (use-package company-quickhelp
-    :ensure t
-    :after company
-    :config (company-quickhelp-mode))
 #+end_src
 
 ** Undo tree
@@ -948,7 +944,8 @@ A literate based Emacs configuration. I took inspiration from various sources.
     :ensure t
     :after (typescript-mode company flycheck)
     :hook ((typescript-mode . tide-setup)
-	   (typescript-mode . tide-hl-identifier-mode)))
+	   (typescript-mode . tide-hl-identifier-mode))
+    :config (setq typescript-indent-level 2))
 #+end_src
 
    Better CSS support.
