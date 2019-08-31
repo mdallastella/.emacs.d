@@ -802,6 +802,13 @@ A literate based Emacs configuration. I took inspiration from various sources.
 		  cider-switch-to-repl-after-insert-p nil))
 #+end_src
 
+*** Flycheck
+    Flycheck using clj-kondo
+#+begin_src emacs-lisp
+  (use-package flycheck-clj-kondo
+    :ensure t)
+#+end_src
+
 *** Major mode for Clojure files
 
 #+begin_src emacs-lisp
