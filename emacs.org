@@ -141,7 +141,7 @@ A literate based Emacs configuration. I took inspiration from various sources.
 
 #+begin_src emacs-lisp
   (set-face-attribute 'default nil
-		      :family "Iosevka SS01"
+		      :family "Iosevka Term SS01"
 		      :weight 'light
 		      :height 140)
 #+end_src
@@ -703,6 +703,13 @@ A literate based Emacs configuration. I took inspiration from various sources.
 
     :config
     (setq auto-insert-query nil))
+#+end_src
+
+** Sudo
+   Edit files using sudo
+
+#+begin_src emacs-lisp
+  (use-package sudo-edit)
 #+end_src
 
 
