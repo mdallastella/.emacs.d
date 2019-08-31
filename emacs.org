@@ -709,7 +709,8 @@ A literate based Emacs configuration. I took inspiration from various sources.
    Edit files using sudo
 
 #+begin_src emacs-lisp
-  (use-package sudo-edit)
+  (use-package sudo-edit
+    :ensure t)
 #+end_src
 
 
