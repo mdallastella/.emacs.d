@@ -810,7 +810,7 @@ A literate based Emacs configuration. I took inspiration from various sources.
 		  cider-switch-to-repl-after-insert-p nil))
 #+end_src
 
-*** Flycheck
+*** Clojure Flycheck
     Flycheck using clj-kondo
 #+begin_src emacs-lisp
   (use-package flycheck-clj-kondo
@@ -871,6 +871,24 @@ A literate based Emacs configuration. I took inspiration from various sources.
 		  cider-repl-display-help-banner nil ; Disable help banner
 		  cider-repl-pop-to-buffer-on-connect t
 		  cider-repl-result-prefix ";; => "))
+#+end_src
+
+*** Kaocha test runner
+    An emacs package for running Kaocha tests via CIDER.
+
+#+begin_src emacs-lisp
+  (use-package kaocha-runner
+    :ensure t
+    :after cider
+    :bind (:map clojure-mode-map
+		("C-c k a" . kaocha-runner-run-all-tests)
+		("C-c k h" . kaocha-runner-hide-windows)
+		("C-c k r" . kaocha-runner-run-tests)
+		("C-c k t" . kaocha-runner-run-test-at-point)
+		("C-c k w" . kaocha-runner-show-warnings))
+    :config (setq kaocha-runner-failure-win-min-height 20
+		  kaocha-runner-ongoing-tests-win-min-height 20
+		  kaocha-runner-output-win-max-height 20))
 #+end_src
 
 *** org-babel-clojure
