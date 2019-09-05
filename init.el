@@ -42,9 +42,6 @@
   (package-refresh-contents)
   (package-install 'org))
 
-(use-package gnutls
-  :config (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3"))
-
 ;; Keep .emacs.d clean
 (use-package no-littering
   :ensure t
