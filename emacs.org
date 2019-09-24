@@ -1154,6 +1154,23 @@ A literate based Emacs configuration. I took inspiration from various sources.
     :ensure t)
 #+end_src
 
+** Janet
+   [[https://janet-lang.org][Janet]] is a functional and imperative programming language.
+
+#+begin_src emacs-lisp
+  (use-package janet-mode
+    :straight (:host github :repo "ALSchwalm/janet-mode")
+    :mode ("\\.janet\\'" . janet-mode))
+
+  (use-package ijanet-mode
+    :straight (:host github :repo "serialdev/ijanet-mode")
+    :after janet-mode
+    :bind (:map janet-mode-map
+		("C-c C-z" . ijanet)
+		("C-c C-e" . ijanet-eval-line)
+		("C-c C-b" . ijanet-eval-buffer)))
+#+end_src
+
 
 * Custom functions
 ** Indent whole buffer
