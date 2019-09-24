@@ -6,6 +6,7 @@
 elpa
 
 # Stuff
+/straight
 backup
 autosave
 main.el
