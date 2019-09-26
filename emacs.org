@@ -167,7 +167,7 @@ A literate based Emacs configuration. I took inspiration from various sources.
 #+end_src
 
 ** Mode line
-   Custom mode-line with [[https://github.com/Malabarba/smart-mode-line][smart-mode-line]], [[https://github.com/tarsius/minions][minions]] and [[https://github.com/tarsius/moody][moody]].
+   Custom mode-line [[https://github.com/tarsius/minions][minions]] and [[https://github.com/tarsius/moody][moody]].
 
 *** Show current column and line
 
@@ -323,41 +323,6 @@ A literate based Emacs configuration. I took inspiration from various sources.
     :init (which-key-mode)
     :config (setq which-key-idle-delay 0.4
 		  which-key-sort-order 'which-key-prefix-then-key-order))
-#+end_src
-
-** EyeBrowse
-   Easy workspaces creation and switching.
-
-#+begin_src emacs-lisp
-  (use-package eyebrowse
-    :ensure t
-    :config (setq eyebrowse-keymap-prefix (kbd "C-c w")
-		  eyebrowse-switch-back-and-forth t
-		  eyebrowse-wrap-around t
-		  eyebrowse-new-workspace t)
-    (eyebrowse-mode t))
-#+end_src
-
-** Spacebar
-
-   Spacebar provides workspaces with an interface similar to vim
-   tabs. Workspaces can display any buffer, but retain their own split
-   layout. Spacebar is a user interface built on eyebrowse, which manages the
-   workspaces.
-
-#+begin_src emacs-lisp
-  (use-package spacebar
-    :ensure t
-    :after projectile
-    :bind-keymap ("C-c w" . spacebar-command-map)
-    :config
-    (setq spacebar-window-height 1)
-    (spacebar-mode)
-    (spacebar-projectile-init)
-    (set-face-attribute
-     'spacebar-inactive nil :inherit font-lock-comment-face)
-    (set-face-attribute
-     'spacebar-active nil :height 1.0))
 #+end_src
 
 
