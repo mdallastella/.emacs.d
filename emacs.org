@@ -167,7 +167,7 @@ A literate based Emacs configuration. I took inspiration from various sources.
 #+end_src
 
 ** Mode line
-   Custom mode-line [[https://github.com/tarsius/minions][minions]] and [[https://github.com/tarsius/moody][moody]].
+   Custom mode-line and [[https://github.com/tarsius/minions][minions]].
 
 *** Show current column and line
 
@@ -202,15 +202,15 @@ A literate based Emacs configuration. I took inspiration from various sources.
     :config (setq minions-direct '(cider-mode)))
 #+end_src
 
-*** moody
+*** anzu
 
 #+begin_src emacs-lisp
-  (use-package moody
+  (use-package anzu
     :ensure t
+    :bind (("M-%" . anzu-query-replace)
+	   ("C-M-%" . anzu-query-replace-regexp))
     :config
-    (setq x-underline-at-descent-line t)
-    (moody-replace-mode-line-buffer-identification)
-    (moody-replace-vc-mode))
+    (global-anzu-mode))
 #+end_src
 
 ** Frame title
