@@ -166,6 +166,16 @@ A literate based Emacs configuration. I took inspiration from various sources.
       (set-face-attribute 'mode-line-inactive nil :box nil)))
 #+end_src
 
+** Eyebrowse
+   [[https://github.com/wasamasa/eyebrowse][Eyebrowse]] - A simple-minded way of managing window configs in emacs
+
+#+begin_src emacs-lisp
+  (use-package eyebrowse
+    :ensure t
+    :config (setq eyebrowse-mode-line-style 'always)
+    :init (eyebrowse-mode))
+#+end_src
+
 ** Mode line
    Custom mode-line and [[https://github.com/tarsius/minions][minions]].
 
