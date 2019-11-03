@@ -698,46 +698,30 @@ A literate based Emacs configuration. I took inspiration from various sources.
 
 
 * Tools
-** Markdown and Pandoc
-   I use markdown and pandoc for note taking.
+** Docker
+   Editing Dockerfiles and docker-compose.yml.
 
 #+begin_src emacs-lisp
-  (use-package markdown-mode
+  (use-package dockerfile-mode
     :ensure t)
 
-  (use-package pandoc-mode
-    :ensure t
-    :hook
-    ((pandoc-mode markdown-mode) . pandoc-load-default-settings))
-#+end_src
-
-** Olivetti mode
-   [[https://github.com/rnkn/olivetti][Olivetti]] is a simple Emacs minor mode for a nice writing environment.
-
-#+begin_src emacs-lisp
-  (use-package olivetti
-    :ensure t
-    :config (setq-default olivetti-body-width 80))
-#+end_src
-
-** EPUB reader mode
-#+begin_src emacs-lisp
-  (use-package nov
-    :ensure t
-    :mode ("\\.epub\\'" . nov-mode))
-#+end_src
-
-
-* Coding settings
-** Emacs lisp
-   Package linter
-
-#+begin_src emacs-lisp
-  (use-package package-lint
+  (use-package docker-compose-mode
     :ensure t)
+#+end_src
 
-  (use-package package-lint-flymake
-    :ensure t)
+** Flycheck
+   [[http://www.flycheck.org][Flycheck]] automatically checks buffers for errors while you type, and reports
+   warnings and errors directly in the buffer and in an optional IDE-like error
+   list.
+
+#+begin_src emacs-lisp
+  (use-package flycheck
+    :ensure t
+    :hook (prog-mode . flycheck-mode)
+    :config
+    (setq flycheck-standard-error-navigation nil
+		   flycheck-display-errors-function
+		   #'flycheck-display-error-messages-unless-error-list))
 #+end_src
 
 ** Projectile
@@ -780,6 +764,141 @@ A literate based Emacs configuration. I took inspiration from various sources.
     :bind (:map projectile-command-map
 		("s r" . projectile-ripgrep)))
 #+end_src
+** Magit configuration
+   [[https://github.com/magit/magit][Magit]] - A Git porcelain inside Emacs.
+
+#+begin_src emacs-lisp
+  (use-package magit
+    :ensure t
+    :bind (("C-c v c" . magit-clone)
+	   ("C-c v C" . magit-checkout)
+	   ("C-c v d" . magit-dispatch-popup)
+	   ("C-c v g" . magit-blame)
+	   ("C-c v l" . magit-log-buffer-file)
+	   ("C-c v p" . magit-pull)
+	   ("C-c v v" . magit-status))
+    :config (setq magit-save-repository-buffers 'dontask
+		  magit-refs-show-commit-count 'all)
+
+    ;; Use Ivy
+    (setq magit-completing-read-function 'ivy-completing-read)
+
+    ;; Show status buffer in fullscreen
+    (setq magit-display-buffer-function
+	  #'magit-display-buffer-fullframe-status-v1)
+
+    ;; Kill Magit buffers when quitting `magit-status'
+    (defun my-magit-quit-session (&optional kill-buffer)
+      "Kill all Magit buffers on quit"
+      (interactive)
+      (magit-restore-window-configuration kill-buffer))
+
+    (bind-key "q" #'my-magit-quit-session magit-status-mode-map))
+
+  (use-package magit-gitflow
+    :ensure t
+    :hook (magit-mode . turn-on-magit-gitflow))
+#+end_src
+
+   [[https://github.com/magit/forge][Forge]] - Work with Git forges from the comfort of Magit
+
+#+begin_src emacs-lisp
+  (use-package forge
+    :ensure t
+    :after magit)
+#+end_src
+
+*** Git Time-machine
+   [[https://github.com/pidu/git-timemachine][git-timemachine]] - Step through historic versions of git controlled file using
+   everyone's favourite editor.
+
+#+begin_src emacs-lisp
+  (use-package git-timemachine
+    :ensure t
+    :bind ("C-c v t" . git-timemachine))
+#+end_src
+
+** Smartparens
+   Smartparens - Minor mode for Emacs that deals with parens pairs and tries to
+   be smart about it.
+
+#+begin_src emacs-lisp
+  (use-package smartparens
+    :ensure t
+    :bind (("C-<right>" . sp-forward-slurp-sexp)
+	   ("C-<left>" . sp-forward-barf-sexp)
+	   ("M-r" . sp-raise-sexp)
+	   ("C-c c s" . smartparens-strict-mode)
+	   ("C-M-k" . sp-kill-sexp))
+    :init (progn (smartparens-global-mode)
+		 (show-smartparens-global-mode)
+		 (smartparens-global-strict-mode)
+		 (sp-pair "'" nil :actions :rem))
+    :config (setq sp-autoskip-closing-pair 'always
+		  ;; Don't kill entire symbol on C-k
+		  sp-hybrid-kill-entire-symbol nil))
+#+end_src
+
+** Github stuff
+   [[https://github.com/defunkt/gist.el][gist.el]] – Share snippets of code using Gist.
+
+#+begin_src emacs-lisp
+  (use-package gist
+    :ensure t
+    :bind (("C-c c g l" . gist-list)
+	   ("C-c c g n" . gist-region-or-buffer)
+	   ("C-c c g p" . gist-region-or-buffer-private)))
+#+end_src
+
+** Markdown and Pandoc
+   I use markdown and pandoc for note taking.
+
+#+begin_src emacs-lisp
+  (use-package markdown-mode
+    :ensure t)
+
+  (use-package pandoc-mode
+    :ensure t
+    :hook
+    ((pandoc-mode markdown-mode) . pandoc-load-default-settings))
+#+end_src
+
+** Olivetti mode
+   [[https://github.com/rnkn/olivetti][Olivetti]] is a simple Emacs minor mode for a nice writing environment.
+
+#+begin_src emacs-lisp
+  (use-package olivetti
+    :ensure t
+    :config (setq-default olivetti-body-width 80))
+#+end_src
+
+** EPUB reader mode
+#+begin_src emacs-lisp
+  (use-package nov
+    :ensure t
+    :mode ("\\.epub\\'" . nov-mode))
+#+end_src
+
+
+* Coding settings
+** Emacs lisp
+   Package linter
+
+#+begin_src emacs-lisp
+  (use-package package-lint
+    :ensure t)
+
+  (use-package package-lint-flymake
+    :ensure t)
+#+end_src
+
+** Common Lisp
+   [[https://github.com/joaotavora/sly][SLY]] is Sylvester the Cat's Common Lisp IDE for Emacs
+
+   #+begin_src emacs-lisp
+     (use-package sly
+       :ensure t)
+   #+end_src
 
 ** Clojure
    Clojure settings for Emacs
@@ -1004,120 +1123,8 @@ A literate based Emacs configuration. I took inspiration from various sources.
     :mode "\\.json\\'")
 #+end_src
 
-** Flycheck
-   [[http://www.flycheck.org][Flycheck]] automatically checks buffers for errors while you type, and reports
-   warnings and errors directly in the buffer and in an optional IDE-like error
-   list.
-
-#+begin_src emacs-lisp
-  (use-package flycheck
-    :ensure t
-    :hook (prog-mode . flycheck-mode)
-    :config
-    (setq flycheck-standard-error-navigation nil
-		   flycheck-display-errors-function
-		   #'flycheck-display-error-messages-unless-error-list))
-#+end_src
-
-** Magit configuration
-   [[https://github.com/magit/magit][Magit]] - A Git porcelain inside Emacs.
-
-#+begin_src emacs-lisp
-  (use-package magit
-    :ensure t
-    :bind (("C-c v c" . magit-clone)
-	   ("C-c v C" . magit-checkout)
-	   ("C-c v d" . magit-dispatch-popup)
-	   ("C-c v g" . magit-blame)
-	   ("C-c v l" . magit-log-buffer-file)
-	   ("C-c v p" . magit-pull)
-	   ("C-c v v" . magit-status))
-    :config (setq magit-save-repository-buffers 'dontask
-		  magit-refs-show-commit-count 'all)
-
-    ;; Use Ivy
-    (setq magit-completing-read-function 'ivy-completing-read)
-
-    ;; Show status buffer in fullscreen
-    (setq magit-display-buffer-function
-	  #'magit-display-buffer-fullframe-status-v1)
-
-    ;; Kill Magit buffers when quitting `magit-status'
-    (defun my-magit-quit-session (&optional kill-buffer)
-      "Kill all Magit buffers on quit"
-      (interactive)
-      (magit-restore-window-configuration kill-buffer))
-
-    (bind-key "q" #'my-magit-quit-session magit-status-mode-map))
-
-  (use-package magit-gitflow
-    :ensure t
-    :hook (magit-mode . turn-on-magit-gitflow))
-#+end_src
-
-   [[https://github.com/magit/forge][Forge]] - Work with Git forges from the comfort of Magit
-
-#+begin_src emacs-lisp
-  (use-package forge
-    :ensure t
-    :after magit)
-#+end_src
-
-** Git Time-machine
-   [[https://github.com/pidu/git-timemachine][git-timemachine]] - Step through historic versions of git controlled file using
-   everyone's favourite editor.
-
-#+begin_src emacs-lisp
-  (use-package git-timemachine
-    :ensure t
-    :bind ("C-c v t" . git-timemachine))
-#+end_src
-
-** Smartparens
-   Smartparens - Minor mode for Emacs that deals with parens pairs and tries to
-   be smart about it.
-
-#+begin_src emacs-lisp
-  (use-package smartparens
-    :ensure t
-    :bind (("C-<right>" . sp-forward-slurp-sexp)
-	   ("C-<left>" . sp-forward-barf-sexp)
-	   ("M-r" . sp-raise-sexp)
-	   ("C-c c s" . smartparens-strict-mode)
-	   ("C-M-k" . sp-kill-sexp))
-    :init (progn (smartparens-global-mode)
-		 (show-smartparens-global-mode)
-		 (smartparens-global-strict-mode)
-		 (sp-pair "'" nil :actions :rem))
-    :config (setq sp-autoskip-closing-pair 'always
-		  ;; Don't kill entire symbol on C-k
-		  sp-hybrid-kill-entire-symbol nil))
-#+end_src
-
-** Github stuff
-   [[https://github.com/defunkt/gist.el][gist.el]] – Share snippets of code using Gist.
-
-#+begin_src emacs-lisp
-  (use-package gist
-    :ensure t
-    :bind (("C-c c g l" . gist-list)
-	   ("C-c c g n" . gist-region-or-buffer)
-	   ("C-c c g p" . gist-region-or-buffer-private)))
-#+end_src
-
-** Docker
-   Editing Dockerfiles and docker-compose.yml.
-
-#+begin_src emacs-lisp
-  (use-package dockerfile-mode
-    :ensure t)
-
-  (use-package docker-compose-mode
-    :ensure t)
-#+end_src
-
-** PHP (argh!) Mode
-   Sometimes I have to do with ugly PHP...
+** PHP
+   Sometimes I have to deal with ugly PHP...
 
 #+begin_src emacs-lisp
   (use-package php-mode
@@ -1179,7 +1186,6 @@ A literate based Emacs configuration. I took inspiration from various sources.
 
 * Productivity
 ** org-mode
-
 *** org settings
 #+begin_src emacs-lisp
   (use-package org
