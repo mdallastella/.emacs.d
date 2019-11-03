@@ -31,7 +31,7 @@
 ;; Bootstrap use-package and dash
 (unless (and (package-installed-p 'use-package)
              (package-installed-p 'dash)
-	     (package-installed-p 'no-littering))
+             (package-installed-p 'no-littering))
   (package-refresh-contents)
   (package-install 'use-package)
   (package-install 'dash)
@@ -56,24 +56,28 @@
   (package-refresh-contents)
   (package-install 'org))
 
+;; I need org-plus-contrib too
+(unless (package-installed-p 'org-plus-contrib)
+  (package-refresh-contents)
+  (package-install 'org-plus-contrib))
+
 ;; Keep .emacs.d clean
 (use-package no-littering
   :ensure t
   :config
   (require 'recentf)
   (add-to-list 'recentf-exclude no-littering-var-directory)
-  (add-to-list 'recentf-exclude no-littering-etc-directory)
 
   (setq create-lockfiles nil
-	delete-old-versions t
-	kept-new-versions 6
-	kept-old-versions 2
-	version-control t)
+        delete-old-versions t
+        kept-new-versions 6
+        kept-old-versions 2
+        version-control t)
 
   (setq backup-directory-alist
-	`((".*" . ,(no-littering-expand-var-file-name "backup/")))
-	auto-save-file-name-transforms
-	`((".*" ,(no-littering-expand-var-file-name "auto-save/") t))))
+        `((".*" . ,(no-littering-expand-var-file-name "backup/")))
+        auto-save-file-name-transforms
+        `((".*" ,(no-littering-expand-var-file-name "auto-save/") t))))
 
 (use-package gnu-elpa-keyring-update
   :ensure t)
