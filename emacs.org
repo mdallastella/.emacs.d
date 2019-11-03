@@ -137,13 +137,16 @@ A literate based Emacs configuration. I took inspiration from various sources.
    #+end_src
 
 ** Font setup
-   I use the Iosevka font.
+   I use the Victor Mono font.
 
 #+begin_src emacs-lisp
   (set-face-attribute 'default nil
-		      :family "Iosevka Term SS01"
+		      :family "Victor Mono"
 		      :weight 'light
+		      :italic nil
 		      :height 140)
+
+  (set-face-italic-p 'italic nil)
 #+end_src
 
 ** Theme
@@ -155,7 +158,7 @@ A literate based Emacs configuration. I took inspiration from various sources.
     :config (setq solarized-use-variable-pitch nil
 		  solarized-scale-org-headlines nil
 		  solarized-use-less-bold t
-		  solarized-use-more-italic t
+		  solarized-use-more-italic nil
 		  x-underline-at-descent-line t)
     (load-theme 'solarized-dark 'no-confirm)
     (let ((line (face-attribute 'mode-line :underline)))
