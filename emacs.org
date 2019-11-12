@@ -1190,16 +1190,18 @@ A literate based Emacs configuration. I took inspiration from various sources.
 #+begin_src emacs-lisp
   (use-package org
     :ensure t
-    :config (setq org-log-done t
-		  org-default-notes-file "inbox.org"
-		  org-hide-emphasis-markers t
-		  org-fontify-quote-and-verse-blocks t
-		  org-confirm-babel-evaluate nil))
-
-  (setq org-agenda-files (list "~/org/inbox.org"
-			       "~/org/todo.org"
-			       "~/org/someday.org"
-			       "~/org/archive.org"))
+    :config
+    (setq org-log-done t
+	  org-default-notes-file "inbox.org"
+	  org-hide-emphasis-markers t
+	  org-fontify-quote-and-verse-blocks t
+	  org-confirm-babel-evaluate nil
+	  org-refile-targets '((org-agenda-files :maxlevel . 1))
+	  org-agenda-files (list "~/org/inbox.org"
+				 "~/org/someday.org"
+				 "~/org/archive.org")
+	  org-archive-location "~/org/archive.org::datatree/"
+	  org-archive-mark-done t))
 #+end_src
 
 *** org-super-agenda
@@ -1254,8 +1256,10 @@ A literate based Emacs configuration. I took inspiration from various sources.
 *** capture templates
 #+begin_src emacs-lisp
   (setq org-capture-templates
-	'(("t" "Task" entry (file "inbox.org")
+	'(("t" "Task" entry (file+headline "inbox.org" "Personal")
 	   "* TODO %?\n")
+	  ("j" "Journal" entry (file+olp+datetree "journal.org")
+	   "** %<%H:%M> %?\n")
 	  ("p" "Project" entry (file+headline "todo.org" "Projects")
 	   (file "templates/newproject.org"))
 	  ("s" "Someday" entry (file+headline "someday.org" "Someday / Maybe")
@@ -1314,6 +1318,7 @@ A literate based Emacs configuration. I took inspiration from various sources.
   #+begin_src emacs-lisp
     (global-set-key (kbd "C-c t t") 'org-capture)
     (global-set-key (kbd "C-c t a") 'org-agenda)
+    (global-set-key (kbd "C-c t r") 'org-refile)
   #+end_src
 
 
