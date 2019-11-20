@@ -32,16 +32,14 @@ A literate based Emacs configuration. I took inspiration from various sources.
 
   (use-package epa-file
     :after epa)
-
-  (load-library "~/.emacs.d/.secrets.el.gpg")
 #+end_src
 
 ** User details
    My personal details.
 
 #+begin_src emacs-lisp
-  (setq user-full-name username)
-  (setq user-mail-address user-mail-address)
+  (setq user-full-name "Marco Dalla Stella")
+  (setq user-mail-address "marco@dallastella.name")
 #+end_src
 
 ** Emacs server
@@ -148,6 +146,8 @@ A literate based Emacs configuration. I took inspiration from various sources.
 
   (set-face-italic-p 'italic nil)
 #+end_src
+
+#+RESULTS:
 
 ** Theme
    My current favorite theme.
