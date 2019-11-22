@@ -24,13 +24,12 @@
     :ensure t
     :config
     (setq exec-path-from-shell-variables '("PATH")
-	  exec-path-from-shell-arguments '("-l"))
+          exec-path-from-shell-arguments '("-l"))
     (exec-path-from-shell-initialize))
 
   (use-package keychain-environment
     :ensure t
-    :init
-    (keychain-refresh-environment))
+    :init (keychain-refresh-environment))
 #+end_src
 
 ** Various minor settings
@@ -55,17 +54,16 @@
     :init (global-auto-revert-mode)
     :config
     (setq auto-revert-verbose nil
-	  ;; Revert Dired buffers, too
-	  global-auto-revert-non-file-buffers t))
+          ;; Revert Dired buffers, too
+          global-auto-revert-non-file-buffers t))
 #+end_src
 
 *** Kill ring features
-
     More killed items, no duplicates in kill ring.
 
 #+begin_src emacs-lisp
   (setq kill-ring-max 200
-	kill-do-not-save-duplicates t)
+        kill-do-not-save-duplicates t)
 #+end_src
 
 *** Auto-save buffers when they lose focus.
@@ -82,13 +80,10 @@
   (use-package paradox
     :ensure t
     :bind (("C-c c p" . paradox-list-packages)
-	   ("C-c c P" . paradox-upgrade-packages))
+           ("C-c c P" . paradox-upgrade-packages))
     :config (setq paradox-github-token t             ; Don't ask for a token
-		  paradox-execute-asynchronously nil ; No async updates
-		  paradox-use-homepage-buttons nil   ; Hide download button
-		  paradox-automatically-star nil     ; Don't star packages automatically
-		  paradox-display-download-count t   ; Show all possible counts
-		  paradox-display-star-count t))
+                  paradox-use-homepage-buttons nil   ; Hide download button
+                  paradox-automatically-star nil))   ; Don't star packages automatically
 #+end_src
 
 
@@ -101,17 +96,15 @@
   (setq-default frame-title-format "%b (%f)")
 #+end_src
 
-
 ** Font setup
    I use the Victor Mono font.
 
 #+begin_src emacs-lisp
   (set-face-attribute 'default nil
-		      :family "Victor Mono"
-		      :weight 'light
-		      :italic nil
-		      :height 130)
-
+                      :family "Victor Mono"
+                      :weight 'light
+                      :italic nil
+                      :height 130)
   (set-face-italic-p 'italic nil)
 #+end_src
 
@@ -122,10 +115,10 @@
   (use-package solarized-theme
     :ensure t
     :config (setq solarized-use-variable-pitch nil
-		  solarized-scale-org-headlines nil
-		  solarized-use-less-bold t
-		  solarized-use-more-italic nil
-		  x-underline-at-descent-line t)
+                  solarized-scale-org-headlines nil
+                  solarized-use-less-bold t
+                  solarized-use-more-italic nil
+                  x-underline-at-descent-line t)
     (load-theme 'solarized-dark-high-contrast 'no-confirm)
     (let ((line (face-attribute 'mode-line :underline)))
       (set-face-attribute 'mode-line nil :overline line)
@@ -141,7 +134,7 @@
 #+begin_src emacs-lisp
   (use-package uniquify
     :config (setq uniquify-buffer-name-style 'post-forward
-		  uniquify-separator ":"))
+                  uniquify-separator ":"))
 #+end_src
 
 ** Remove menus, bars and everything that's annoying
@@ -160,19 +153,15 @@
     (menu-bar-mode -1))
 #+end_src
 
-
 ** Disable annoying prompts and messages
 
 #+begin_src emacs-lisp
   (fset 'yes-or-no-p 'y-or-n-p)
-
   (setq ring-bell-function #'ignore
-	inhibit-startup-screen t
-	initial-scratch-message nil)
-
+        inhibit-startup-screen t
+        initial-scratch-message nil)
   (fset 'display-startup-echo-area-message #'ignore)
 #+end_src
-
 
 ** Mode line
    Custom mode-line and [[https://github.com/tarsius/minions][minions]].
@@ -211,20 +200,18 @@
     :config (setq minions-direct '(cider-mode)))
 #+end_src
 
-
 ** Eyebrowse
    [[https://github.com/wasamasa/eyebrowse][Eyebrowse]] - A simple-minded way of managing window configs in emacs
 
 #+begin_src emacs-lisp
-    (use-package eyebrowse
-      :ensure t
-      :config (setq eyebrowse-switch-back-and-forth t
-		    eyebrowse-wrap-around t
-		    eyebrowse-new-workspace t
-		    eyebrowse-mode-line-style t)
-      (eyebrowse-mode t))
+  (use-package eyebrowse
+    :ensure t
+    :config (setq eyebrowse-switch-back-and-forth t
+                  eyebrowse-wrap-around t
+                  eyebrowse-new-workspace t
+                  eyebrowse-mode-line-style t)
+    (eyebrowse-mode t))
 #+end_src
-
 
 ** Show matching parenthesis
 
@@ -243,32 +230,32 @@
 #+end_src
 
 ** Minibuffer settings
-   Allow to read from the minibuffer while in minibuffer
+*** Allow to read from the minibuffer while in minibuffer
 
 #+begin_src emacs-lisp
   (setq enable-recursive-minibuffers t)
 #+end_src
 
-   Show the minibuffer depth (when larger than 1).
+*** Show the minibuffer depth (when larger than 1).
 
 #+begin_src emacs-lisp
   (minibuffer-depth-indicate-mode 1)
 #+end_src
 
-   Never use dialogs for minibuffer input and store more history.
+*** Never use dialogs for minibuffer input and store more history.
 
 #+begin_src emacs-lisp
   (setq use-dialog-box nil
-	history-length 1000)
+        history-length 1000)
 #+end_src
 
-   Save minibuffer history.
+*** Save minibuffer history.
 
 #+begin_src emacs-lisp
   (use-package savehist
     :init (savehist-mode t)
     :config (setq savehist-save-minibuffer-history t
-		  savehist-autosave-interval 180))
+                  savehist-autosave-interval 180))
 #+end_src
 
 ** Scratch settings
@@ -286,68 +273,50 @@
     :ensure t
     :init (which-key-mode)
     :config (setq which-key-idle-delay 0.4
-		  which-key-sort-order 'which-key-prefix-then-key-order))
+                  which-key-sort-order 'which-key-prefix-then-key-order))
 #+end_src
 
 
 
 * Editing settings
-
-** Evil mode - Disabled for now
-   [[https://github.com/emacs-evil/evil][Evil]] - Evil is an extensible vi layer for Emacs.
-
-#+begin_src emacs-lisp
-  ;; (use-package evil
-  ;;   :ensure t
-  ;;   :init (evil-mode 1))
-#+end_src
-
-this is a test
-
-
-
 ** Misc variable settings
-   Does anyone type =yes= anymore?
+*** Does anyone type =yes= anymore?
 
 #+begin_src emacs-lisp
   (fset 'yes-or-no-p 'y-or-n-p)
 #+end_src
 
-   Fix the scrolling to keep point in the center.
+*** Fix the scrolling to keep point in the center.
 
 #+begin_src emacs-lisp
   (setq scroll-conservatively 10000
-	scroll-preserve-screen-position t)
+        scroll-preserve-screen-position t)
 #+end_src
 
-   I've been using Emacs for too long to need to re-enable each
-   feature bit-by-bit.
+*** I've been using Emacs for too long to need to re-enable each feature bit-by-bit.
 
 #+begin_src emacs-lisp
   (setq disabled-command-function nil)
 #+end_src
 
-   Store more history.
+*** Store more history.
 
 #+begin_src emacs-lisp
   (setq history-length 1000)
 #+end_src
 
-   Increase line-spacing (default 0).
+*** Increase line-spacing (default 0).
 
 #+begin_src emacs-lisp
   (setq-default line-spacing 0.2)
 #+end_src
 
-   Configure a reasonable fill column and enable automatic filling in
-   ~text-mode~.
+*** Fill column and enable automatic filling in ~text-mode~.
 
 #+begin_src emacs-lisp
   (setq-default fill-column 80)
   (add-hook 'text-mode-hook #'auto-fill-mode)
 #+end_src
-
-
 
 ** Tabs vs Spaces
    I have learned to distrust tabs in my source code, so let's make sure that we
@@ -364,8 +333,6 @@ this is a test
   (setq-default tab-always-indent 'complete)
 #+end_src
 
-
-
 ** Windows navigation
    Use Ctrl-c Ctrl-Arrow for cycle throught windows, ignoring possible errors.
 
@@ -375,7 +342,6 @@ this is a test
   (global-set-key (kbd "C-c C-<up>")    'windmove-up)
   (global-set-key (kbd "C-c C-<down>")  'windmove-down)
 #+end_src
-
 
 ** Jumping around
    Use [[https://github.com/abo-abo/avy][Avy]] for jumping around in a buffer.
@@ -389,7 +355,23 @@ this is a test
                 ("C-'" . avy-isearch)))
 #+end_src
 
+** Counsel
+   Completion functions with Ivy
 
+#+begin_src emacs-lisp
+  (use-package counsel
+    :ensure t
+    :init (counsel-mode)
+    :bind (("C-c u" . counsel-unicode-char)
+           ("C-c r" . counsel-rg)
+           ("C-c h h" . counsel-command-history)
+           ([remap execute-extended-command] . counsel-M-x)
+           ([remap find-file] . counsel-find-file)
+           ([remap describe-function] . counsel-describe-function)
+           ([remap describe-variable] . counsel-describe-variable))
+    :config (setq counsel-mode-override-describe-bindings t
+                  counsel-find-file-at-point t))
+#+end_src
 
 ** Ivy configuration
    [[http://oremacs.com/swiper/][Ivy]] is an interactive interface for completion in Emacs.
@@ -425,17 +407,6 @@ this is a test
     :init (ivy-rich-mode 1))
 #+end_src
 
-
-*** ivy-todo
-#+begin_src emacs-lisp
-  (use-package ivy-todo :ensure t
-    :bind ("C-c t" . ivy-todo)
-    :commands ivy-todo
-    :config
-    (setq ivy-todo-default-tags '("PROJECT")))
-#+end_src
-
-
 ** Amx
    [[https://github.com/DarwinAwardWinner/amx][Amx]] is an alternative interface for ~M-x~ in Emacs.
 
@@ -444,47 +415,6 @@ this is a test
     :ensure t)
 #+end_src
 
-** Counsel
-   Completion functions with Ivy
-
-#+begin_src emacs-lisp
-  (use-package counsel
-    :ensure t
-    :init (counsel-mode)
-    :bind (("C-c u" . counsel-unicode-char)
-           ("C-c r" . counsel-rg)
-           ("C-c h h" . counsel-command-history)
-           ([remap execute-extended-command] . counsel-M-x)
-           ([remap find-file] . counsel-find-file)
-           ([remap describe-function] . counsel-describe-function)
-           ([remap describe-variable] . counsel-describe-variable))
-    :config (setq counsel-mode-override-describe-bindings t
-                  counsel-find-file-at-point t))
-#+end_src
-
-** Completion with company
-   [[http://company-mode.github.io/][Company]] is a text completion framework for Emacs. The name stands for
-   "complete anything". It uses pluggable back-ends and front-ends to retrieve
-   and display completion candidates.
-
-#+begin_src emacs-lisp
-  (use-package company
-    :ensure t
-    :init (global-company-mode)
-    :bind (:map company-active-map
-                ("C-tab" . company-complete-common-or-cycle)
-                ("C-n" . company-select-next)
-                ("C-p" . company-select-previous))
-    :config (setq company-tooltip-align-annotations t
-                  company-dabbrev-ignore-case t
-                  company-dabbrev-downcase nil))
-
-  ;; Show likelier candidates on top
-  (use-package company-statistics
-    :ensure t
-    :after company
-    :config (company-statistics-mode))
-#+end_src
 ** Aggressive indentation
    Aggressive-indent-mode is a minor mode that keeps your code always indented.
    It re-indents after every change, making it more reliable than
@@ -519,8 +449,8 @@ this is a test
   (use-package symbol-overlay
     :ensure t
     :bind (:map symbol-overlay-mode-map
-		("M-n" . symbol-overlay-jump-next)
-		("M-p" . symbol-overlay-jump-prev))
+                ("M-n" . symbol-overlay-jump-next)
+                ("M-p" . symbol-overlay-jump-prev))
     :hook ((prog-mode html-mode css-mode) . symbol-overlay-mode))
 #+end_src
 ** Flyspell
@@ -530,10 +460,8 @@ this is a test
 #+begin_src emacs-lisp
   (use-package ispell
     :defer t
-    :config
-    (setq
-     ispell-program-name (executable-find "hunspell")
-     ispell-dictionary "en_US")
+    :config (setq ispell-program-name (executable-find "hunspell")
+                  ispell-dictionary "en_US")
     (unless ispell-program-name
       (warn "No spell checker available. Please install hunspell.")))
 #+end_src
@@ -542,23 +470,34 @@ this is a test
 
 #+begin_src emacs-lisp
   (use-package flyspell
-    :hook
-    ((prog-mode text-mode) . flyspell-prog-mode)
+    :hook ((prog-mode text-mode) . flyspell-prog-mode)
     :config
     (setq flyspell-use-meta-tab nil
-	  ;; Make Flyspell less chatty
-	  flyspell-issue-welcome-flag nil
-	  flyspell-issue-message-flag nil))
+          ;; Make Flyspell less chatty
+          flyspell-issue-welcome-flag nil
+          flyspell-issue-message-flag nil))
 
-   ; Better interface for corrections
-   (use-package flyspell-correct-ivy
-     :ensure t
-     :after flyspell
-     :bind
-     (:map flyspell-mode-map
-	   ("C-c $" . flyspell-correct-word-generic)))
+  ;; Better interface for corrections
+  (use-package flyspell-correct-ivy
+    :ensure t
+    :after flyspell
+    :bind (:map flyspell-mode-map
+                ("C-c $" . flyspell-correct-word-generic)))
+#+end_src
+** Multiple cursors
+   [[https://github.com/magnars/multiple-cursors.el][Multiple cursors for emacs.]]
+
+#+begin_src emacs-lisp
+  (use-package multiple-cursors
+    :ensure t
+    :bind* (("C-> n" . mc/mark-next-like-this)
+            ("C-> p" . mc/mark-previous-like-this)
+            ("C-> a" . mc/mark-all-like-this)
+            ("C-> C->" . mc/edit-lines)))
 #+end_src
 
+#+RESULTS:
+: mc/edit-lines
 
 
 * Tools
@@ -587,14 +526,14 @@ this is a test
     :ensure t
     :bind
     (:map projectile-mode-map
-	  ("C-c p" . projectile-command-map))
+          ("C-c p" . projectile-command-map))
     :init
     (projectile-mode +1)
     (setq projectile-completion-system 'ivy
-	  projectile-find-dir-includes-top-level t)
+          projectile-find-dir-includes-top-level t)
     (projectile-register-project-type 'lein-cljs '("project.clj")
-				      :compile "lein cljsbuild once"
-				      :test "lein cljsbuild test"))
+                                      :compile "lein cljsbuild once"
+                                      :test "lein cljsbuild test"))
 #+end_src
 
 *** Ivy integration with Projectile
@@ -603,10 +542,10 @@ this is a test
   (use-package counsel-projectile
     :ensure t
     :bind (:map projectile-command-map
-		("p" . counsel-projectile)
-		("f" . counsel-projectile-find-file)
-		("P" . counsel-projectile-switch-project)
-		("r" . counsel-projectile-rg)))
+                ("p" . counsel-projectile)
+                ("f" . counsel-projectile-find-file)
+                ("P" . counsel-projectile-switch-project)
+                ("r" . counsel-projectile-rg)))
 #+end_src
 
 *** Search project with ripgrep
@@ -654,6 +593,15 @@ this is a test
                   sp-hybrid-kill-entire-symbol nil))
 #+end_src
 
+** Direnv
+   direnv integration for emacs.
+
+#+begin_src emacs-lisp
+  (use-package direnv
+    :ensure t
+    :config (direnv-mode))
+#+end_src
+
 
 * Productivity
 ** org-mode
@@ -663,16 +611,16 @@ this is a test
     :ensure t
     :config
     (setq org-log-done t
-	  org-default-notes-file "inbox.org"
-	  org-hide-emphasis-markers t
-	  org-fontify-quote-and-verse-blocks t
-	  org-confirm-babel-evaluate nil
-	  org-refile-targets '((org-agenda-files :maxlevel . 1))
-	  org-agenda-files (list "~/org/inbox.org"
-				 "~/org/someday.org"
-				 "~/org/archive.org")
-	  org-archive-location "~/org/archive.org::datatree/"
-	  org-archive-mark-done t))
+          org-default-notes-file "inbox.org"
+          org-hide-emphasis-markers t
+          org-fontify-quote-and-verse-blocks t
+          org-confirm-babel-evaluate nil
+          org-refile-targets '((org-agenda-files :maxlevel . 1))
+          org-agenda-files (list "~/org/inbox.org"
+                                 "~/org/someday.org"
+                                 "~/org/archive.org")
+          org-archive-location "~/org/archive.org::datatree/"
+          org-archive-mark-done t))
 #+end_src
 
 *** org-super-agenda
@@ -682,8 +630,8 @@ this is a test
   (use-package org-super-agenda
     :ensure t
     :config (setq org-deadline-warning-days 7
-		  org-agenda-block-separator 9472
-		  org-agenda-skip-scheduled-if-done t)
+                  org-agenda-block-separator 9472
+                  org-agenda-skip-scheduled-if-done t)
     :init (org-super-agenda-mode))
 #+end_src
 
@@ -725,3 +673,279 @@ this is a test
 #+END_SRC
 
 *** capture templates
+
+#+begin_src emacs-lisp
+  (setq org-capture-templates
+        '(("t" "Task" entry (file+headline "inbox.org" "Personal")
+           "* TODO %?\n")
+          ("j" "Journal" entry (file+olp+datetree "journal.org")
+           "** %<%H:%M> %?\n")
+          ("p" "Project" entry (file+headline "todo.org" "Projects")
+           (file "templates/newproject.org"))
+          ("s" "Someday" entry (file+headline "someday.org" "Someday / Maybe")
+           "* SOMEDAY %?\n")
+          ("m" "Maybe" entry (file+headline "someday.org" "Someday / Maybe")
+           "* MAYBE %?\n")))
+#+end_src
+
+
+
+* Coding
+** Completion with company
+   [[http://company-mode.github.io/][Company]] is a text completion framework for Emacs. The name stands for
+   "complete anything". It uses pluggable back-ends and front-ends to retrieve
+   and display completion candidates.
+
+#+begin_src emacs-lisp
+  (use-package company
+    :ensure t
+    :init (global-company-mode)
+    :bind (:map company-active-map               
+                ("C-n" . company-select-next)
+                ("C-p" . company-select-previous))
+    :config (setq company-tooltip-align-annotations t
+                  company-dabbrev-ignore-case t
+                  company-dabbrev-downcase nil))
+
+  ;; Show likelier candidates on top
+  (use-package company-statistics
+    :ensure t
+    :after company
+    :config (company-statistics-mode))
+#+end_src
+
+** Clojure
+   Clojure settings for Emacs
+
+*** Clojure development environment
+
+#+begin_src emacs-lisp
+  (use-package cider
+    :ensure t
+    :hook (cider-mode . eldoc-mode)
+    :bind (:map cider-mode-map
+                ("C-c M-l" . cider-load-all-project-ns))
+    :config (setq cider-offer-to-open-cljs-app-in-browser nil))
+#+end_src
+
+*** CIDER mode for REPL interaction
+
+#+begin_src emacs-lisp
+  (use-package cider-mode
+    :ensure cider
+    :config (setq cider-font-lock-dynamically t
+                  cider-invert-insert-eval-p t
+                  cider-switch-to-repl-after-insert-p nil))
+#+end_src
+
+*** Clojure Flycheck
+    Flycheck using clj-kondo
+
+#+begin_src emacs-lisp
+  (use-package flycheck-clj-kondo
+    :ensure t)
+#+end_src
+
+*** Major mode for Clojure files
+
+#+begin_src emacs-lisp
+  (use-package clojure-mode
+    :ensure t
+    :hook  ((clojure-mode . cider-mode)
+            (clojure-mode . subword-mode))
+    :config (define-clojure-indent	; Fix indentation of some common macros
+              (for-all 1)
+              (defroutes 'defun)
+              (GET 2)
+              (POST 2)
+              (PUT 2)
+              (DELETE 2)
+              (HEAD 2)
+              (ANY 2)
+              (context 2)))
+#+end_src
+
+*** Font-locking for Clojure mode
+
+#+begin_src emacs-lisp
+  (use-package clojure-mode-extra-font-locking
+    :ensure t
+    :after clojure-mode)
+#+end_src
+
+*** Client for Clojure nREPL
+
+#+begin_src emacs-lisp
+  (use-package nrepl-client
+    :ensure cider
+    :config (setq nrepl-hide-special-buffers t))
+#+end_src
+
+*** REPL interactions with CIDER
+
+#+begin_src emacs-lisp
+  (use-package cider-repl
+    :ensure cider
+    :hook ((cider-repl-mode . eldoc-mode)
+           (cider-repl-mode . subword-mode))
+    :bind (:map cider-repl-mode-map
+                ("RET" . cider-repl-newline-and-indent)
+                ("C-RET" . cider-repl-return)
+                ("C-c c b" . cider-repl-clear-buffer))
+    :config (setq cider-repl-wrap-history t
+                  cider-repl-history-size 1000
+                  cider-repl-history-file
+                  (locate-user-emacs-file "cider-repl-history")
+                  cider-repl-display-help-banner nil ; Disable help banner
+                  cider-repl-pop-to-buffer-on-connect t
+                  cider-repl-result-prefix ";; => "))
+#+end_src
+
+*** Kaocha test runner
+    An emacs package for running Kaocha tests via CIDER.
+
+#+begin_src emacs-lisp
+  (use-package kaocha-runner
+    :ensure t
+    :after cider
+    :bind (:map clojure-mode-map
+                ("C-c k a" . kaocha-runner-run-all-tests)
+                ("C-c k h" . kaocha-runner-hide-windows)
+                ("C-c k r" . kaocha-runner-run-tests)
+                ("C-c k t" . kaocha-runner-run-test-at-point)
+                ("C-c k w" . kaocha-runner-show-warnings))
+    :config (setq kaocha-runner-failure-win-min-height 20
+                  kaocha-runner-ongoing-tests-win-min-height 20
+                  kaocha-runner-output-win-max-height 20))
+#+end_src
+
+*** org-babel-clojure
+    Settings for use Clojure inside org-mode documents.
+
+ #+begin_src emacs-lisp
+   (use-package ob-clojure
+     :config (setq org-babel-clojure-backend 'cider))
+ #+end_src
+
+** Web Development
+   I use web-mode, css-mode and js2 for web development.
+
+*** web-mode
+
+#+begin_src emacs-lisp
+  (use-package web-mode
+    :ensure t
+    :mode "\\.html\\'"
+    :config
+    (setq web-mode-markup-indent-offset 2
+          web-mode-css-indent-offset 2
+          web-mode-code-indent-offset 2))
+#+end_src
+
+*** js2 - A better JavaScript support
+
+#+begin_src emacs-lisp
+  (use-package js2-mode
+    :ensure t
+    :mode "\\.js\\'"
+    :hook (js2-mode . js2-highlight-unused-variables-mode)
+    :config (setq-default js2-basic-offset 2))
+#+end_src
+
+*** Typescript support with [[https://github.com/ananthakumaran/tide][tide]]
+
+#+begin_src emacs-lisp
+  (use-package tide
+    :ensure t
+    :after (typescript-mode company flycheck)
+    :hook ((typescript-mode . tide-setup)
+           (typescript-mode . tide-hl-identifier-mode))
+    :config (setq typescript-indent-level 2))
+#+end_src
+
+   Better CSS support.
+
+#+begin_src emacs-lisp
+  (use-package css-mode
+    :ensure t
+    :mode "\\.css\\'"
+    :hook (css-mode-hook . (lambda () (run-hooks 'prog-mode-hook)))
+    :config (setq css-indent-offset 2))
+#+end_src
+
+   Eldoc for CSS.
+
+#+begin_src emacs-lisp
+  (use-package css-eldoc
+    :ensure t
+    :hook (css-mode . turn-on-css-eldoc)
+    :commands (turn-on-css-eldoc))
+#+end_src
+
+   JSON specific mode.
+
+#+begin_src emacs-lisp
+  (use-package json-mode                  ; JSON editing
+    :ensure t
+    :mode "\\.json\\'")
+#+end_src
+** Janet
+   [[https://janet-lang.org][Janet]] is a functional and imperative programming language.
+
+#+begin_src emacs-lisp
+  (use-package janet-mode
+    :straight (:host github :repo "ALSchwalm/janet-mode")
+    :mode ("\\.janet\\'" . janet-mode))
+
+  (use-package ijanet-mode
+    :straight (:host github :repo "serialdev/ijanet-mode")
+    :after janet-mode
+    :bind (:map janet-mode-map
+                ("C-c C-z" . ijanet)
+                ("C-c C-e" . ijanet-eval-line)
+                ("C-c C-b" . ijanet-eval-buffer)))
+#+end_src
+
+
+* Global keybindings
+** Ctrl-z as undo
+   Use Ctrl-z as undo.
+
+#+begin_src emacs-lisp
+  (global-set-key (kbd "C-z") 'undo)
+#+end_src
+
+** Set C-x C-k to kill the current buffer
+
+#+begin_src emacs-lisp
+  (global-set-key (kbd "C-x C-k") 'kill-this-buffer)
+#+end_src
+
+** Bind M-g to goto-line
+
+#+begin_src emacs-lisp
+  (global-set-key (kbd "M-g") 'goto-line)
+#+end_src
+
+** Comment and uncomment regions
+
+#+begin_src emacs-lisp
+  (global-set-key (kbd "C-c c c") 'comment-or-uncomment-region)
+#+end_src
+
+** Org agenda and capture
+   org-mode shortcuts
+
+  #+begin_src emacs-lisp
+    (global-set-key (kbd "C-c t t") 'org-capture)
+    (global-set-key (kbd "C-c t a") 'org-agenda)
+    (global-set-key (kbd "C-c t r") 'org-refile)
+  #+end_src
+
+
+
+* BEERWARE LICENSE
+  "THE BEER-WARE LICENSE" (Revision 42): <marco@dallastella.name> wrote this
+  file. As long as you retain this notice you can do whatever you want with this
+  stuff. If we meet some day, and you think this stuff is worth it, you can buy me
+  a beer in return.
