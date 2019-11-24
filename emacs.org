@@ -396,7 +396,6 @@
     :after ivy)
 #+end_src
 
-
 *** ivy-rich
 
 #+begin_src emacs-lisp
@@ -405,6 +404,16 @@
     :config (setcdr (assq t ivy-format-functions-alist)
                     #'ivy-format-function-line)
     :init (ivy-rich-mode 1))
+#+end_src
+
+*** ivy-posframe
+
+#+begin_src emacs-lisp
+  (use-package ivy-posframe
+    :ensure t
+    :init (ivy-posframe-mode 1)
+    :config (setq ivy-posframe-display-functions-alist
+                  '((t . ivy-posframe-display-at-frame-center))))
 #+end_src
 
 ** Amx
@@ -501,6 +510,17 @@
 
 
 * Tools
+** Crux
+   [[https://github.com/bbatsov/crux][crux]] - A Collection of Ridiculously Useful eXtensions for Emacs.
+
+#+begin_src emacs-lisp
+  (use-package crux
+    :ensure t
+    :config
+    (setq save-abbrevs 'silently)
+    (setq-default abbrev-mode t))
+#+end_src
+
 ** Flycheck
    [[http://www.flycheck.org][Flycheck]] automatically checks buffers for errors while you type, and reports
    warnings and errors directly in the buffer and in an optional IDE-like error
@@ -582,15 +602,13 @@
 #+begin_src emacs-lisp
   (use-package smartparens
     :ensure t
-    :bind (("C-<right> " . sp-forward-slurp-sexp)
-           ("C-<left>"   . sp-forward-barf-sexp)
-           ("M-r"        . sp-raise-sexp)
-           ("C-M-k"      . sp-kill-sexp))
-    :init (progn (smartparens-global-mode)
-                 (show-smartparens-global-mode)
-                 (smartparens-global-strict-mode))
-    :config (setq sp-autoskip-closing-pair 'always
-                  sp-hybrid-kill-entire-symbol nil))
+    :config (require 'smartparens-config)
+    (setq sp-highlight-pair-overlay t
+          sp-highlight-wrap-overlay t
+          sp-highlight-wrap-tag-overlay t
+          sp-show-pair-from-inside t)
+    (sp-use-smartparens-bindings)
+    :init (smartparens-global-strict-mode t))
 #+end_src
 
 ** Direnv
