@@ -596,6 +596,21 @@
                   magit-completing-read-function 'ivy-completing-read))
 #+end_src
 
+** diff-hl
+   [[https://github.com/dgutov/diff-hl][diff-hl-mode]] highlights uncommitted changes on the left side of the window,
+   allows you to jump between and revert them selectively.
+
+#+begin_src emacs-lisp
+  (use-package diff-hl
+    :ensure t
+    :config (add-hook 'magit-post-refresh-hook
+                      'diff-hl-magit-post-refresh)
+    :init
+    (diff-hl-dired-mode)
+    (diff-hl-flydiff-mode)
+    (global-hl-line-mode))
+#+end_src
+
 ** Smartparens
    Smartparens - Minor mode for Emacs that deals with parens pairs and tries to
    be smart about it.
