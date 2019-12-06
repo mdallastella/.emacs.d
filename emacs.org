@@ -516,6 +516,7 @@
 #+begin_src emacs-lisp
   (use-package crux
     :ensure t
+    :bind ("C-^" . crux-top-join-line)
     :config
     (setq save-abbrevs 'silently)
     (setq-default abbrev-mode t))
