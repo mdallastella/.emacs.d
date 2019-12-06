@@ -686,6 +686,23 @@
     :bind ("C-c o i" . org-cliplink))
 #+end_src
 
+*** org-mru-clock
+
+    [[https://github.com/unhammer/org-mru-clock][org-mru-clock]] - Pre-fill your clock history with clocks from your agenda
+    files (and other open org files) so you can clock in to your most recent
+    clocks regardless of whether you just started Emacs or have had it running
+    for decades.
+
+#+begin_src emacs-lisp
+  (use-package org-mru-clock
+    :ensure t
+    :bind* (("C-c t i" . org-mru-clock-in)
+            ("C-c t j" . org-mru-clock-select-recent-task))
+    :init
+    (setq org-mru-clock-how-many 100
+          org-mru-clock-completing-read #'ivy-completing-read))
+#+end_src
+
 *** yankpad
     [[https://github.com/Kungsgeten/yankpad][GitHub - Kungsgeten/yankpad: Paste snippets from an org-mode file]]
 
@@ -712,8 +729,8 @@
   (setq org-capture-templates
         '(("t" "Task" entry (file+headline "inbox.org" "Personal")
            "* TODO %?\n")
-          ("j" "Journal" entry (file+olp+datetree "journal.org")
-           "** %<%H:%M> %?\n")
+          ("T" "Clockable task" entry (file+headline "inbox.org")
+           "* TODO %?\n :clock-in t :clock-keep t")
           ("p" "Project" entry (file+headline "todo.org" "Projects")
            (file "templates/newproject.org"))
           ("s" "Someday" entry (file+headline "someday.org" "Someday / Maybe")
