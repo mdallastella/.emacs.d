@@ -608,7 +608,7 @@
     :init
     (diff-hl-dired-mode)
     (diff-hl-flydiff-mode)
-    (global-hl-line-mode))
+    (global-diff-hl-mode))
 #+end_src
 
 ** Smartparens
