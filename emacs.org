@@ -760,15 +760,16 @@
 #+begin_src emacs-lisp
   (use-package company
     :ensure t
-    :hook (prog-mode . company-mode)
     :bind (:map company-active-map
                 ("C-n" . company-select-next)
                 ("C-p" . company-select-previous))
-    :config (setq company-tooltip-align-annotations t
+    :config (setq company-mode-idle-dalay nil
+                  company-tooltip-align-annotations t
                   company-dabbrev-ignore-case t
                   company-show-numbers t
                   company-dabbrev-downcase nil)
-    :bind ("<backtab>" . company-complete))
+    :bind* ("<TAB>" . company-indent-or-complete-common)
+    :init (global-company-mode))
 
   ;; Show likelier candidates on top
   (use-package company-statistics
@@ -798,6 +799,7 @@
     :ensure cider
     :config (setq cider-font-lock-dynamically t
                   cider-invert-insert-eval-p t
+                  cider-save-file-on-load t
                   cider-switch-to-repl-after-insert-p nil))
 #+end_src
 
@@ -860,8 +862,7 @@
                   cider-repl-history-file
                   (locate-user-emacs-file "cider-repl-history")
                   cider-repl-display-help-banner nil ; Disable help banner
-                  cider-repl-pop-to-buffer-on-connect t
-                  cider-repl-result-prefix ";; => "))
+                  cider-repl-pop-to-buffer-on-connect t))
 #+end_src
 
 *** Kaocha test runner
@@ -887,6 +888,7 @@
 
  #+begin_src emacs-lisp
    (use-package ob-clojure
+     :ensure t
      :config (setq org-babel-clojure-backend 'cider))
  #+end_src
 
