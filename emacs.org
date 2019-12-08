@@ -333,16 +333,6 @@
   (setq-default tab-always-indent 'complete)
 #+end_src
 
-** Windows navigation
-   Use Ctrl-c Ctrl-Arrow for cycle throught windows, ignoring possible errors.
-
-#+begin_src emacs-lisp
-  (global-set-key (kbd "C-c C-<left>")  'windmove-left)
-  (global-set-key (kbd "C-c C-<right>") 'windmove-right)
-  (global-set-key (kbd "C-c C-<up>")    'windmove-up)
-  (global-set-key (kbd "C-c C-<down>")  'windmove-down)
-#+end_src
-
 ** Jumping around
    Use [[https://github.com/abo-abo/avy][Avy]] for jumping around in a buffer.
 
@@ -645,6 +635,17 @@
     :ensure t
     :defer t)
 #+end_src
+
+** ace-windows
+   [[https://github.com/abo-abo/ace-window][ace-windows]] - GNU Emacs package for selecting a window to switch to
+
+#+begin_src emacs-lisp
+  (use-package ace-window
+    :ensure t
+    :config (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
+    :bind* ("C-x o" . ace-window))
+#+end_src
+
 
 * Productivity
 ** org-mode
