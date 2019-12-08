@@ -636,6 +636,15 @@
     :config (direnv-mode))
 #+end_src
 
+** wgrep
+   [[https://github.com/mhayashi1120/Emacs-wgrep][wgrep.el]] - allows you to edit a grep buffer and apply those changes to the
+   file buffer.
+
+#+begin_src emacs-lisp
+  (use-package wgrep
+    :ensure t
+    :defer t)
+#+end_src
 
 * Productivity
 ** org-mode
