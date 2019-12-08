@@ -741,7 +741,6 @@
 #+end_src
 
 
-
 * Coding
 ** Completion with company
    [[http://company-mode.github.io/][Company]] is a text completion framework for Emacs. The name stands for
@@ -751,13 +750,15 @@
 #+begin_src emacs-lisp
   (use-package company
     :ensure t
-    :init (global-company-mode)
-    :bind (:map company-active-map               
+    :hook (prog-mode . company-mode)
+    :bind (:map company-active-map
                 ("C-n" . company-select-next)
                 ("C-p" . company-select-previous))
     :config (setq company-tooltip-align-annotations t
                   company-dabbrev-ignore-case t
-                  company-dabbrev-downcase nil))
+                  company-show-numbers t
+                  company-dabbrev-downcase nil)
+    :bind ("<backtab>" . company-complete))
 
   ;; Show likelier candidates on top
   (use-package company-statistics
