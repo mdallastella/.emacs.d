@@ -700,7 +700,8 @@
             ("C-c t j" . org-mru-clock-select-recent-task))
     :init
     (setq org-mru-clock-how-many 100
-          org-mru-clock-completing-read #'ivy-completing-read))
+          org-mru-clock-completing-read #'ivy-completing-read
+          org-mru-clock-files #'org-agenda-files))
 #+end_src
 
 *** yankpad
@@ -729,8 +730,8 @@
   (setq org-capture-templates
         '(("t" "Task" entry (file+headline "inbox.org" "Personal")
            "* TODO %?\n")
-          ("T" "Clockable task" entry (file+headline "inbox.org")
-           "* TODO %?\n :clock-in t :clock-keep t")
+          ("T" "Clockable task" entry (file+headline "inbox.org" "Personal")
+           "* TODO %?\n" :clock-in t :clock-keep t)
           ("p" "Project" entry (file+headline "todo.org" "Projects")
            (file "templates/newproject.org"))
           ("s" "Someday" entry (file+headline "someday.org" "Someday / Maybe")
