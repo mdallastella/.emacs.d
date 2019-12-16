@@ -971,6 +971,13 @@
                 ("C-c C-e" . ijanet-eval-line)
                 ("C-c C-b" . ijanet-eval-buffer)))
 #+end_src
+** YAML
+   Editing YAML files.
+
+#+begin_src emacs-lisp
+  (use-package yaml
+    :defer t)
+#+end_src
 
 
 * Global keybindings
