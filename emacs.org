@@ -714,6 +714,15 @@
           org-mru-clock-files #'org-agenda-files))
 #+end_src
 
+*** org-clock-csv
+    Extracts clock entries from org files and convert them into CSV format. It
+    is intended to facilitate clocked time analysis in external programs.
+
+#+begin_src emacs-lisp
+  (use-package org-clock-csv
+    :ensure t)
+#+end_src
+
 *** yankpad
     [[https://github.com/Kungsgeten/yankpad][GitHub - Kungsgeten/yankpad: Paste snippets from an org-mode file]]
 
@@ -768,7 +777,7 @@
                   company-dabbrev-ignore-case t
                   company-show-numbers t
                   company-dabbrev-downcase nil)
-    :bind* ("<TAB>" . company-indent-or-complete-common)
+    :bind* ("TAB" . company-indent-or-complete-common)
     :init (global-company-mode))
 
   ;; Show likelier candidates on top
@@ -882,15 +891,6 @@
                   kaocha-runner-ongoing-tests-win-min-height 20
                   kaocha-runner-output-win-max-height 20))
 #+end_src
-
-*** org-babel-clojure
-    Settings for use Clojure inside org-mode documents.
-
- #+begin_src emacs-lisp
-   (use-package ob-clojure
-     :ensure t
-     :config (setq org-babel-clojure-backend 'cider))
- #+end_src
 
 ** Web Development
    I use web-mode, css-mode and js2 for web development.
