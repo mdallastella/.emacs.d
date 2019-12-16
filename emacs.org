@@ -777,7 +777,8 @@
                   company-dabbrev-ignore-case t
                   company-show-numbers t
                   company-dabbrev-downcase nil)
-    :bind* ("TAB" . company-indent-or-complete-common)
+    :bind (:map prog-mode-map
+                ("TAB" . company-indent-or-complete-common))
     :init (global-company-mode))
 
   ;; Show likelier candidates on top
