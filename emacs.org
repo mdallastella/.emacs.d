@@ -486,7 +486,20 @@
 #+end_src
 
 #+RESULTS:
-: mc/edit-lines
+
+** ibuffer
+   Use ibuffer instead of list-buffers.
+
+ #+begin_src emacs-lisp
+   (bind-key* "C-x C-b" #'ibuffer)
+
+   (use-package ibuffer-vc
+     :ensure t
+     :hook (ibuffer . (lambda ()
+                        (ibuffer-vc-set-filter-groups-by-vc-root)
+                        (unless (eq ibuffer-sorting-mode 'alphabetic)
+                          (ibuffer-do-sort-by-alphabetic)))))
+ #+end_src
 
 
 * Tools
