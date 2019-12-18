@@ -396,16 +396,6 @@
     :init (ivy-rich-mode 1))
 #+end_src
 
-*** ivy-posframe
-
-#+begin_src emacs-lisp
-  (use-package ivy-posframe
-    :ensure t
-    :init (ivy-posframe-mode 1)
-    :config (setq ivy-posframe-display-functions-alist
-                  '((t . ivy-posframe-display-at-frame-center))))
-#+end_src
-
 ** Amx
    [[https://github.com/DarwinAwardWinner/amx][Amx]] is an alternative interface for ~M-x~ in Emacs.
 
