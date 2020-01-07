@@ -485,8 +485,6 @@
             ("C-> C->" . mc/edit-lines)))
 #+end_src
 
-#+RESULTS:
-
 ** ibuffer
    Use ibuffer instead of list-buffers.
 
@@ -600,7 +598,6 @@
                       'diff-hl-magit-post-refresh)
     :init
     (diff-hl-dired-mode)
-    (diff-hl-flydiff-mode)
     (global-diff-hl-mode))
 #+end_src
 
@@ -710,11 +707,11 @@
   (use-package org-mru-clock
     :ensure t
     :bind* (("C-c t i" . org-mru-clock-in)
-            ("C-c t j" . org-mru-clock-select-recent-task))
-    :init
-    (setq org-mru-clock-how-many 100
-          org-mru-clock-completing-read #'ivy-completing-read
-          org-mru-clock-files #'org-agenda-files))
+            ("C-c t j" . org-mru-clock-select-recent-task)
+            ("C-c t o" . org-clock-out))
+    :init (setq org-mru-clock-how-many 100
+                org-mru-clock-completing-read #'ivy-completing-read
+                org-mru-clock-files #'org-agenda-files))
 #+end_src
 
 *** org-clock-csv
