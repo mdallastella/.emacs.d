@@ -499,6 +499,16 @@
                           (ibuffer-do-sort-by-alphabetic)))))
  #+end_src
 
+** undo-fu
+   [[https://gitlab.com/ideasman42/emacs-undo-fu][Undo Fu]] - Simple, stable undo with redo for emacs.
+
+#+begin_src emacs-lisp
+  (use-package undo-fu
+    :ensure t
+    :bind* (("C-z" . undo-fu-only-undo)
+            ("C-S-z" . undo-fu-only-redo)))
+#+end_src
+
 
 * Tools
 ** Crux
@@ -981,13 +991,6 @@
 
 
 * Global keybindings
-** Ctrl-z as undo
-   Use Ctrl-z as undo.
-
-#+begin_src emacs-lisp
-  (global-set-key (kbd "C-z") 'undo)
-#+end_src
-
 ** Set C-x C-k to kill the current buffer
 
 #+begin_src emacs-lisp
