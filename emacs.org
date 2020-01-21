@@ -809,7 +809,8 @@
     :hook (cider-mode . eldoc-mode)
     :bind (:map cider-mode-map
                 ("C-c M-l" . cider-load-all-project-ns))
-    :config (setq cider-offer-to-open-cljs-app-in-browser nil))
+    :config (setq cider-offer-to-open-cljs-app-in-browser nil
+                  cider-auto-select-error-buffer nil))
 #+end_src
 
 *** CIDER mode for REPL interaction
@@ -820,7 +821,8 @@
     :config (setq cider-font-lock-dynamically t
                   cider-invert-insert-eval-p t
                   cider-save-file-on-load t
-                  cider-switch-to-repl-after-insert-p nil))
+                  cider-switch-to-repl-after-insert-p nil
+                  cider-repl-pop-to-buffer-on-connect 'display-only))
 #+end_src
 
 *** Clojure Flycheck
