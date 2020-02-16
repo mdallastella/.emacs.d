@@ -97,11 +97,11 @@
 #+end_src
 
 ** Font setup
-   I use the Victor Mono font.
+   I use the Iosevka font.
 
 #+begin_src emacs-lisp
   (set-face-attribute 'default nil
-                      :family "Victor Mono"
+                      :family "Iosevka SS09"
                       :weight 'light
                       :italic nil
                       :height 130)
