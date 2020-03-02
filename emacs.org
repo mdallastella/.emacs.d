@@ -201,17 +201,15 @@
                   doom-modeline-modal-icon nil))
 #+end_src
 
-** Eyebrowse
-   [[https://github.com/wasamasa/eyebrowse][Eyebrowse]] - A simple-minded way of managing window configs in emacs
+** Perspectives
+   The [[https://github.com/nex3/perspective-el][Perspective]] package provides multiple named workspaces (or
+   "perspectives") in Emacs, similar to multiple desktops in window managers
+   like Awesome and XMonad, and Spaces on the Mac.
 
 #+begin_src emacs-lisp
-  (use-package eyebrowse
+  (use-package perspective
     :ensure t
-    :config (setq eyebrowse-switch-back-and-forth t
-                  eyebrowse-wrap-around t
-                  eyebrowse-new-workspace t
-                  eyebrowse-mode-line-style t)
-    (eyebrowse-mode t))
+    :init (persp-mode))
 #+end_src
 
 ** Show matching parenthesis
@@ -370,7 +368,8 @@
 #+begin_src emacs-lisp
   (use-package ivy
     :ensure t
-    :bind (("C-c C-r" . ivy-resume)
+    :bind (("C-x M-b" . persp-ivy-switch-buffer)
+           ("C-c C-r" . ivy-resume)
            :map ivy-minibuffer-map
            ("<return>" . ivy-alt-done)
            ("C-o" . hydra-ivy/body))
