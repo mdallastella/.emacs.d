@@ -591,7 +591,8 @@
            ("C-c v g" . magit-blame)
            ("C-c v l" . magit-log-buffer-file)
            ("C-c v p" . magit-pull)
-           ("C-c v v" . magit-status))
+           ("C-c v v" . magit-status)
+           ("C-c v f" . magit-fetch-all))
     :config (setq magit-save-repository-buffers 'dontask
                   magit-refs-show-commit-count 'all
                   magit-completing-read-function 'ivy-completing-read))
