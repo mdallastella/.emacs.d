@@ -120,12 +120,10 @@
                   solarized-use-more-italic nil
                   x-underline-at-descent-line t)
     (load-theme 'solarized-dark-high-contrast 'no-confirm)
-    (let ((line (face-attribute 'mode-line :underline)))
-      (set-face-attribute 'mode-line nil :overline line)
-      (set-face-attribute 'mode-line-inactive nil :overline line)
-      (set-face-attribute 'mode-line-inactive nil :underline line)
-      (set-face-attribute 'mode-line nil :box nil)
-      (set-face-attribute 'mode-line-inactive nil :box nil)))
+    (set-face-attribute 'mode-line nil :overline nil)
+    (set-face-attribute 'mode-line nil :underline nil)
+    (set-face-attribute 'mode-line-inactive nil :overline nil)
+    (set-face-attribute 'mode-line-inactive nil :underline nil))
 #+end_src
 
 ** Icons
