@@ -617,6 +617,8 @@
 #+begin_src emacs-lisp
   (use-package smartparens
     :ensure t
+    :bind (:map smartparens-mode-map
+                ("M-R" . sp-raise-sexp))
     :config (require 'smartparens-config)
     (setq sp-highlight-pair-overlay t
           sp-highlight-wrap-overlay t
