@@ -968,27 +968,32 @@
     :ensure t
     :mode "\\.json\\'")
 #+end_src
+
 ** Janet
    [[https://janet-lang.org][Janet]] is a functional and imperative programming language.
 
 #+begin_src emacs-lisp
   (use-package janet-mode
-    :straight (:host github :repo "ALSchwalm/janet-mode")
+    :ensure t
     :mode ("\\.janet\\'" . janet-mode))
-
-  (use-package ijanet-mode
-    :straight (:host github :repo "serialdev/ijanet-mode")
-    :after janet-mode
-    :bind (:map janet-mode-map
-                ("C-c C-z" . ijanet)
-                ("C-c C-e" . ijanet-eval-line)
-                ("C-c C-b" . ijanet-eval-buffer)))
 #+end_src
+
+** Fennel
+   [[https://fennel-lang.org/][Fennel]] is a programming language that brings together the speed, simplicity,
+   and reach of Lua with the flexibility of a lisp syntax and macro system.
+
+#+begin_src emacs-lisp
+  (use-package fennel-mode
+    :ensure t
+    :mode ("\\.fnl" . fennel-mode))
+#+end_src
+
 ** YAML
    Editing YAML files.
 
 #+begin_src emacs-lisp
-  (use-package yaml
+  (use-package yaml-mode
+    :ensure t
     :defer t)
 #+end_src
 
