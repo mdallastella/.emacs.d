@@ -879,7 +879,7 @@
     :bind (:map cider-repl-mode-map
                 ("RET" . cider-repl-newline-and-indent)
                 ("C-RET" . cider-repl-return)
-                ("C-c c b" . cider-repl-clear-buffer))
+                ("C-c c l" . cider-repl-clear-buffer))
     :config (setq cider-repl-wrap-history t
                   cider-repl-history-size 1000
                   cider-repl-history-file
