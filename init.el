@@ -20,7 +20,7 @@
       ;; Package archives, the usual suspects
       '(("GNU ELPA" . "https://elpa.gnu.org/packages/")
         ("MELPA"    . "https://melpa.org/packages/")
-	("org"      . "http://orgmode.org/elpa/")))
+        ("org"      . "http://orgmode.org/elpa/")))
 (add-to-list 'load-path "~/.emacs.d/lisp/")
 (package-initialize)
 
@@ -36,20 +36,6 @@
   (package-install 'use-package)
   (package-install 'dash)
   (package-install 'no-littering))
-
-;; Bootstrap straight.el
-(defvar bootstrap-version)
-(let ((bootstrap-file
-       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
-      (bootstrap-version 5))
-  (unless (file-exists-p bootstrap-file)
-    (with-current-buffer
-        (url-retrieve-synchronously
-         "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
-         'silent 'inhibit-cookies)
-      (goto-char (point-max))
-      (eval-print-last-sexp)))
-  (load bootstrap-file nil 'nomessage))
 
 ;; I need org-mode
 (unless (package-installed-p 'org)
