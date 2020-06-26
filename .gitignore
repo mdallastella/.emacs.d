@@ -26,3 +26,4 @@ company-statistics-cache.el
 /network-security.data
 var/*
 /etc/transient/values.el
+default-persp

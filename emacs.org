@@ -30,6 +30,9 @@
   (use-package keychain-environment
     :ensure t
     :init (keychain-refresh-environment))
+
+  (use-package use-package-ensure-system-package
+    :ensure t)
 #+end_src
 
 ** Various minor settings
@@ -103,9 +106,7 @@
   (set-face-attribute 'default nil
                       :family "Iosevka SS09"
                       :weight 'light
-                      :italic nil
-                      :height 130)
-  (set-face-italic-p 'italic nil)
+                      :height 120)
 #+end_src
 
 ** Theme
@@ -196,18 +197,22 @@
     :hook (after-init . doom-modeline-mode)
     :config (setq doom-modeline-buffer-file-name-style 'buffer-name
                   doom-modeline-minor-modes t
+                  doom-modeline-mu4e t
                   doom-modeline-modal-icon nil))
 #+end_src
 
 ** Perspectives
-   The [[https://github.com/nex3/perspective-el][Perspective]] package provides multiple named workspaces (or
+   The [[https://github.com/nex3/perspective-el][Persqpective]] package provides multiple named workspaces (or
    "perspectives") in Emacs, similar to multiple desktops in window managers
    like Awesome and XMonad, and Spaces on the Mac.
 
 #+begin_src emacs-lisp
   (use-package perspective
     :ensure t
-    :init (persp-mode))
+    :config (progn
+              (persp-mode 1)
+              (setq persp-state-default-file "~/.emacs.d/default-persp")
+              (persp-state-load persp-state-default-file)))
 #+end_src
 
 ** Show matching parenthesis
@@ -590,7 +595,8 @@
            ("C-c v l" . magit-log-buffer-file)
            ("C-c v p" . magit-pull)
            ("C-c v v" . magit-status)
-           ("C-c v f" . magit-fetch-all))
+           ("C-c v f" . magit-fetch-all)
+           ("C-c v R" . vc-refresh-state))
     :config (setq magit-save-repository-buffers 'dontask
                   magit-refs-show-commit-count 'all
                   magit-completing-read-function 'ivy-completing-read))
@@ -671,9 +677,8 @@
           org-fontify-quote-and-verse-blocks t
           org-confirm-babel-evaluate nil
           org-refile-targets '((org-agenda-files :maxlevel . 1))
-          org-agenda-files (list "~/org/inbox.org"
-                                 "~/org/someday.org"
-                                 "~/org/archive.org")
+          org-agenda-files (list "~/org/"
+                                 "~/org/projects/")
           org-archive-location "~/org/archive.org::datatree/"
           org-archive-mark-done t))
 #+end_src
@@ -768,6 +773,29 @@
            "* SOMEDAY %?\n")
           ("m" "Maybe" entry (file+headline "someday.org" "Someday / Maybe")
            "* MAYBE %?\n")))
+#+end_src
+** mu4e
+   Configure [[https://www.djcbsoftware.nl/code/mu/mu4e.html][mu and mu4e]] to deal with my emails
+
+#+begin_src emacs-lisp
+  (use-package mu4e
+    :ensure-system-package mu
+    :load-path "/usr/share/emacs/site-lisp/mu4e"
+    :init (setq mu4e-get-mail-command "mbsync -aq"
+                mu4e-attachment-dir "~/Downloads"
+                mu4e-update-interval 350
+                mu4e-use-fancy-chars t
+                mu4e-view-show-images t
+                mu4e-view-show-addresses t
+                mu4e-user-mail-address-list '("marco@7bridges.eu"
+                                              "marco@dallastella.name")
+                message-send-mail-function 'smtpmail-send-it
+                message-kill-buffer-on-exit t))
+
+  (use-package mu4e-alert
+    :ensure t
+    :hook (after-init . mu4e-alert-enable-notifications)
+    :config (setq mu4e-alert-set-default-style 'libnotify))
 #+end_src
 
 
