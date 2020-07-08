@@ -105,7 +105,6 @@
 #+begin_src emacs-lisp
   (set-face-attribute 'default nil
                       :family "Iosevka SS09"
-                      :weight 'light
                       :height 120)
 #+end_src
 
