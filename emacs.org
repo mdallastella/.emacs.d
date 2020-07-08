@@ -676,9 +676,9 @@
           org-hide-emphasis-markers t
           org-fontify-quote-and-verse-blocks t
           org-confirm-babel-evaluate nil
-          org-refile-targets '((org-agenda-files :maxlevel . 1))
-          org-agenda-files (list "~/org/"
-                                 "~/org/projects/")
+          org-refile-targets '((org-agenda-files :maxlevel . 2))
+          org-refile-allow-creating-parent-nodes 'confirm
+          org-agenda-files (list "~/org/")
           org-archive-location "~/org/archive.org::datatree/"
           org-archive-mark-done t))
 #+end_src
@@ -765,15 +765,16 @@
   (setq org-capture-templates
         '(("t" "Task" entry (file+headline "inbox.org" "Personal")
            "* TODO %?\n")
+          ("r" "Task with ref" entry (file+headline "inbox.org" "Personal")
+           "* TODO %?\n%a")
           ("T" "Clockable task" entry (file+headline "inbox.org" "Personal")
            "* TODO %?\n" :clock-in t :clock-keep t)
-          ("p" "Project" entry (file+headline "todo.org" "Projects")
-           (file "templates/newproject.org"))
-          ("s" "Someday" entry (file+headline "someday.org" "Someday / Maybe")
-           "* SOMEDAY %?\n")
           ("m" "Maybe" entry (file+headline "someday.org" "Someday / Maybe")
-           "* MAYBE %?\n")))
+           "* MAYBE %?\n")
+          ("j" "Journal" entry (file+olp+datetree "~/org/journal.org")
+           "** %<%H:%M> %?\n")))
 #+end_src
+
 ** mu4e
    Configure [[https://www.djcbsoftware.nl/code/mu/mu4e.html][mu and mu4e]] to deal with my emails
 
@@ -782,10 +783,15 @@
     :ensure-system-package mu
     :load-path "/usr/share/emacs/site-lisp/mu4e"
     :init (setq mu4e-get-mail-command "mbsync -aq"
-                mu4e-attachment-dir "~/Downloads"
+                mu4e-index-update-in-background t
+                mu4e-attachment-dir "~/Downloads/mail"
                 mu4e-update-interval 350
                 mu4e-use-fancy-chars t
                 mu4e-view-show-images t
+                mu4e-html2text-command 'mu4e-shr2text
+                shr-color-visible-luminance-min 60
+                shr-color-visible-distance-min 5
+                shr-use-fonts nil
                 mu4e-view-show-addresses t
                 mu4e-user-mail-address-list '("marco@7bridges.eu"
                                               "marco@dallastella.name")
@@ -796,6 +802,9 @@
     :ensure t
     :hook (after-init . mu4e-alert-enable-notifications)
     :config (setq mu4e-alert-set-default-style 'libnotify))
+
+  (use-package org-mu4e
+    :init (setq org-mu4e-link-query-in-headers-mode nil))
 #+end_src
 
 
