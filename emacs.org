@@ -677,16 +677,17 @@
   (use-package org
     :ensure t
     :config
-    (setq org-log-done t
+    (setq org-agenda-files (list "~/org/")
           org-default-notes-file "inbox.org"
+          org-todo-keywords '((sequence "TODO" "NEXT" "DONE"))
+          org-log-done t
+          org-archive-location "~/org/archive.org::datatree/"
+          org-archive-mark-done t
           org-hide-emphasis-markers t
           org-fontify-quote-and-verse-blocks t
           org-confirm-babel-evaluate nil
           org-refile-targets '((org-agenda-files :maxlevel . 2))
-          org-refile-allow-creating-parent-nodes 'confirm
-          org-agenda-files (list "~/org/")
-          org-archive-location "~/org/archive.org::datatree/"
-          org-archive-mark-done t))
+          org-refile-allow-creating-parent-nodes 'confirm))
 #+end_src
 
 *** org-super-agenda
