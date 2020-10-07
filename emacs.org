@@ -5,7 +5,6 @@
 * Emacs literal configuration
   I like to keep my cofiguration in a [[https://en.wikipedia.org/wiki/Literate_programming][literate programming]] way, thanks to [[https://orgmode.org/worg/org-contrib/babel/intro.html][org-babel]].
 
-
 * General settings
 ** User details
    My personal details.
@@ -104,7 +103,7 @@
 
 #+begin_src emacs-lisp
   (set-face-attribute 'default nil
-                      :family "Iosevka SS09"
+                      :family "Iosevka"
                       :height 120)
 #+end_src
 
@@ -669,6 +668,25 @@
     :bind* ("C-x o" . ace-window))
 #+end_src
 
+** dired-sidebar
+
+   Let's put dired in a sideabar.
+
+   #+begin_src emacs-lisp
+     (use-package dired-sidebar
+       :bind (("C-c c d" . dired-sidebar-toggle-sidebar))
+       :ensure t
+       :commands (dired-sidebar-toggle-sidebar)
+       :init
+       (add-hook 'dired-sidebar-mode-hook
+                 (lambda ()
+                   (unless (file-remote-p default-directory)
+                     (auto-revert-mode))))
+       :config
+       (push 'toggle-window-split dired-sidebar-toggle-hidden-commands)
+       (push 'rotate-windows dired-sidebar-toggle-hidden-commands))
+   #+end_src
+   
 
 * Productivity
 ** org-mode
@@ -686,7 +704,7 @@
           org-hide-emphasis-markers t
           org-fontify-quote-and-verse-blocks t
           org-confirm-babel-evaluate nil
-          org-refile-targets '((org-agenda-files :maxlevel . 2))
+          org-refile-targets '((org-agenda-files :maxlevel . 1))
           org-refile-allow-creating-parent-nodes 'confirm))
 #+end_src
 
@@ -786,32 +804,32 @@
    Configure [[https://www.djcbsoftware.nl/code/mu/mu4e.html][mu and mu4e]] to deal with my emails
 
 #+begin_src emacs-lisp
-  (use-package mu4e
-    :ensure-system-package mu
-    :load-path "/usr/share/emacs/site-lisp/mu4e"
-    :init (setq mu4e-get-mail-command "mbsync -aq"
-                mu4e-index-update-in-background t
-                mu4e-attachment-dir "~/Downloads/mail"
-                mu4e-update-interval 350
-                mu4e-use-fancy-chars t
-                mu4e-view-show-images t
-                mu4e-html2text-command 'mu4e-shr2text
-                shr-color-visible-luminance-min 60
-                shr-color-visible-distance-min 5
-                shr-use-fonts nil
-                mu4e-view-show-addresses t
-                mu4e-user-mail-address-list '("marco@7bridges.eu"
-                                              "marco@dallastella.name")
-                message-send-mail-function 'smtpmail-send-it
-                message-kill-buffer-on-exit t))
+  ;; (use-package mu4e
+  ;;   :ensure-system-package mu
+  ;;   :load-path "/usr/share/emacs/site-lisp/mu4e"
+  ;;   :init (setq mu4e-get-mail-command "mbsync -aq"
+  ;;               mu4e-index-update-in-background t
+  ;;               mu4e-attachment-dir "~/Downloads/mail"
+  ;;               mu4e-update-interval 350
+  ;;               mu4e-use-fancy-chars t
+  ;;               mu4e-view-show-images t
+  ;;               mu4e-html2text-command 'mu4e-shr2text
+  ;;               shr-color-visible-luminance-min 60
+  ;;               shr-color-visible-distance-min 5
+  ;;               shr-use-fonts nil
+  ;;               mu4e-view-show-addresses t
+  ;;               mu4e-user-mail-address-list '("marco@7bridges.eu"
+  ;;                                             "marco@dallastella.name")
+  ;;               message-send-mail-function 'smtpmail-send-it
+  ;;               message-kill-buffer-on-exit t))
 
-  (use-package mu4e-alert
-    :ensure t
-    :hook (after-init . mu4e-alert-enable-notifications)
-    :config (setq mu4e-alert-set-default-style 'libnotify))
+  ;; (use-package mu4e-alert
+  ;;   :ensure t
+  ;;   :hook (after-init . mu4e-alert-enable-notifications)
+  ;;   :config (setq mu4e-alert-set-default-style 'libnotify))
 
-  (use-package org-mu4e
-    :init (setq org-mu4e-link-query-in-headers-mode nil))
+  ;; (use-package org-mu4e
+  ;;   :init (setq org-mu4e-link-query-in-headers-mode nil))
 #+end_src
 
 
