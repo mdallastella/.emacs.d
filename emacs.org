@@ -1,9 +1,11 @@
 #+TITLE: Emacs configuration
 #+AUTHOR: Marco Dalla Stella
 #+EMAIL: marco@dallastella.name
+#+STARTUP: overview
 
 * Emacs literal configuration
   I like to keep my cofiguration in a [[https://en.wikipedia.org/wiki/Literate_programming][literate programming]] way, thanks to [[https://orgmode.org/worg/org-contrib/babel/intro.html][org-babel]].
+
 
 * General settings
 ** User details
@@ -799,6 +801,7 @@
           ("j" "Journal" entry (file+olp+datetree "~/org/journal.org")
            "** %<%H:%M> %?\n")))
 #+end_src
+
 
 ** mu4e
    Configure [[https://www.djcbsoftware.nl/code/mu/mu4e.html][mu and mu4e]] to deal with my emails
