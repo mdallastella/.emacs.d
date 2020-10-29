@@ -790,18 +790,17 @@
 
 #+begin_src emacs-lisp
   (setq org-capture-templates
-        '(("t" "Task" entry (file+headline "inbox.org" "Personal")
+        '(("t" "Task" entry (file "inbox.org")
            "* TODO %?\n")
-          ("r" "Task with ref" entry (file+headline "inbox.org" "Personal")
+          ("r" "Task with ref" entry (file "inbox.org")
            "* TODO %?\n%a")
-          ("T" "Clockable task" entry (file+headline "inbox.org" "Personal")
+          ("T" "Clockable task" entry (file+headline "inbox.org")
            "* TODO %?\n" :clock-in t :clock-keep t)
           ("m" "Maybe" entry (file+headline "someday.org" "Someday / Maybe")
            "* MAYBE %?\n")
           ("j" "Journal" entry (file+olp+datetree "~/org/journal.org")
            "** %<%H:%M> %?\n")))
 #+end_src
-
 
 ** mu4e
    Configure [[https://www.djcbsoftware.nl/code/mu/mu4e.html][mu and mu4e]] to deal with my emails
