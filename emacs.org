@@ -699,7 +699,7 @@
     :config
     (setq org-agenda-files (list "~/org/")
           org-default-notes-file "inbox.org"
-          org-todo-keywords '((sequence "TODO" "NEXT" "DONE"))
+          org-todo-keywords '((sequence "TODO" "NEXT" "|" "DONE"))
           org-log-done t
           org-archive-location "~/org/archive.org::datatree/"
           org-archive-mark-done t
