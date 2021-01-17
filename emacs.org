@@ -101,11 +101,11 @@
 #+end_src
 
 ** Font setup
-   I use the Iosevka font.
+   I use the PragmataPro font.
 
 #+begin_src emacs-lisp
   (set-face-attribute 'default nil
-                      :family "Iosevka SS09"
+                      :family "PragmataPro Mono Liga"
                       :height 120)
 #+end_src
 
