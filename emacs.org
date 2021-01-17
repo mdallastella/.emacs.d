@@ -1048,6 +1048,17 @@
     :mode ("\\.janet\\'" . janet-mode))
 #+end_src
 
+** LUA
+
+   #+begin_src emacs-lisp
+     (use-package lua-mode
+       :ensure t
+       :defer t
+       :mode ("\\.lua" . lua-mode)
+       :config
+       (setq lua-indent-level 2))
+   #+end_src
+
 ** Fennel
    [[https://fennel-lang.org/][Fennel]] is a programming language that brings together the speed, simplicity,
    and reach of Lua with the flexibility of a lisp syntax and macro system.
