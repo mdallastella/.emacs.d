@@ -714,16 +714,6 @@
     :init (org-super-agenda-mode))
 #+end_src
 
-*** org-mode visual
-   Bullets as UTF-8 characters
-
-#+begin_src emacs-lisp
-  (use-package org-bullets
-    :ensure t
-    :hook (org-mode . org-bullets-mode)
-    :config (setq org-bullets-bullet-list '("◉" "○" "●" "►" "◇" "◎")))
-#+end_src
-
 *** org-cliplink
 #+begin_src emacs-lisp
   (use-package org-cliplink
