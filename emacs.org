@@ -784,44 +784,6 @@
            "** %<%H:%M> %?\n")))
 #+end_src
 
-** mu4e
-   Configure [[https://www.djcbsoftware.nl/code/mu/mu4e.html][mu and mu4e]] to deal with my emails
-
-#+begin_src emacs-lisp
-  (use-package mu4e
-    :ensure-system-package mu
-    :load-path "/usr/share/emacs/site-lisp/mu4e"
-    :init (setq mu4e-get-mail-command "mbsync -aq"
-                mu4e-index-update-in-background t
-                mu4e-attachment-dir "~/Downloads/mail"
-                mu4e-update-interval 350
-                mu4e-use-fancy-chars t
-                mu4e-view-show-images t
-                mu4e-html2text-command "w3m -T text/html"
-                shr-color-visible-luminance-min 60
-                shr-color-visible-distance-min 5
-                shr-use-fonts nil
-                mu4e-view-show-addresses t
-                mu4e-user-mail-address-list '("marco@7bridges.eu"
-                                              "marco@dallastella.name")
-                message-send-mail-function 'smtpmail-send-it
-                message-kill-buffer-on-exit t))
-
-  (use-package mu4e-alert
-    :ensure t
-    :hook (after-init . mu4e-alert-enable-notifications)
-    :config (setq mu4e-alert-set-default-style 'libnotify))
-
-  (use-package org-mu4e
-    :init (setq org-mu4e-link-query-in-headers-mode nil))
-
-  ;; use msmtp
-  (setq message-send-mail-function 'message-send-mail-with-sendmail
-        sendmail-program "msmtp"
-        message-sendmail-extra-arguments '("--read-envelope-from")
-        message-sendmail-f-is-evil t)
-#+end_src
-
 
 * Coding
 ** Completion with company
