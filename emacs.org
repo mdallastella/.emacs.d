@@ -452,37 +452,29 @@
                 ("M-p" . symbol-overlay-jump-prev))
     :hook ((prog-mode html-mode css-mode) . symbol-overlay-mode))
 #+end_src
-** Flyspell
-*** Flyspell configuration using hunspell.
-**** aspell
+** Spell checking
+
+*** aspell
 
 #+begin_src emacs-lisp
   (use-package ispell
     :defer t
     :config (setq ispell-program-name (executable-find "aspell")
-                  ispell-extra-args '("--sug-mode=ultra"))
+                  ispell-extra-args '("--sug-mode=ultra")
+                  ispell-dictionary "en"
+                  ispell-local-dictionary "en")
     (unless ispell-program-name
       (warn "No spell checker available. Please install hunspell.")))
 #+end_src
 
-**** Flyspell
+*** [[https://gitlab.com/ideasman42/emacs-spell-fu][spell-fu]] - Fast highlighting of misspelled words.
 
 #+begin_src emacs-lisp
-  (use-package flyspell
-    :hook ((prog-mode text-mode) . flyspell-prog-mode)
-    :config
-    (setq flyspell-use-meta-tab nil
-          ;; Make Flyspell less chatty
-          flyspell-issue-welcome-flag nil
-          flyspell-issue-message-flag nil))
-
-  ;; Better interface for corrections
-  (use-package flyspell-correct-ivy
+  (use-package spell-fu
     :ensure t
-    :after flyspell
-    :bind (:map flyspell-mode-map
-                ("C-c $" . flyspell-correct-word-generic)))
+    :hook ((prog-mode text-mode) . spell-fu-mode))
 #+end_src
+
 ** Multiple cursors
    [[https://github.com/magnars/multiple-cursors.el][Multiple cursors for emacs.]]
 
