@@ -22,18 +22,15 @@
 
 #+begin_src emacs-lisp
   (use-package exec-path-from-shell
-    :ensure t
     :config
     (setq exec-path-from-shell-variables '("PATH")
           exec-path-from-shell-arguments '("-l"))
     (exec-path-from-shell-initialize))
 
   (use-package keychain-environment
-    :ensure t
     :init (keychain-refresh-environment))
 
-  (use-package use-package-ensure-system-package
-    :ensure t)
+  (use-package use-package-ensure-system-package)
 #+end_src
 
 ** Various minor settings
@@ -74,20 +71,7 @@
 
 #+begin_src emacs-lisp
   (use-package super-save
-    :ensure t
     :config (super-save-mode 1))
-#+end_src
-
-*** [[https://github.com/Malabarba/paradox][paradox]] - A better package manager interface.
-
-#+begin_src emacs-lisp
-  (use-package paradox
-    :ensure t
-    :bind (("C-c c p" . paradox-list-packages)
-           ("C-c c P" . paradox-upgrade-packages))
-    :config (setq paradox-github-token t             ; Don't ask for a token
-                  paradox-use-homepage-buttons nil   ; Hide download button
-                  paradox-automatically-star nil))   ; Don't star packages automatically
 #+end_src
 
 
@@ -114,7 +98,6 @@
 
 #+begin_src emacs-lisp
   (use-package solarized-theme
-    :ensure t
     :config (setq solarized-use-variable-pitch nil
                   solarized-scale-org-headlines nil
                   solarized-use-less-bold t
@@ -130,19 +113,15 @@
 ** Icons
    Some icons for our modern looking Emacs
 #+begin_src emacs-lisp
-  (use-package all-the-icons
-    :ensure t)
+  (use-package all-the-icons)
 
   (use-package all-the-icons-ivy-rich
-    :ensure t
     :init (all-the-icons-ivy-rich-mode 1))
 
   (use-package all-the-icons-ivy-rich
-    :ensure t
     :init (all-the-icons-ivy-rich-mode 1))
 
   (use-package all-the-icons-ibuffer
-    :ensure t
     :init (all-the-icons-ibuffer-mode 1))
 #+end_src
 
@@ -152,9 +131,9 @@
    Set unique buffer names.
 
 #+begin_src emacs-lisp
-  (use-package uniquify
-    :config (setq uniquify-buffer-name-style 'post-forward
-                  uniquify-separator ":"))
+  (require 'uniquify)
+  (setq uniquify-buffer-name-style 'post-forward
+	uniquify-separator ":")
 #+end_src
 
 ** Remove menus, bars and everything that's annoying
@@ -195,12 +174,10 @@
 
 #+begin_src emacs-lisp
   (use-package minions
-    :ensure t
     :init (minions-mode)
     :config (setq minions-direct '(cider-mode)))
 
   (use-package doom-modeline
-    :ensure t
     :hook (after-init . doom-modeline-mode)
     :config (setq doom-modeline-buffer-file-name-style 'buffer-name
                   doom-modeline-minor-modes t
@@ -215,20 +192,18 @@
 
 #+begin_src emacs-lisp
   (use-package perspective
-    :ensure t
     :config (progn
               (persp-mode 1)
               (setq persp-state-default-file "~/.emacs.d/default-persp")
               (persp-state-load persp-state-default-file)))
 #+end_src
 
-** Show matching parenthesis
+** Show matching parenthesis 
 
 #+begin_src emacs-lisp
   (show-paren-mode t)
 
   (use-package rainbow-delimiters
-    :ensure t
     :hook ((prog-mode cider-repl-mode) . rainbow-delimiters-mode))
 #+end_src
 
@@ -279,7 +254,6 @@
 
 #+begin_src emacs-lisp
   (use-package which-key
-    :ensure t
     :init (which-key-mode)
     :config (setq which-key-idle-delay 0.4
                   which-key-sort-order 'which-key-prefix-then-key-order))
@@ -347,7 +321,6 @@
 
 #+begin_src emacs-lisp
   (use-package avy
-    :ensure t
     :bind* (("C-:" . avy-goto-line)
             ("C-;" . avy-goto-char))
     :bind (:map isearch-mode-map
@@ -359,7 +332,6 @@
 
 #+begin_src emacs-lisp
   (use-package counsel
-    :ensure t
     :init (counsel-mode)
     :bind (("C-c u" . counsel-unicode-char)
            ("C-c r" . counsel-rg)
@@ -377,7 +349,6 @@
 
 #+begin_src emacs-lisp
   (use-package ivy
-    :ensure t
     :bind (("C-x M-b" . persp-ivy-switch-buffer)
            ("C-c C-r" . ivy-resume)
            :map ivy-minibuffer-map
@@ -410,8 +381,7 @@
    [[https://github.com/DarwinAwardWinner/amx][Amx]] is an alternative interface for ~M-x~ in Emacs.
 
 #+begin_src emacs-lisp
-  (use-package amx
-    :ensure t)
+  (use-package amx)
 #+end_src
 
 ** Aggressive indentation
@@ -421,7 +391,6 @@
 
 #+begin_src emacs-lisp
   (use-package aggressive-indent
-    :ensure t
     :init (global-aggressive-indent-mode 1)
     :config
     ;; Free C-c C-q, used in Org and in CIDER
@@ -435,7 +404,6 @@
 
 #+begin_src emacs-lisp
   (use-package easy-kill
-    :ensure t
     :bind (([remap kill-ring-save] . easy-kill)
            ([remap mark-sexp]      . easy-mark)))
 #+end_src
@@ -446,7 +414,6 @@
 
 #+begin_src emacs-lisp
   (use-package symbol-overlay
-    :ensure t
     :bind (:map symbol-overlay-mode-map
                 ("M-n" . symbol-overlay-jump-next)
                 ("M-p" . symbol-overlay-jump-prev))
@@ -471,7 +438,6 @@
 
 #+begin_src emacs-lisp
   (use-package spell-fu
-    :ensure t
     :hook ((prog-mode text-mode) . spell-fu-mode))
 #+end_src
 
@@ -480,7 +446,6 @@
 
 #+begin_src emacs-lisp
   (use-package multiple-cursors
-    :ensure t
     :bind* (("C-> n" . mc/mark-next-like-this)
             ("C-> p" . mc/mark-previous-like-this)
             ("C-> a" . mc/mark-all-like-this)
@@ -494,7 +459,6 @@
    (bind-key* "C-x C-b" #'ibuffer)
 
    (use-package ibuffer-vc
-     :ensure t
      :hook (ibuffer . (lambda ()
                         (ibuffer-vc-set-filter-groups-by-vc-root)
                         (unless (eq ibuffer-sorting-mode 'alphabetic)
@@ -506,7 +470,6 @@
 
 #+begin_src emacs-lisp
   (use-package undo-fu
-    :ensure t
     :bind* (("C-z" . undo-fu-only-undo)
             ("C-S-z" . undo-fu-only-redo)))
 #+end_src
@@ -518,7 +481,6 @@
 
 #+begin_src emacs-lisp
   (use-package crux
-    :ensure t
     :bind ("C-^" . crux-top-join-line)
     :config
     (setq save-abbrevs 'silently)
@@ -532,12 +494,11 @@
 
 #+begin_src emacs-lisp
   (use-package flycheck
-    :ensure t
     :hook (prog-mode . flycheck-mode)
     :config
     (setq flycheck-standard-error-navigation nil
-		   flycheck-display-errors-function
-		   #'flycheck-display-error-messages-unless-error-list))
+          flycheck-display-errors-function
+          #'flycheck-display-error-messages-unless-error-list))
 #+end_src
 
 ** Projectile
@@ -547,7 +508,6 @@
 
 #+begin_src emacs-lisp
   (use-package projectile
-    :ensure t
     :bind
     (:map projectile-mode-map
           ("C-c p" . projectile-command-map))
@@ -586,7 +546,6 @@
 
 #+begin_src emacs-lisp
   (use-package magit
-    :ensure t
     :bind (("C-c v c" . magit-clone)
            ("C-c v C" . magit-checkout)
            ("C-c v d" . magit-dispatch-popup)
@@ -607,7 +566,6 @@
 
 #+begin_src emacs-lisp
   (use-package diff-hl
-    :ensure t
     :config (add-hook 'magit-post-refresh-hook
                       'diff-hl-magit-post-refresh)
     :init
@@ -621,7 +579,6 @@
 
 #+begin_src emacs-lisp
   (use-package smartparens
-    :ensure t
     :bind (:map smartparens-mode-map
                 ("M-R" . sp-raise-sexp))
     :config (require 'smartparens-config)
@@ -638,7 +595,6 @@
 
 #+begin_src emacs-lisp
   (use-package direnv
-    :ensure t
     :config (direnv-mode))
 #+end_src
 
@@ -647,9 +603,7 @@
    file buffer.
 
 #+begin_src emacs-lisp
-  (use-package wgrep
-    :ensure t
-    :defer t)
+  (use-package wgrep)
 #+end_src
 
 ** ace-windows
@@ -657,7 +611,6 @@
 
 #+begin_src emacs-lisp
   (use-package ace-window
-    :ensure t
     :config (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
     :bind* ("C-x o" . ace-window))
 #+end_src
@@ -669,7 +622,6 @@
    #+begin_src emacs-lisp
      (use-package dired-sidebar
        :bind (("C-c c d" . dired-sidebar-toggle-sidebar))
-       :ensure t
        :commands (dired-sidebar-toggle-sidebar)
        :init
        (add-hook 'dired-sidebar-mode-hook
@@ -687,7 +639,6 @@
 *** org settings
 #+begin_src emacs-lisp
   (use-package org
-    :ensure t
     :config
     (setq org-agenda-files (list "~/org/")
           org-default-notes-file "inbox.org"
@@ -707,7 +658,6 @@
 
 #+begin_src emacs-lisp
   (use-package org-super-agenda
-    :ensure t
     :config (setq org-deadline-warning-days 7
                   org-agenda-block-separator 9472
                   org-agenda-skip-scheduled-if-done t)
@@ -717,7 +667,6 @@
 *** org-cliplink
 #+begin_src emacs-lisp
   (use-package org-cliplink
-    :ensure t
     :bind ("C-c o i" . org-cliplink))
 #+end_src
 
@@ -730,7 +679,6 @@
 
 #+begin_src emacs-lisp
   (use-package org-mru-clock
-    :ensure t
     :bind* (("C-c t i" . org-mru-clock-in)
             ("C-c t j" . org-mru-clock-select-recent-task)
             ("C-c t o" . org-clock-out))
@@ -739,33 +687,22 @@
                 org-mru-clock-files #'org-agenda-files))
 #+end_src
 
-*** org-clock-csv
-    Extracts clock entries from org files and convert them into CSV format. It
-    is intended to facilitate clocked time analysis in external programs.
-
-#+begin_src emacs-lisp
-  (use-package org-clock-csv
-    :ensure t)
-#+end_src
-
 *** yankpad
     [[https://github.com/Kungsgeten/yankpad][GitHub - Kungsgeten/yankpad: Paste snippets from an org-mode file]]
 
 #+begin_src emacs-lisp
-  (use-package yasnippet
-    :ensure t)
+  (use-package yasnippet)
   (use-package yankpad
-    :ensure t
     :init
-    (setq yankpad-file "~/cloud/mds/Org/yankpad.org")
+    (setq yankpad-file "~/org/yankpad.org")
     (bind-keys :prefix-map yank-map
-	       :prefix "C-c y"
-	       ("c" . yankpad-set-category)
-	       ("e" . yankpad-edit)
-	       ("i" . yankpad-insert)
-	       ("m" . yankpad-map)
-	       ("r" . yankpad-reload)
-	       ("x" . yankpad-expand)))
+               :prefix "C-c y"
+               ("c" . yankpad-set-category)
+               ("e" . yankpad-edit)
+               ("i" . yankpad-insert)
+               ("m" . yankpad-map)
+               ("r" . yankpad-reload)
+               ("x" . yankpad-expand)))
 #+END_SRC
 
 *** capture templates
@@ -793,7 +730,6 @@
 
 #+begin_src emacs-lisp
   (use-package company
-    :ensure t
     :bind (:map company-active-map
                 ("C-n" . company-select-next)
                 ("C-p" . company-select-previous))
@@ -805,12 +741,6 @@
     :bind (:map prog-mode-map
                 ("TAB" . company-indent-or-complete-common))
     :init (global-company-mode))
-
-  ;; Show likelier candidates on top
-  (use-package company-statistics
-    :ensure t
-    :after company
-    :config (company-statistics-mode))
 #+end_src
 
 ** Clojure
@@ -820,20 +750,15 @@
 
 #+begin_src emacs-lisp
   (use-package cider
-    :ensure t
-    :hook (cider-mode . eldoc-mode)
+    :hook  ((cider-mode . eldoc-mode)
+            (clojure-mode . cider-mode)
+            (clojure-mode . subword-mode))
+
     :bind (:map cider-mode-map
                 ("C-c M-l" . cider-load-all-project-ns))
     :config (setq cider-offer-to-open-cljs-app-in-browser nil
-                  cider-auto-select-error-buffer nil))
-#+end_src
-
-*** CIDER mode for REPL interaction
-
-#+begin_src emacs-lisp
-  (use-package cider-mode
-    :ensure cider
-    :config (setq cider-font-lock-dynamically t
+                  cider-auto-select-error-buffer nil
+                  cider-font-lock-dynamically t
                   cider-invert-insert-eval-p t
                   cider-save-file-on-load t
                   cider-switch-to-repl-after-insert-p nil
@@ -844,50 +769,43 @@
     Flycheck using clj-kondo
 
 #+begin_src emacs-lisp
-  (use-package flycheck-clj-kondo
-    :ensure t)
+  (use-package flycheck-clj-kondo)
 #+end_src
 
 *** Major mode for Clojure files
 
 #+begin_src emacs-lisp
-  (use-package clojure-mode
-    :ensure t
-    :hook  ((clojure-mode . cider-mode)
-            (clojure-mode . subword-mode))
-    :config (define-clojure-indent	; Fix indentation of some common macros
-              (for-all 1)
-              (defroutes 'defun)
-              (GET 2)
-              (POST 2)
-              (PUT 2)
-              (DELETE 2)
-              (HEAD 2)
-              (ANY 2)
-              (context 2)))
+  ;; Fix indentation of some common macros
+  (define-clojure-indent
+    (for-all 1)
+    (defroutes 'defun)
+    (GET 2)
+    (POST 2)
+    (PUT 2)
+    (DELETE 2)
+    (HEAD 2)
+    (ANY 2)
+    (context 2))
 #+end_src
 
 *** Font-locking for Clojure mode
 
 #+begin_src emacs-lisp
   (use-package clojure-mode-extra-font-locking
-    :ensure t
     :after clojure-mode)
 #+end_src
 
 *** Client for Clojure nREPL
 
 #+begin_src emacs-lisp
-  (use-package nrepl-client
-    :ensure cider
-    :config (setq nrepl-hide-special-buffers t))
+  (require 'nrepl-client)
+  (setq nrepl-hide-special-buffers t)
 #+end_src
 
 *** REPL interactions with CIDER
 
 #+begin_src emacs-lisp
   (use-package cider-repl
-    :ensure cider
     :hook ((cider-repl-mode . eldoc-mode)
            (cider-repl-mode . subword-mode))
     :bind (:map cider-repl-mode-map
@@ -907,7 +825,6 @@
 
 #+begin_src emacs-lisp
   (use-package kaocha-runner
-    :ensure t
     :after cider
     :bind (:map clojure-mode-map
                 ("C-c k a" . kaocha-runner-run-all-tests)
@@ -927,7 +844,6 @@
 
 #+begin_src emacs-lisp
   (use-package web-mode
-    :ensure t
     :mode "\\.html\\'"
     :config
     (setq web-mode-markup-indent-offset 2
@@ -939,34 +855,21 @@
 
 #+begin_src emacs-lisp
   (use-package js2-mode
-    :ensure t
     :mode "\\.js\\'"
     :hook (js2-mode . js2-highlight-unused-variables-mode)
     :config (setq-default js2-basic-offset 2))
 #+end_src
 
-*** Typescript support with [[https://github.com/ananthakumaran/tide][tide]]
-
-#+begin_src emacs-lisp
-  (use-package tide
-    :ensure t
-    :after (typescript-mode company flycheck)
-    :hook ((typescript-mode . tide-setup)
-           (typescript-mode . tide-hl-identifier-mode))
-    :config (setq typescript-indent-level 2))
-#+end_src
-
-   Better CSS support.
+*** Better CSS support
 
 #+begin_src emacs-lisp
   (use-package css-mode
-    :ensure t
     :mode "\\.css\\'"
     :hook (css-mode-hook . (lambda () (run-hooks 'prog-mode-hook)))
     :config (setq css-indent-offset 2))
 #+end_src
 
-   Eldoc for CSS.
+*** Eldoc for CSS.
 
 #+begin_src emacs-lisp
   (use-package css-eldoc
@@ -975,7 +878,7 @@
     :commands (turn-on-css-eldoc))
 #+end_src
 
-   JSON specific mode.
+*** JSON specific mode.
 
 #+begin_src emacs-lisp
   (use-package json-mode                  ; JSON editing
@@ -988,20 +891,18 @@
 
 #+begin_src emacs-lisp
   (use-package janet-mode
-    :ensure t
     :mode ("\\.janet\\'" . janet-mode))
 #+end_src
 
 ** LUA
 
-   #+begin_src emacs-lisp
-     (use-package lua-mode
-       :ensure t
-       :defer t
-       :mode ("\\.lua" . lua-mode)
-       :config
-       (setq lua-indent-level 2))
-   #+end_src
+#+begin_src emacs-lisp
+  (use-package lua-mode
+    :defer t
+    :mode ("\\.lua" . lua-mode)
+    :config
+    (setq lua-indent-level 2))
+#+end_src
 
 ** Fennel
    [[https://fennel-lang.org/][Fennel]] is a programming language that brings together the speed, simplicity,
@@ -1009,7 +910,6 @@
 
 #+begin_src emacs-lisp
   (use-package fennel-mode
-    :ensure t
     :mode ("\\.fnl" . fennel-mode))
 #+end_src
 
@@ -1018,7 +918,6 @@
 
 #+begin_src emacs-lisp
   (use-package yaml-mode
-    :ensure t
     :defer t)
 #+end_src
 
