@@ -4,7 +4,8 @@
 #+STARTUP: overview
 
 * Emacs literal configuration
-  I like to keep my cofiguration in a [[https://en.wikipedia.org/wiki/Literate_programming][literate programming]] way, thanks to [[https://orgmode.org/worg/org-contrib/babel/intro.html][org-babel]].
+  I like to keep my cofiguration in a [[https://en.wikipedia.org/wiki/Literate_programming][literate programming]] way, thanks to
+  [[https://orgmode.org/worg/org-contrib/babel/intro.html][org-babel]] and [[https://github.com/raxod502/straight.el][straight.el]].
 
 
 * General settings
@@ -98,6 +99,7 @@
 
 #+begin_src emacs-lisp
   (use-package solarized-theme
+    :ensure t
     :config (setq solarized-use-variable-pitch nil
                   solarized-scale-org-headlines nil
                   solarized-use-less-bold t
@@ -136,38 +138,12 @@
 	uniquify-separator ":")
 #+end_src
 
-** Remove menus, bars and everything that's annoying
-   I don't like scrollbars nor bars. I've been using Emacs for many years, and
-   appreciate a certain minimalist approach to its display.
-
-#+begin_src emacs-lisp
-  (setq initial-scratch-message "")
-  (when (window-system)
-    (tool-bar-mode -1)
-    (when (fboundp 'horizontal-scroll-bar-mode)
-      (horizontal-scroll-bar-mode -1))
-    (blink-cursor-mode -1)
-    (scroll-bar-mode -1)
-    (tooltip-mode -1)
-    (menu-bar-mode -1))
-#+end_src
-
-** Disable annoying prompts and messages
-
-#+begin_src emacs-lisp
-  (fset 'yes-or-no-p 'y-or-n-p)
-  (setq ring-bell-function #'ignore
-        inhibit-startup-screen t
-        initial-scratch-message nil)
-  (fset 'display-startup-echo-area-message #'ignore)
-#+end_src
-
 ** Window margins
    I like to have some space on the left and right edge of the window
-   #+begin_src emacs-lisp
-     (setq-default left-margin-width 4
-                   right-margin-width 4)
-   #+end_src
+#+begin_src emacs-lisp
+  (setq-default left-margin-width 4
+		right-margin-width 4)
+#+end_src
    
 ** Doom mode line
    [[https://github.com/seagle0128/doom-modeline][doom-modeline]] - A fancy and fast mode-line inspired by minimalism design.
@@ -214,18 +190,6 @@
 #+end_src
 
 ** Minibuffer settings
-*** Allow to read from the minibuffer while in minibuffer
-
-#+begin_src emacs-lisp
-  (setq enable-recursive-minibuffers t)
-#+end_src
-
-*** Show the minibuffer depth (when larger than 1).
-
-#+begin_src emacs-lisp
-  (minibuffer-depth-indicate-mode 1)
-#+end_src
-
 *** Never use dialogs for minibuffer input and store more history.
 
 #+begin_src emacs-lisp
@@ -255,46 +219,28 @@
 #+begin_src emacs-lisp
   (use-package which-key
     :init (which-key-mode)
-    :config (setq which-key-idle-delay 0.4
+    :config (setq which-key-idle-delay 0.5
                   which-key-sort-order 'which-key-prefix-then-key-order))
 #+end_src
 
-
-
-* Editing settings
 ** Misc variable settings
-*** Does anyone type =yes= anymore?
-
-#+begin_src emacs-lisp
-  (fset 'yes-or-no-p 'y-or-n-p)
-#+end_src
-
-*** Fix the scrolling to keep point in the center.
-
-#+begin_src emacs-lisp
-  (setq scroll-conservatively 10000
-        scroll-preserve-screen-position t)
-#+end_src
-
 *** I've been using Emacs for too long to need to re-enable each feature bit-by-bit.
 
 #+begin_src emacs-lisp
   (setq disabled-command-function nil)
 #+end_src
 
-*** Store more history.
-
-#+begin_src emacs-lisp
-  (setq history-length 1000)
-#+end_src
-
 *** Increase line-spacing (default 0).
-
 #+begin_src emacs-lisp
   (setq-default line-spacing 0.2)
 #+end_src
 
-*** Fill column and enable automatic filling in ~text-mode~.
+#+RESULTS:
+: 0.2
+
+
+* Editing settings
+** Fill column and enable automatic filling in ~text-mode~.
 
 #+begin_src emacs-lisp
   (setq-default fill-column 80)
@@ -327,24 +273,16 @@
                 ("C-'" . avy-isearch)))
 #+end_src
 
-** Counsel
+** Counsel, Ivy and Swiper
+*** Counsel
    Completion functions with Ivy
 
 #+begin_src emacs-lisp
   (use-package counsel
-    :init (counsel-mode)
-    :bind (("C-c u" . counsel-unicode-char)
-           ("C-c r" . counsel-rg)
-           ("C-c h h" . counsel-command-history)
-           ([remap execute-extended-command] . counsel-M-x)
-           ([remap find-file] . counsel-find-file)
-           ([remap describe-function] . counsel-describe-function)
-           ([remap describe-variable] . counsel-describe-variable))
-    :config (setq counsel-mode-override-describe-bindings t
-                  counsel-find-file-at-point t))
+    :init (counsel-mode 1))
 #+end_src
 
-** Ivy configuration
+*** Ivy
    [[http://oremacs.com/swiper/][Ivy]] is an interactive interface for completion in Emacs.
 
 #+begin_src emacs-lisp
@@ -359,7 +297,7 @@
     :init (ivy-mode 1))
 #+end_src
 
-*** ivy-hydra
+**** ivy-hydra
 
 #+begin_src emacs-lisp
   (use-package ivy-hydra
@@ -367,7 +305,7 @@
     :after ivy)
 #+end_src
 
-*** ivy-rich
+**** ivy-rich
 
 #+begin_src emacs-lisp
   (use-package ivy-rich
@@ -375,13 +313,6 @@
     :config (setcdr (assq t ivy-format-functions-alist)
                     #'ivy-format-function-line)
     :init (ivy-rich-mode 1))
-#+end_src
-
-** Amx
-   [[https://github.com/DarwinAwardWinner/amx][Amx]] is an alternative interface for ~M-x~ in Emacs.
-
-#+begin_src emacs-lisp
-  (use-package amx)
 #+end_src
 
 ** Aggressive indentation
@@ -420,7 +351,6 @@
     :hook ((prog-mode html-mode css-mode) . symbol-overlay-mode))
 #+end_src
 ** Spell checking
-
 *** aspell
 
 #+begin_src emacs-lisp
@@ -446,24 +376,11 @@
 
 #+begin_src emacs-lisp
   (use-package multiple-cursors
-    :bind* (("C-> n" . mc/mark-next-like-this)
-            ("C-> p" . mc/mark-previous-like-this)
-            ("C-> a" . mc/mark-all-like-this)
-            ("C-> C->" . mc/edit-lines)))
+    :bind* (("C-c m n" . mc/mark-next-like-this)
+            ("C-c m p" . mc/mark-previous-like-this)
+            ("C-c m a" . mc/mark-all-like-this)
+            ("C-c m >" . mc/edit-lines)))
 #+end_src
-
-** ibuffer
-   Use ibuffer instead of list-buffers.
-
- #+begin_src emacs-lisp
-   (bind-key* "C-x C-b" #'ibuffer)
-
-   (use-package ibuffer-vc
-     :hook (ibuffer . (lambda ()
-                        (ibuffer-vc-set-filter-groups-by-vc-root)
-                        (unless (eq ibuffer-sorting-mode 'alphabetic)
-                          (ibuffer-do-sort-by-alphabetic)))))
- #+end_src
 
 ** undo-fu
    [[https://gitlab.com/ideasman42/emacs-undo-fu][Undo Fu]] - Simple, stable undo with redo for emacs.
@@ -486,6 +403,9 @@
     (setq save-abbrevs 'silently)
     (setq-default abbrev-mode t))
 #+end_src
+
+#+RESULTS:
+: crux-top-join-line
 
 ** Flycheck
    [[http://www.flycheck.org][Flycheck]] automatically checks buffers for errors while you type, and reports
@@ -532,15 +452,6 @@
                 ("r" . counsel-projectile-rg)))
 #+end_src
 
-*** Search project with ripgrep
-
-#+begin_src emacs-lisp
-  (use-package projectile-ripgrep         ; Search projects with ripgrep
-    :ensure t
-    :bind (:map projectile-command-map
-		("s r" . projectile-ripgrep)))
-#+end_src
-
 ** Magit configuration
    [[https://github.com/magit/magit][Magit]] - A Git porcelain inside Emacs.
 
@@ -573,7 +484,7 @@
     (global-diff-hl-mode))
 #+end_src
 
-** Smartparens
+** TODO Smartparens
    Smartparens - Minor mode for Emacs that deals with parens pairs and tries to
    be smart about it.
 
@@ -615,53 +526,38 @@
     :bind* ("C-x o" . ace-window))
 #+end_src
 
-** dired-sidebar
-
-   Let's put dired in a sideabar.
-
-   #+begin_src emacs-lisp
-     (use-package dired-sidebar
-       :bind (("C-c c d" . dired-sidebar-toggle-sidebar))
-       :commands (dired-sidebar-toggle-sidebar)
-       :init
-       (add-hook 'dired-sidebar-mode-hook
-                 (lambda ()
-                   (unless (file-remote-p default-directory)
-                     (auto-revert-mode))))
-       :config
-       (push 'toggle-window-split dired-sidebar-toggle-hidden-commands)
-       (push 'rotate-windows dired-sidebar-toggle-hidden-commands))
-   #+end_src
-   
 
 * Productivity
 ** org-mode
 *** org settings
 #+begin_src emacs-lisp
   (use-package org
-    :config
-    (setq org-agenda-files (list "~/org/")
-          org-default-notes-file "inbox.org"
-          org-todo-keywords '((sequence "TODO" "NEXT" "|" "DONE"))
-          org-log-done t
-          org-archive-location "~/org/archive.org::datatree/"
-          org-archive-mark-done t
-          org-hide-emphasis-markers t
-          org-fontify-quote-and-verse-blocks t
-          org-confirm-babel-evaluate nil
-          org-refile-targets '((org-agenda-files :maxlevel . 1))
-          org-refile-allow-creating-parent-nodes 'confirm))
+    :bind* (("C-c o t" . 'org-capture)
+            ("C-c o a" . 'org-agenda)
+            ("C-c o r" . 'org-refile))
+    :config (setq org-agenda-files (list "~/org/")
+                  org-default-notes-file "inbox.org"
+                  org-todo-keywords '((sequence "TODO" "NEXT" "HOLD" "|" "DONE" "CANCEL"))
+                  org-log-done t
+                  org-archive-location "~/org/archive.org::datatree/"
+                  org-archive-mark-done t
+                  org-hide-emphasis-markers t
+                  org-ellipsis " ↴"
+                  org-src-fontify-natively t
+                  org-src-window-setup 'current-window
+                  org-fontify-quote-and-verse-blocks t
+                  org-confirm-babel-evaluate nil
+                  org-refile-targets '((org-agenda-files :maxlevel . 1))
+                  org-refile-allow-creating-parent-nodes 'confirm))
 #+end_src
 
-*** org-super-agenda
-    [[https://github.com/alphapapa/org-super-agenda][org-super-agenda: Supercharge your Org daily/weekly agenda...]]
+*** org-bullets
+    Pretty bullets instead of asterisks.
 
 #+begin_src emacs-lisp
-  (use-package org-super-agenda
-    :config (setq org-deadline-warning-days 7
-                  org-agenda-block-separator 9472
-                  org-agenda-skip-scheduled-if-done t)
-    :init (org-super-agenda-mode))
+  (use-package org-bullets
+    :hook (org-mode . org-bullets-mode)
+    :config (setq org-bullets-bullet-list '("◉" "○" "●" "►" "◇" "◎")))
 #+end_src
 
 *** org-cliplink
@@ -679,10 +575,10 @@
 
 #+begin_src emacs-lisp
   (use-package org-mru-clock
-    :bind* (("C-c t i" . org-mru-clock-in)
-            ("C-c t j" . org-mru-clock-select-recent-task)
-            ("C-c t o" . org-clock-out))
-    :init (setq org-mru-clock-how-many 100
+    :bind* (("C-c o i" . org-mru-clock-in)
+            ("C-c o j" . org-mru-clock-select-recent-task)
+            ("C-c o o" . org-clock-out))
+    :init (setq org-mru-clock-how-many 25
                 org-mru-clock-completing-read #'ivy-completing-read
                 org-mru-clock-files #'org-agenda-files))
 #+end_src
@@ -711,12 +607,8 @@
   (setq org-capture-templates
         '(("t" "Task" entry (file "inbox.org")
            "* TODO %?\n")
-          ("r" "Task with ref" entry (file "inbox.org")
-           "* TODO %?\n%a")
           ("T" "Clockable task" entry (file+headline "inbox.org")
            "* TODO %?\n" :clock-in t :clock-keep t)
-          ("m" "Maybe" entry (file+headline "someday.org" "Someday / Maybe")
-           "* MAYBE %?\n")
           ("j" "Journal" entry (file+olp+datetree "~/org/journal.org")
            "** %<%H:%M> %?\n")))
 #+end_src
@@ -752,17 +644,27 @@
   (use-package cider
     :hook  ((cider-mode . eldoc-mode)
             (clojure-mode . cider-mode)
-            (clojure-mode . subword-mode))
+            (clojure-mode . subword-mode)
+            (cider-repl-mode . eldoc-mode)
+            (cider-repl-mode . subword-mode))
 
     :bind (:map cider-mode-map
-                ("C-c M-l" . cider-load-all-project-ns))
+                ("C-c M-l" . cider-load-all-project-ns)
+                :map cider-repl-mode-map
+                ("RET" . cider-repl-newline-and-indent)
+                ("C-RET" . cider-repl-return)
+                ("C-c c l" . cider-repl-clear-buffer))
     :config (setq cider-offer-to-open-cljs-app-in-browser nil
                   cider-auto-select-error-buffer nil
                   cider-font-lock-dynamically t
                   cider-invert-insert-eval-p t
                   cider-save-file-on-load t
                   cider-switch-to-repl-after-insert-p nil
-                  cider-repl-pop-to-buffer-on-connect 'display-only))
+                  cider-repl-pop-to-buffer-on-connect 'display-only
+                  cider-repl-wrap-history t
+                  cider-repl-history-size 1000
+                  cider-repl-history-file (locate-user-emacs-file "cider-repl-history")
+                  cider-repl-display-help-banner nil))
 #+end_src
 
 *** Clojure Flycheck
@@ -770,22 +672,6 @@
 
 #+begin_src emacs-lisp
   (use-package flycheck-clj-kondo)
-#+end_src
-
-*** Major mode for Clojure files
-
-#+begin_src emacs-lisp
-  ;; Fix indentation of some common macros
-  (define-clojure-indent
-    (for-all 1)
-    (defroutes 'defun)
-    (GET 2)
-    (POST 2)
-    (PUT 2)
-    (DELETE 2)
-    (HEAD 2)
-    (ANY 2)
-    (context 2))
 #+end_src
 
 *** Font-locking for Clojure mode
@@ -800,24 +686,6 @@
 #+begin_src emacs-lisp
   (require 'nrepl-client)
   (setq nrepl-hide-special-buffers t)
-#+end_src
-
-*** REPL interactions with CIDER
-
-#+begin_src emacs-lisp
-  (use-package cider-repl
-    :hook ((cider-repl-mode . eldoc-mode)
-           (cider-repl-mode . subword-mode))
-    :bind (:map cider-repl-mode-map
-                ("RET" . cider-repl-newline-and-indent)
-                ("C-RET" . cider-repl-return)
-                ("C-c c l" . cider-repl-clear-buffer))
-    :config (setq cider-repl-wrap-history t
-                  cider-repl-history-size 1000
-                  cider-repl-history-file
-                  (locate-user-emacs-file "cider-repl-history")
-                  cider-repl-display-help-banner nil ; Disable help banner
-                  cider-repl-pop-to-buffer-on-connect t))
 #+end_src
 
 *** Kaocha test runner
@@ -934,22 +802,6 @@
 #+begin_src emacs-lisp
   (global-set-key (kbd "M-g") 'goto-line)
 #+end_src
-
-** Comment and uncomment regions
-
-#+begin_src emacs-lisp
-  (global-set-key (kbd "C-c c c") 'comment-or-uncomment-region)
-#+end_src
-
-** Org agenda and capture
-   org-mode shortcuts
-
-  #+begin_src emacs-lisp
-    (global-set-key (kbd "C-c t t") 'org-capture)
-    (global-set-key (kbd "C-c t a") 'org-agenda)
-    (global-set-key (kbd "C-c t r") 'org-refile)
-  #+end_src
-
 
 
 * BEERWARE LICENSE
