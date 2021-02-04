@@ -68,6 +68,7 @@
 
 ;; Load emacs.org - my Emacs configuration
 (org-babel-load-file (expand-file-name "emacs.org" user-emacs-directory))
+(load custom-file)
 (message "Loaded %s" custom-file)
 
 ;; Garbage collector - decrease threshold to 5 MB
