@@ -117,12 +117,6 @@
 #+begin_src emacs-lisp
   (use-package all-the-icons)
 
-  (use-package all-the-icons-ivy-rich
-    :init (all-the-icons-ivy-rich-mode 1))
-
-  (use-package all-the-icons-ivy-rich
-    :init (all-the-icons-ivy-rich-mode 1))
-
   (use-package all-the-icons-ibuffer
     :init (all-the-icons-ibuffer-mode 1))
 #+end_src
@@ -189,6 +183,16 @@
   (global-prettify-symbols-mode 1)
 #+end_src
 
+** Which-key
+   [[https://github.com/justbur/emacs-which-key][Which-key]] – Emacs package that displays available keybindings in popup.
+
+#+begin_src emacs-lisp
+  (use-package which-key
+    :init (which-key-mode)
+    :config (setq which-key-idle-delay 0.5
+                  which-key-sort-order 'which-key-prefix-then-key-order))
+#+end_src
+
 ** Minibuffer settings
 *** Never use dialogs for minibuffer input and store more history.
 
@@ -206,21 +210,57 @@
                   savehist-autosave-interval 180))
 #+end_src
 
+*** Selectrum
+#+begin_src emacs-lisp
+  (use-package selectrum
+    :init (selectrum-mode t))
+
+  (use-package selectrum-prescient
+    :init (selectrum-prescient-mode t))
+#+end_src
+
+*** Embark, Consul and Marginalia
+#+begin_src emacs-lisp
+  (use-package marginalia
+    :config
+    (marginalia-mode))
+
+  (use-package consult
+    :bind* (("C-c c l" . consult-line)
+            ("C-c c b" . consult-buffer)
+            ("C-c c r" . consult-ripgrep)
+            ("C-c c g" . consult-goto-line))
+    :config (setq consult-project-root-function #'projectile-project-root))
+
+  (use-package consult-selectrum
+    :disabled t
+    :after selectrum
+    :demand t)
+
+  (use-package embark
+    :bind* ("s-'" . embark-act)
+    :config (setq embark-action-indicator
+                  (lambda (map _target)
+                    (which-key--show-keymap "Embark" map nil nil 'no-paging)
+                    #'which-key--hide-popup-ignore-command)
+                  embark-become-indicator embark-action-indicator))
+
+  ;; Consult users will also want the embark-consult package.
+  (use-package embark-consult
+    :after (embark consult)
+    :demand t ; only necessary if you have the hook below
+    ;; if you want to have consult previews as you move around an
+    ;; auto-updating embark collect buffer
+    :hook
+    (embark-collect-mode . embark-consult-preview-minor-mode))
+#+end_src
+
 ** Scratch settings
    Use `emacs-lisp-mode' instead of `lisp-interaction-mode' for scratch buffer.
 
 #+begin_src emacs-lisp
-  (setq initial-major-mode 'emacs-lisp-mode)
-#+end_src
-
-** Which-key
-   [[https://github.com/justbur/emacs-which-key][Which-key]] – Emacs package that displays available keybindings in popup.
-
-#+begin_src emacs-lisp
-  (use-package which-key
-    :init (which-key-mode)
-    :config (setq which-key-idle-delay 0.5
-                  which-key-sort-order 'which-key-prefix-then-key-order))
+  (setq initial-major-mode 'emacs-lisp-mode
+        initial-scratch-message "")
 #+end_src
 
 ** Misc variable settings
@@ -268,51 +308,7 @@
 #+begin_src emacs-lisp
   (use-package avy
     :bind* (("C-:" . avy-goto-line)
-            ("C-;" . avy-goto-char))
-    :bind (:map isearch-mode-map
-                ("C-'" . avy-isearch)))
-#+end_src
-
-** Counsel, Ivy and Swiper
-*** Counsel
-   Completion functions with Ivy
-
-#+begin_src emacs-lisp
-  (use-package counsel
-    :init (counsel-mode 1))
-#+end_src
-
-*** Ivy
-   [[http://oremacs.com/swiper/][Ivy]] is an interactive interface for completion in Emacs.
-
-#+begin_src emacs-lisp
-  (use-package ivy
-    :bind (("C-x M-b" . persp-ivy-switch-buffer)
-           ("C-c C-r" . ivy-resume)
-           :map ivy-minibuffer-map
-           ("<return>" . ivy-alt-done)
-           ("C-o" . hydra-ivy/body))
-    :config (setq ivy-use-virtual-buffers t
-                  ivy-count-format "(%d/%d) ")
-    :init (ivy-mode 1))
-#+end_src
-
-**** ivy-hydra
-
-#+begin_src emacs-lisp
-  (use-package ivy-hydra
-    :ensure t
-    :after ivy)
-#+end_src
-
-**** ivy-rich
-
-#+begin_src emacs-lisp
-  (use-package ivy-rich
-    :ensure t
-    :config (setcdr (assq t ivy-format-functions-alist)
-                    #'ivy-format-function-line)
-    :init (ivy-rich-mode 1))
+            ("C-;" . avy-goto-char-2)))
 #+end_src
 
 ** Aggressive indentation
@@ -433,23 +429,10 @@
           ("C-c p" . projectile-command-map))
     :init
     (projectile-mode +1)
-    (setq projectile-completion-system 'ivy
-          projectile-find-dir-includes-top-level t)
+    (setq projectile-find-dir-includes-top-level t)
     (projectile-register-project-type 'lein-cljs '("project.clj")
                                       :compile "lein cljsbuild once"
                                       :test "lein cljsbuild test"))
-#+end_src
-
-*** Ivy integration with Projectile
-
-#+begin_src emacs-lisp
-  (use-package counsel-projectile
-    :ensure t
-    :bind (:map projectile-command-map
-                ("p" . counsel-projectile)
-                ("f" . counsel-projectile-find-file)
-                ("P" . counsel-projectile-switch-project)
-                ("r" . counsel-projectile-rg)))
 #+end_src
 
 ** Magit configuration
@@ -467,8 +450,7 @@
            ("C-c v f" . magit-fetch-all)
            ("C-c v R" . vc-refresh-state))
     :config (setq magit-save-repository-buffers 'dontask
-                  magit-refs-show-commit-count 'all
-                  magit-completing-read-function 'ivy-completing-read))
+                  magit-refs-show-commit-count 'all))
 #+end_src
 
 ** diff-hl
@@ -579,7 +561,6 @@
             ("C-c o j" . org-mru-clock-select-recent-task)
             ("C-c o o" . org-clock-out))
     :init (setq org-mru-clock-how-many 25
-                org-mru-clock-completing-read #'ivy-completing-read
                 org-mru-clock-files #'org-agenda-files))
 #+end_src
 
@@ -653,7 +634,7 @@
                 :map cider-repl-mode-map
                 ("RET" . cider-repl-newline-and-indent)
                 ("C-RET" . cider-repl-return)
-                ("C-c c l" . cider-repl-clear-buffer))
+                ("C-c C-l" . cider-repl-clear-buffer))
     :config (setq cider-offer-to-open-cljs-app-in-browser nil
                   cider-auto-select-error-buffer nil
                   cider-font-lock-dynamically t
@@ -787,20 +768,6 @@
 #+begin_src emacs-lisp
   (use-package yaml-mode
     :defer t)
-#+end_src
-
-
-* Global keybindings
-** Set C-x C-k to kill the current buffer
-
-#+begin_src emacs-lisp
-  (global-set-key (kbd "C-x C-k") 'kill-this-buffer)
-#+end_src
-
-** Bind M-g to goto-line
-
-#+begin_src emacs-lisp
-  (global-set-key (kbd "M-g") 'goto-line)
 #+end_src
 
 
