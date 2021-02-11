@@ -114,8 +114,15 @@
 
 ** Icons
    Some icons for our modern looking Emacs
+   
 #+begin_src emacs-lisp
   (use-package all-the-icons)
+
+  (use-package all-the-icons-ivy-rich
+    :init (all-the-icons-ivy-rich-mode 1))
+
+  (use-package all-the-icons-ivy-rich
+    :init (all-the-icons-ivy-rich-mode 1))
 
   (use-package all-the-icons-ibuffer
     :init (all-the-icons-ibuffer-mode 1))
@@ -156,7 +163,7 @@
 #+end_src
 
 ** Perspectives
-   The [[https://github.com/nex3/perspective-el][Persqpective]] package provides multiple named workspaces (or
+   The [[https://github.com/nex3/perspective-el][Perspective]] package provides multiple named workspace (or
    "perspectives") in Emacs, similar to multiple desktops in window managers
    like Awesome and XMonad, and Spaces on the Mac.
 
@@ -194,14 +201,14 @@
 #+end_src
 
 ** Minibuffer settings
-*** Never use dialogs for minibuffer input and store more history.
+*** Never use dialogs for minibuffer input and store more history
 
-#+begin_src emacs-lisp
-  (setq use-dialog-box nil
-        history-length 1000)
-#+end_src
+    #+begin_src emacs-lisp
+      (setq use-dialog-box nil
+            history-length 1000)
+   #+end_src
 
-*** Save minibuffer history.
+*** Save minibuffer history
 
 #+begin_src emacs-lisp
   (use-package savehist
@@ -210,50 +217,13 @@
                   savehist-autosave-interval 180))
 #+end_src
 
-*** Selectrum
-#+begin_src emacs-lisp
-  (use-package selectrum
-    :init (selectrum-mode t))
-
-  (use-package selectrum-prescient
-    :init (selectrum-prescient-mode t))
-#+end_src
-
-*** Embark, Consul and Marginalia
-#+begin_src emacs-lisp
-  (use-package marginalia
-    :config
-    (marginalia-mode))
-
-  (use-package consult
-    :bind* (("C-c c l" . consult-line)
-            ("C-c c b" . consult-buffer)
-            ("C-c c r" . consult-ripgrep)
-            ("C-c c g" . consult-goto-line))
-    :config (setq consult-project-root-function #'projectile-project-root))
-
-  (use-package consult-selectrum
-    :disabled t
-    :after selectrum
-    :demand t)
-
-  (use-package embark
-    :bind* ("s-'" . embark-act)
-    :config (setq embark-action-indicator
-                  (lambda (map _target)
-                    (which-key--show-keymap "Embark" map nil nil 'no-paging)
-                    #'which-key--hide-popup-ignore-command)
-                  embark-become-indicator embark-action-indicator))
-
-  ;; Consult users will also want the embark-consult package.
-  (use-package embark-consult
-    :after (embark consult)
-    :demand t ; only necessary if you have the hook below
-    ;; if you want to have consult previews as you move around an
-    ;; auto-updating embark collect buffer
-    :hook
-    (embark-collect-mode . embark-consult-preview-minor-mode))
-#+end_src
+*** Recursive minibuffer
+    Make the minibuffer much more useful by enabling recursive usage.
+    
+  #+begin_src emacs-lisp
+    (setq enable-recursive-minibuffers t)
+    (minibuffer-depth-indicate-mode 1)
+  #+end_src
 
 ** Scratch settings
    Use `emacs-lisp-mode' instead of `lisp-interaction-mode' for scratch buffer.
@@ -389,19 +359,86 @@
 
 
 * Tools
+** Amx
+   [[https://github.com/DarwinAwardWinner/amx][Amx]] is an alternative interface for ~M-x~ in Emacs.
+
+#+begin_src emacs-lisp
+  (use-package amx)
+#+end_src
+
+** Ivy, Consul and Swiper
+   [[https://oremacs.com/swiper/][Ivy]] is an interactive interface for completion in Emacs.
+
+*** Counsel
+   Completion functions with Ivy
+
+#+begin_src emacs-lisp
+  (use-package counsel
+    :bind* (("C-s" . swiper-isearch)
+            ("C-c u" . counsel-unicode-char)
+            ("C-c r" . counsel-rg)
+            ("C-c h h" . counsel-command-history)
+            ([remap execute-extended-command] . counsel-M-x)
+            ([remap find-file] . counsel-find-file)
+            ([remap describe-function] . counsel-describe-function)
+            ([remap describe-variable] . counsel-describe-variable))
+    :config (setq counsel-mode-override-describe-bindings t
+                  counsel-find-file-at-point t)
+    :init (counsel-mode))
+#+end_src
+
+*** counsel-spotify
+    #+begin_src emacs-lisp
+      (use-package counsel-spotify)
+    #+end_src
+
+*** Ivy configuration
+   [[http://oremacs.com/swiper/][Ivy]] is an interactive interface for completion in Emacs.
+
+#+begin_src emacs-lisp
+  (use-package ivy
+    :bind (("C-x M-b" . persp-ivy-switch-buffer)
+           ("C-c C-r" . ivy-resume)
+           :map ivy-minibuffer-map
+           ("<return>" . ivy-alt-done)
+           ("C-o" . hydra-ivy/body))
+    :config (setq ivy-use-virtual-buffers t
+                  ivy-display-style 'fancy
+                  ivy-count-format "(%d/%d) ")
+    :init (ivy-mode 1))
+#+end_src
+
+**** ivy-hydra
+
+#+begin_src emacs-lisp
+  (use-package ivy-hydra
+    :after ivy)
+#+end_src
+
+**** ivy-rich
+
+#+begin_src emacs-lisp
+  (use-package ivy-rich
+    :config (setcdr (assq t ivy-format-functions-alist)
+                    #'ivy-format-function-line)
+    :init (ivy-rich-mode 1))
+#+end_src
+
 ** Crux
    [[https://github.com/bbatsov/crux][crux]] - A Collection of Ridiculously Useful eXtensions for Emacs.
 
 #+begin_src emacs-lisp
   (use-package crux
-    :bind ("C-^" . crux-top-join-line)
+    :bind* (("C-^" . crux-top-join-line)
+            ("M-o" . crux-smart-open-line)
+            ("M-O" . crux-smart-open-line-above))
     :config
     (setq save-abbrevs 'silently)
     (setq-default abbrev-mode t))
 #+end_src
 
 #+RESULTS:
-: crux-top-join-line
+: crux-smart-open-line-above
 
 ** Flycheck
    [[http://www.flycheck.org][Flycheck]] automatically checks buffers for errors while you type, and reports
@@ -429,7 +466,8 @@
           ("C-c p" . projectile-command-map))
     :init
     (projectile-mode +1)
-    (setq projectile-find-dir-includes-top-level t)
+    (setq projectile-find-dir-includes-top-level t
+          projectile-completion-system 'ivy)
     (projectile-register-project-type 'lein-cljs '("project.clj")
                                       :compile "lein cljsbuild once"
                                       :test "lein cljsbuild test"))
