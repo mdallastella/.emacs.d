@@ -458,7 +458,8 @@
               ("C-c v f" . magit-fetch-all)
               ("C-c v R" . vc-refresh-state))
        :config (setq magit-save-repository-buffers 'dontask
-                     magit-refs-show-commit-count 'all))
+                     magit-refs-show-commit-count 'all
+                     magit-completing-read-function #'selectrum-completing-read))
    #+end_src
 
 ** diff-hl
