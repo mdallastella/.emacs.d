@@ -694,6 +694,16 @@
                       kaocha-runner-output-win-max-height 20))
     #+end_src
 
+** Common Lisp
+   Common Lisp settings
+
+   #+begin_src emacs-lisp
+     (use-package sly
+       :config (setq inferior-lisp-program "/usr/bin/sbcl"))
+
+     (use-package sly-quicklisp)
+   #+end_src
+
 ** Web Development
    I use web-mode, css-mode and js2 for web development.
 
