@@ -48,18 +48,6 @@
       (use-package saveplace
         :init (save-place-mode 1))
     #+end_src
-
-*** Auto-revert buffers of changed files
-
-    #+begin_src emacs-lisp
-      (use-package autorevert
-        :init (global-auto-revert-mode)
-        :config
-        (setq auto-revert-verbose nil
-              ;; Revert Dired buffers, too
-              global-auto-revert-non-file-buffers t))
-    #+end_src
-
 *** Kill ring features
     More killed items, no duplicates in kill ring.
 
