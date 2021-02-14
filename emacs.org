@@ -65,7 +65,7 @@
 
 *** Bind kill-this-buffer to C-c C-k
     #+begin_src emacs-lisp
-      (global-set-key (kbd "C-c C-k") 'kill-this-buffer)
+      (global-set-key (kbd "C-x C-k") 'kill-this-buffer)
     #+end_src    
 
 
