@@ -63,6 +63,11 @@
         :config (super-save-mode 1))
     #+end_src
 
+*** Bind kill-this-buffer to C-c C-k
+    #+begin_src emacs-lisp
+      (global-set-key (kbd "C-c C-k") 'kill-this-buffer)
+    #+end_src    
+
 
 * Graphics and looks
 ** Frame title
