@@ -268,21 +268,6 @@
                ("C-;" . avy-goto-char-2)))
    #+end_src
 
-** Aggressive indentation
-   Aggressive-indent-mode is a minor mode that keeps your code always indented.
-   It re-indents after every change, making it more reliable than
-   `electric-indent-mode`.
-
-   #+begin_src emacs-lisp
-     (use-package aggressive-indent
-       :init (global-aggressive-indent-mode 1)
-       :config
-       ;; Free C-c C-q, used in Org and in CIDER
-       (unbind-key "C-c C-q" aggressive-indent-mode-map)
-       (add-to-list 'aggressive-indent-excluded-modes
-                    'cider-repl-mode))
-   #+end_src
-
 ** Easykill
    [[https://github.com/leoliu/easy-kill][Easykill]] - Better kill text.
 
