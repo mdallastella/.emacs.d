@@ -68,6 +68,11 @@
       (global-set-key (kbd "C-x C-k") 'kill-this-buffer)
     #+end_src    
 
+*** bind ESC to keyboard-escape-quit
+    #+begin_src emacs-lisp
+      (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
+    #+end_src
+
 
 * Graphics and looks
 ** Frame title
@@ -131,6 +136,7 @@
    #+begin_src emacs-lisp
      (setq-default left-margin-width 4
                    right-margin-width 4)
+     (set-fringe-mode 10)
    #+end_src
    
 ** Doom mode line
@@ -183,7 +189,7 @@
    #+begin_src emacs-lisp
      (use-package which-key
        :init (which-key-mode)
-       :config (setq which-key-idle-delay 0.5
+       :config (setq which-key-idle-delay 1
                      which-key-sort-order 'which-key-prefix-then-key-order))
    #+end_src
 
