@@ -13,32 +13,35 @@
 ;; Increase the garbage collection threshold to 500 MB to ease startup
 (setq gc-cons-threshold (* 500 1024 1024))
 
-;; Initialize straight.el
-(defvar bootstrap-version)
-(let ((bootstrap-file
-       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
-      (bootstrap-version 5))
-  (unless (file-exists-p bootstrap-file)
-    (with-current-buffer
-        (url-retrieve-synchronously
-         "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
-         'silent 'inhibit-cookies)
-      (goto-char (point-max))
-      (eval-print-last-sexp)))
-  (load bootstrap-file nil 'nomessage))
-
-;; Replace use-package with straight-use-package
-(straight-use-package 'use-package)
-(setq straight-use-package-by-default t)
+;; List package archives and initialize them
+(require 'package)
+(setq package-enable-at-startup nil)
+(setq package-archives
+      ;; Package archives, the usual suspects
+      '(("GNU ELPA" . "https://elpa.gnu.org/packages/")
+        ("MELPA"    . "https://melpa.org/packages/")
+        ("org"      . "http://orgmode.org/elpa/")))
 
 (add-to-list 'load-path "~/.emacs.d/lisp/")
+(package-initialize)
 
 (setq load-prefer-newer t)               ; Always load newer compiled files
 (setq ad-redefinition-action 'accept)    ; Silence advice redefinition warnings
 (setq message-log-max 10000)             ; Debugging
 
+;; Bootstrap use-package, dash and no-littering
+(unless (and (package-installed-p 'use-package)
+             (package-installed-p 'dash)
+             (package-installed-p 'no-littering))
+  (package-refresh-contents)
+  (package-install 'use-package)
+  (package-install 'dash)
+  (package-install 'no-littering))
+
 ;; I need org-mode
-(straight-use-package 'org)
+(unless (package-installed-p 'org)
+  (package-refresh-contents)
+  (package-install 'org))
 
 ;; Keep .emacs.d clean
 (use-package no-littering

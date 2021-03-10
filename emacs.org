@@ -5,7 +5,7 @@
 
 * Emacs literal configuration
   I like to keep my cofiguration in a [[https://en.wikipedia.org/wiki/Literate_programming][literate programming]] way, thanks to
-  [[https://orgmode.org/worg/org-contrib/babel/intro.html][org-babel]] and [[https://github.com/raxod502/straight.el][straight.el]].
+  [[https://orgmode.org/worg/org-contrib/babel/intro.html][org-babel]].
 
 
 * General settings
@@ -23,15 +23,15 @@
 
    #+begin_src emacs-lisp
      (use-package exec-path-from-shell
+       :ensure t
        :config
        (setq exec-path-from-shell-variables '("PATH")
              exec-path-from-shell-arguments '("-l"))
        (exec-path-from-shell-initialize))
 
      (use-package keychain-environment
+       :ensure t
        :init (keychain-refresh-environment))
-
-     (use-package use-package-ensure-system-package)
    #+end_src
 
 ** Various minor settings
@@ -60,6 +60,7 @@
 
     #+begin_src emacs-lisp
       (use-package super-save
+        :ensure t
         :config (super-save-mode 1))
     #+end_src
 
@@ -93,30 +94,33 @@
    #+end_src
 
 ** Theme
-   My favorite theme is solarized dark.
+   My current theme is gruvbox by [[https://github.com/hlissner/emacs-doom-themes][Doom Themes]].
 
    #+begin_src emacs-lisp
-     (use-package solarized-theme
+     (use-package doom-themes
        :ensure t
-       :config (setq solarized-use-variable-pitch nil
-                     solarized-scale-org-headlines nil
-                     solarized-use-less-bold t
-                     solarized-use-more-italic t
-                     x-underline-at-descent-line t)
-       (load-theme 'solarized-dark-high-contrast 'no-confirm)
-       (set-face-attribute 'mode-line nil :overline nil)
-       (set-face-attribute 'mode-line nil :underline nil)
-       (set-face-attribute 'mode-line-inactive nil :overline nil)
-       (set-face-attribute 'mode-line-inactive nil :underline nil))
+       :config
+       ;; Global settings (defaults)
+       (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
+             doom-themes-enable-italic t) ; if nil, italics is universally disabled
+       (load-theme 'doom-gruvbox t)
+
+       ;; Enable flashing mode-line on errors
+       (doom-themes-visual-bell-config)
+
+       ;; Corrects (and improves) org-mode's native fontification.
+       (doom-themes-org-config))
    #+end_src
 
 ** Icons
    Some icons for our modern looking Emacs
    
    #+begin_src emacs-lisp
-     (use-package all-the-icons)
+     (use-package all-the-icons
+       :ensure t)
 
      (use-package all-the-icons-ibuffer
+       :ensure t
        :init (all-the-icons-ibuffer-mode 1))
    #+end_src
 
@@ -126,9 +130,11 @@
    Set unique buffer names.
 
    #+begin_src emacs-lisp
-     (require 'uniquify)
-     (setq uniquify-buffer-name-style 'post-forward
-           uniquify-separator ":")
+     (use-package uniquify
+       :config
+       (setq uniquify-buffer-name-style 'post-forward
+	   uniquify-separator ":"))
+
    #+end_src
 
 ** Window margins
@@ -144,15 +150,17 @@
 
    #+begin_src emacs-lisp
      (use-package minions
+       :ensure t
        :init (minions-mode)
        :config (setq minions-direct '(cider-mode)))
 
      (use-package doom-modeline
+       :ensure t
        :hook (after-init . doom-modeline-mode)
        :config (setq doom-modeline-buffer-file-name-style 'buffer-name
-                     doom-modeline-minor-modes t
-                     doom-modeline-mu4e t
-                     doom-modeline-modal-icon nil))
+		     doom-modeline-minor-modes t
+		     doom-modeline-mu4e t
+		     doom-modeline-modal-icon nil))
    #+end_src
 
 ** Perspectives
@@ -162,10 +170,11 @@
 
    #+begin_src emacs-lisp
      (use-package perspective
+       :ensure t
        :config (progn
-                 (persp-mode 1)
-                 (setq persp-state-default-file "~/.emacs.d/default-persp")
-                 (persp-state-load persp-state-default-file)))
+		 (persp-mode 1)
+		 (setq persp-state-default-file "~/.emacs.d/default-persp")
+		 (persp-state-load persp-state-default-file)))
    #+end_src
 
 ** Show matching parenthesis 
@@ -174,6 +183,7 @@
      (show-paren-mode t)
 
      (use-package rainbow-delimiters
+       :ensure t
        :hook ((prog-mode cider-repl-mode) . rainbow-delimiters-mode))
    #+end_src
 
@@ -188,9 +198,10 @@
 
    #+begin_src emacs-lisp
      (use-package which-key
+       :ensure t
        :init (which-key-mode)
        :config (setq which-key-idle-delay 1
-                     which-key-sort-order 'which-key-prefix-then-key-order))
+		     which-key-sort-order 'which-key-prefix-then-key-order))
    #+end_src
 
 ** Minibuffer settings
@@ -238,9 +249,6 @@
       (setq-default line-spacing 0.2)
     #+end_src
 
-    #+RESULTS:
-    : 0.2
-
 
 * Editing settings
 ** Fill column and enable automatic filling in ~text-mode~.
@@ -270,8 +278,9 @@
 
    #+begin_src emacs-lisp
      (use-package avy
+       :ensure t
        :bind* (("C-:" . avy-goto-line)
-               ("C-;" . avy-goto-char-2)))
+	       ("C-;" . avy-goto-char-2)))
    #+end_src
 
 ** Easykill
@@ -279,8 +288,9 @@
 
    #+begin_src emacs-lisp
      (use-package easy-kill
+       :ensure t
        :bind (([remap kill-ring-save] . easy-kill)
-              ([remap mark-sexp]      . easy-mark)))
+	      ([remap mark-sexp]      . easy-mark)))
    #+end_src
 
 ** Highlight symbols
@@ -289,6 +299,7 @@
 
    #+begin_src emacs-lisp
      (use-package symbol-overlay
+       :ensure t
        :bind (:map symbol-overlay-mode-map
                    ("M-n" . symbol-overlay-jump-next)
                    ("M-p" . symbol-overlay-jump-prev))
@@ -312,6 +323,7 @@
 
     #+begin_src emacs-lisp
       (use-package spell-fu
+        :ensure t
         :hook ((prog-mode text-mode) . spell-fu-mode))
     #+end_src
 
@@ -320,6 +332,7 @@
 
    #+begin_src emacs-lisp
      (use-package multiple-cursors
+       :ensure t
        :bind* (("C-c m n" . mc/mark-next-like-this)
                ("C-c m p" . mc/mark-previous-like-this)
                ("C-c m a" . mc/mark-all-like-this)
@@ -331,20 +344,23 @@
 
    #+begin_src emacs-lisp
      (use-package undo-fu
+       :ensure t
        :bind* (("C-z" . undo-fu-only-undo)
                ("C-S-z" . undo-fu-only-redo)))
    #+end_src
 
 
-* Tools  
+* Tools
 ** Selectrum, Consult, Embark and Marginalia 
 *** Selectrum
 
     #+begin_src emacs-lisp
       (use-package selectrum
+        :ensure t
         :init (selectrum-mode t))
 
       (use-package selectrum-prescient
+        :ensure t
         :init (selectrum-prescient-mode t))
 
       (prescient-persist-mode t)
@@ -354,10 +370,12 @@
 
     #+begin_src emacs-lisp
       (use-package marginalia
+        :ensure t
         :config
         (marginalia-mode))
 
       (use-package consult
+        :ensure t
         :bind* (("C-c c l" . consult-line)
                 ("C-c c b" . consult-buffer)
                 ("C-c c r" . consult-ripgrep)
@@ -366,11 +384,13 @@
         :config (setq consult-project-root-function #'projectile-project-root))
 
       (use-package consult-selectrum
+        :ensure t
         :disabled t
         :after selectrum
         :demand t)
 
       (use-package embark
+        :ensure t
         :bind* ("s-'" . embark-act)
         :config (setq embark-action-indicator
                       (lambda (map _target)
@@ -380,6 +400,7 @@
 
       ;; Consult users will also want the embark-consult package.
       (use-package embark-consult
+        :ensure t
         :after (embark consult)
         :demand t
         :hook (embark-collect-mode . embark-consult-preview-minor-mode))
@@ -390,6 +411,7 @@
 
    #+begin_src emacs-lisp
      (use-package crux
+       :ensure t
        :bind* (("C-^" . crux-top-join-line)
                ("M-o" . crux-smart-open-line)
                ("M-O" . crux-smart-open-line-above))
@@ -398,9 +420,6 @@
        (setq-default abbrev-mode t))
    #+end_src
 
-   #+RESULTS:
-   : crux-smart-open-line-above
-
 ** Flycheck
    [[http://www.flycheck.org][Flycheck]] automatically checks buffers for errors while you type, and reports
    warnings and errors directly in the buffer and in an optional IDE-like error
@@ -408,6 +427,7 @@
 
    #+begin_src emacs-lisp
      (use-package flycheck
+       :ensure t
        :hook (prog-mode . flycheck-mode)
        :config
        (setq flycheck-standard-error-navigation nil
@@ -422,6 +442,7 @@
 
    #+begin_src emacs-lisp
      (use-package projectile
+       :ensure t
        :bind
        (:map projectile-mode-map
              ("C-c p" . projectile-command-map))
@@ -437,6 +458,7 @@
 
    #+begin_src emacs-lisp
      (use-package magit
+       :ensure t
        :bind (("C-c v c" . magit-clone)
               ("C-c v C" . magit-checkout)
               ("C-c v d" . magit-dispatch-popup)
@@ -457,6 +479,7 @@
 
    #+begin_src emacs-lisp
      (use-package diff-hl
+       :ensure t
        :config (add-hook 'magit-post-refresh-hook
                          'diff-hl-magit-post-refresh)
        :init
@@ -470,6 +493,7 @@
 
    #+begin_src emacs-lisp
      (use-package smartparens
+       :ensure t
        :bind (:map smartparens-mode-map
                    ("M-R" . sp-raise-sexp))
        :config (require 'smartparens-config)
@@ -486,6 +510,7 @@
 
    #+begin_src emacs-lisp
      (use-package direnv
+       :ensure t
        :config (direnv-mode))
    #+end_src
 
@@ -494,7 +519,8 @@
    file buffer.
 
    #+begin_src emacs-lisp
-     (use-package wgrep)
+     (use-package wgrep
+       :ensure t)
    #+end_src
 
 ** ace-windows
@@ -502,9 +528,29 @@
 
    #+begin_src emacs-lisp
      (use-package ace-window
+       :ensure t
        :config (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
        :bind* ("C-x o" . ace-window))
    #+end_src
+
+** Paradox
+   [[https://github.com/Malabarba/paradox][Malabarba/paradox: Project for modernizing Emacs' Package Menu.]]
+
+#+begin_src emacs-lisp
+  (use-package paradox
+    :ensure t
+    :config (setq paradox-github-token paradox-gh-token)
+    :init (paradox-enable))
+#+end_src
+
+** dumb-jump
+   [[https://github.com/jacktasia/dumb-jump][dumb-jump: an Emacs "jump to definition".]]
+
+#+begin_src emacs-lisp
+  (use-package dumb-jump
+    :ensure t
+    :init (add-hook 'xref-backend-functions #'dumb-jump-xref-activate))
+#+end_src
 
 
 * Productivity
@@ -512,6 +558,7 @@
 *** org settings
     #+begin_src emacs-lisp
       (use-package org
+        :ensure t
         :bind* (("C-c o t" . 'org-capture)
                 ("C-c o a" . 'org-agenda)
                 ("C-c o r" . 'org-refile))
@@ -536,6 +583,7 @@
 
     #+begin_src emacs-lisp
       (use-package org-bullets
+        :ensure t
         :hook (org-mode . org-bullets-mode)
         :config (setq org-bullets-bullet-list '("◉" "○" "●" "►" "◇" "◎")))
     #+end_src
@@ -543,6 +591,7 @@
 *** org-cliplink
     #+begin_src emacs-lisp
       (use-package org-cliplink
+        :ensure t
         :bind ("C-c o i" . org-cliplink))
     #+end_src
 
@@ -555,6 +604,7 @@
 
     #+begin_src emacs-lisp
       (use-package org-mru-clock
+        :ensure t
         :bind* (("C-c o i" . org-mru-clock-in)
                 ("C-c o j" . org-mru-clock-select-recent-task)
                 ("C-c o o" . org-clock-out))
@@ -566,8 +616,11 @@
     [[https://github.com/Kungsgeten/yankpad][GitHub - Kungsgeten/yankpad: Paste snippets from an org-mode file]]
 
     #+begin_src emacs-lisp
-      (use-package yasnippet)
+      (use-package yasnippet
+        :ensure t)
+
       (use-package yankpad
+        :ensure t
         :init
         (setq yankpad-file "~/org/yankpad.org")
         (bind-keys :prefix-map yank-map
@@ -601,6 +654,7 @@
 
    #+begin_src emacs-lisp
      (use-package company
+       :ensure t
        :bind (:map company-active-map
                    ("C-n" . company-select-next)
                    ("C-p" . company-select-previous))
@@ -621,6 +675,7 @@
 
     #+begin_src emacs-lisp
       (use-package cider
+        :ensure t
         :hook  ((cider-mode . eldoc-mode)
                 (clojure-mode . cider-mode)
                 (clojure-mode . subword-mode)
@@ -650,21 +705,24 @@
     Flycheck using clj-kondo
 
     #+begin_src emacs-lisp
-      (use-package flycheck-clj-kondo)
+      (use-package flycheck-clj-kondo
+        :ensure t)
     #+end_src
 
 *** Font-locking for Clojure mode
 
     #+begin_src emacs-lisp
       (use-package clojure-mode-extra-font-locking
+        :ensure t
         :after clojure-mode)
     #+end_src
 
 *** Client for Clojure nREPL
 
     #+begin_src emacs-lisp
-      (require 'nrepl-client)
-      (setq nrepl-hide-special-buffers t)
+      (use-package nrepl-client
+        :after cider
+        :config (setq nrepl-hide-special-buffers t))
     #+end_src
 
 *** Kaocha test runner
@@ -672,6 +730,7 @@
 
     #+begin_src emacs-lisp
       (use-package kaocha-runner
+        :ensure t
         :after cider
         :bind (:map clojure-mode-map
                     ("C-c k a" . kaocha-runner-run-all-tests)
@@ -689,9 +748,11 @@
 
    #+begin_src emacs-lisp
      (use-package sly
+       :ensure t
        :config (setq inferior-lisp-program "/usr/bin/sbcl"))
 
-     (use-package sly-quicklisp)
+     (use-package sly-quicklisp
+       :ensure t)
    #+end_src
 
 ** Web Development
@@ -701,6 +762,7 @@
 
     #+begin_src emacs-lisp
       (use-package web-mode
+        :ensure t
         :mode "\\.html\\'"
         :config
         (setq web-mode-markup-indent-offset 2
@@ -712,6 +774,7 @@
 
     #+begin_src emacs-lisp
       (use-package js2-mode
+        :ensure t
         :mode "\\.js\\'"
         :hook (js2-mode . js2-highlight-unused-variables-mode)
         :config (setq-default js2-basic-offset 2))
@@ -721,6 +784,7 @@
 
     #+begin_src emacs-lisp
       (use-package css-mode
+        :ensure t
         :mode "\\.css\\'"
         :hook (css-mode-hook . (lambda () (run-hooks 'prog-mode-hook)))
         :config (setq css-indent-offset 2))
@@ -748,6 +812,7 @@
 
    #+begin_src emacs-lisp
      (use-package janet-mode
+       :ensure t
        :mode ("\\.janet\\'" . janet-mode))
    #+end_src
 
@@ -755,6 +820,7 @@
 
    #+begin_src emacs-lisp
      (use-package lua-mode
+       :ensure t
        :defer t
        :mode ("\\.lua" . lua-mode)
        :config
@@ -767,6 +833,7 @@
 
    #+begin_src emacs-lisp
      (use-package fennel-mode
+       :ensure t
        :mode ("\\.fnl" . fennel-mode))
    #+end_src
 
@@ -775,6 +842,7 @@
 
    #+begin_src emacs-lisp
      (use-package yaml-mode
+       :ensure t
        :defer t)
    #+end_src
 
