@@ -61,16 +61,19 @@
         auto-save-file-name-transforms
         `((".*" ,(no-littering-expand-var-file-name "auto-save/") t))))
 
-;; My custom file
-(setq custom-file (no-littering-expand-etc-file-name "custom.el"))
-
 ;; My secrets
-(let ((secret.el (expand-file-name ".secret.el.gpg" user-emacs-directory)))
+(let ((secret.el (expand-file-name ".secrets/.secret.el.gpg" user-emacs-directory)))
   (when (file-exists-p secret.el)
     (load-library secret.el)))
 
+(let ((authinfo.gpg (expand-file-name ".secrets/.authinfo.gpg" user-emacs-directory)))
+  (setq auth-sources `((:source ,authinfo.gpg))))
+
 ;; Load emacs.org - my Emacs configuration
 (org-babel-load-file (expand-file-name "emacs.org" user-emacs-directory))
+
+;; My custom file
+(setq custom-file (no-littering-expand-etc-file-name "custom.el"))
 (load custom-file)
 (message "Loaded %s" custom-file)
 

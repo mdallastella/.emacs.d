@@ -4,7 +4,7 @@
 #+STARTUP: overview
 
 * Emacs literal configuration
-  I like to keep my cofiguration in a [[https://en.wikipedia.org/wiki/Literate_programming][literate programming]] way, thanks to
+  I like to keep my configuration in a [[https://en.wikipedia.org/wiki/Literate_programming][literate programming]] way, thanks to
   [[https://orgmode.org/worg/org-contrib/babel/intro.html][org-babel]].
 
 
@@ -473,6 +473,14 @@
                      magit-completing-read-function #'selectrum-completing-read))
    #+end_src
 
+   [[https://github.com/magit/forge][Forge]] - Work with Git forges from the comfort of Magit
+
+#+begin_src emacs-lisp
+  (use-package forge
+    :ensure t
+    :after magit)
+#+end_src
+
 ** diff-hl
    [[https://github.com/dgutov/diff-hl][diff-hl-mode]] highlights uncommitted changes on the left side of the window,
    allows you to jump between and revert them selectively.
@@ -536,10 +544,12 @@
 ** Paradox
    [[https://github.com/Malabarba/paradox][Malabarba/paradox: Project for modernizing Emacs' Package Menu.]]
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :results output silent
   (use-package paradox
     :ensure t
     :config (setq paradox-github-token paradox-gh-token)
+    :bind* (("C-c c p" . paradox-list-packages)
+            ("C-c c P" . paradox-upgrade-packages))
     :init (paradox-enable))
 #+end_src
 
