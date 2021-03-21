@@ -12,7 +12,7 @@
 ** User details
    My personal details.
 
-   #+begin_src emacs-lisp
+   #+begin_src emacs-lisp :results output silent
      (setq user-full-name "Marco Dalla Stella")
      (setq user-mail-address "marco@dallastella.name")
    #+end_src
@@ -21,7 +21,7 @@
    Ensure environment variables inside Emacs look the same as in the user's
    shell. Also, load keychain environment variables.
 
-   #+begin_src emacs-lisp
+   #+begin_src emacs-lisp :results output silent
      (use-package exec-path-from-shell
        :ensure t
        :config
@@ -37,40 +37,40 @@
 ** Various minor settings
 *** Delete the selection instead of insert
 
-    #+begin_src emacs-lisp
+    #+begin_src emacs-lisp :results output silent
       (use-package delsel
         :init (delete-selection-mode))
     #+end_src
 
 *** Save point position in files
 
-    #+begin_src emacs-lisp
+    #+begin_src emacs-lisp :results output silent
       (use-package saveplace
         :init (save-place-mode 1))
     #+end_src
 *** Kill ring features
     More killed items, no duplicates in kill ring.
 
-    #+begin_src emacs-lisp
+    #+begin_src emacs-lisp :results output silent
       (setq kill-ring-max 200
             kill-do-not-save-duplicates t)
     #+end_src
 
 *** Auto-save buffers when they lose focus.
 
-    #+begin_src emacs-lisp
+    #+begin_src emacs-lisp :results output silent
       (use-package super-save
         :ensure t
         :config (super-save-mode 1))
     #+end_src
 
 *** Bind kill-this-buffer to C-c C-k
-    #+begin_src emacs-lisp
+    #+begin_src emacs-lisp :results output silent
       (global-set-key (kbd "C-x C-k") 'kill-this-buffer)
     #+end_src    
 
 *** bind ESC to keyboard-escape-quit
-    #+begin_src emacs-lisp
+    #+begin_src emacs-lisp :results output silent
       (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
     #+end_src
 
@@ -80,14 +80,14 @@
    Show the current buffer name and the full path of the file on the app title
    bar.
 
-   #+begin_src emacs-lisp
+   #+begin_src emacs-lisp :results output silent
      (setq-default frame-title-format "%b (%f)")
    #+end_src
 
 ** Font setup
    I use the PragmataPro font.
 
-   #+begin_src emacs-lisp
+   #+begin_src emacs-lisp :results output silent
      (set-face-attribute 'default nil
                          :family "PragmataPro Mono Liga"
                          :height 120)
@@ -96,7 +96,7 @@
 ** Theme
    My current theme is gruvbox by [[https://github.com/hlissner/emacs-doom-themes][Doom Themes]].
 
-   #+begin_src emacs-lisp
+   #+begin_src emacs-lisp :results output silent
      (use-package doom-themes
        :ensure t
        :config
@@ -115,7 +115,7 @@
 ** Icons
    Some icons for our modern looking Emacs
    
-   #+begin_src emacs-lisp
+   #+begin_src emacs-lisp :results output silent
      (use-package all-the-icons
        :ensure t)
 
@@ -129,7 +129,7 @@
 ** Uniquify
    Set unique buffer names.
 
-   #+begin_src emacs-lisp
+   #+begin_src emacs-lisp :results output silent
      (use-package uniquify
        :config
        (setq uniquify-buffer-name-style 'post-forward
@@ -139,7 +139,7 @@
 
 ** Window margins
    I like to have some space on the left and right edge of the window
-   #+begin_src emacs-lisp
+   #+begin_src emacs-lisp :results output silent
      (setq-default left-margin-width 4
                    right-margin-width 4)
      (set-fringe-mode 10)
@@ -148,7 +148,7 @@
 ** Doom mode line
    [[https://github.com/seagle0128/doom-modeline][doom-modeline]] - A fancy and fast mode-line inspired by minimalism design.
 
-   #+begin_src emacs-lisp
+   #+begin_src emacs-lisp :results output silent
      (use-package minions
        :ensure t
        :init (minions-mode)
@@ -168,7 +168,7 @@
    "perspectives") in Emacs, similar to multiple desktops in window managers
    like Awesome and XMonad, and Spaces on the Mac.
 
-   #+begin_src emacs-lisp
+   #+begin_src emacs-lisp :results output silent
      (use-package perspective
        :ensure t
        :config (progn
@@ -179,7 +179,7 @@
 
 ** Show matching parenthesis 
 
-   #+begin_src emacs-lisp
+   #+begin_src emacs-lisp :results output silent
      (show-paren-mode t)
 
      (use-package rainbow-delimiters
@@ -189,14 +189,14 @@
 
 ** Prettify symbols
 
-   #+begin_src emacs-lisp
+   #+begin_src emacs-lisp :results output silent
      (global-prettify-symbols-mode 1)
    #+end_src
 
 ** Which-key
    [[https://github.com/justbur/emacs-which-key][Which-key]] – Emacs package that displays available keybindings in popup.
 
-   #+begin_src emacs-lisp
+   #+begin_src emacs-lisp :results output silent
      (use-package which-key
        :ensure t
        :init (which-key-mode)
@@ -207,14 +207,14 @@
 ** Minibuffer settings
 *** Never use dialogs for minibuffer input and store more history
 
-    #+begin_src emacs-lisp
+    #+begin_src emacs-lisp :results output silent
       (setq use-dialog-box nil
             history-length 1000)
     #+end_src
 
 *** Save minibuffer history
 
-    #+begin_src emacs-lisp
+    #+begin_src emacs-lisp :results output silent
       (use-package savehist
         :init (savehist-mode t)
         :config (setq savehist-save-minibuffer-history t
@@ -224,7 +224,7 @@
 *** Recursive minibuffer
     Make the minibuffer much more useful by enabling recursive usage.
     
-    #+begin_src emacs-lisp
+    #+begin_src emacs-lisp :results output silent
       (setq enable-recursive-minibuffers t)
       (minibuffer-depth-indicate-mode 1)
     #+end_src
@@ -232,7 +232,7 @@
 ** Scratch settings
    Use `emacs-lisp-mode' instead of `lisp-interaction-mode' for scratch buffer.
 
-   #+begin_src emacs-lisp
+   #+begin_src emacs-lisp :results output silent
      (setq initial-major-mode 'emacs-lisp-mode
            initial-scratch-message "")
    #+end_src
@@ -240,12 +240,12 @@
 ** Misc variable settings
 *** I've been using Emacs for too long to need to re-enable each feature bit-by-bit.
 
-    #+begin_src emacs-lisp
+    #+begin_src emacs-lisp :results output silent
       (setq disabled-command-function nil)
     #+end_src
 
 *** Increase line-spacing (default 0).
-    #+begin_src emacs-lisp
+    #+begin_src emacs-lisp :results output silent
       (setq-default line-spacing 0.2)
     #+end_src
 
@@ -253,7 +253,7 @@
 * Editing settings
 ** Fill column and enable automatic filling in ~text-mode~.
 
-   #+begin_src emacs-lisp
+   #+begin_src emacs-lisp :results output silent
      (setq-default fill-column 80)
      (add-hook 'text-mode-hook #'auto-fill-mode)
    #+end_src
@@ -262,21 +262,21 @@
    I have learned to distrust tabs in my source code, so let's make sure that we
    only have spaces. See [[http://ergoemacs.org/emacs/emacs_tabs_space_indentation_setup.html][this discussion]] for details.
 
-   #+begin_src emacs-lisp
+   #+begin_src emacs-lisp :results output silent
      (setq-default indent-tabs-mode nil
                    tab-width 2)
    #+end_src
 
    Make tab key do indent first then completion.
 
-   #+begin_src emacs-lisp
+   #+begin_src emacs-lisp :results output silent
      (setq-default tab-always-indent 'complete)
    #+end_src
 
 ** Jumping around
    Use [[https://github.com/abo-abo/avy][Avy]] for jumping around in a buffer.
 
-   #+begin_src emacs-lisp
+   #+begin_src emacs-lisp :results output silent
      (use-package avy
        :ensure t
        :bind* (("C-:" . avy-goto-line)
@@ -286,7 +286,7 @@
 ** Easykill
    [[https://github.com/leoliu/easy-kill][Easykill]] - Better kill text.
 
-   #+begin_src emacs-lisp
+   #+begin_src emacs-lisp :results output silent
      (use-package easy-kill
        :ensure t
        :bind (([remap kill-ring-save] . easy-kill)
@@ -297,7 +297,7 @@
    [[https://github.com/wolray/symbol-overlay][symbol-overlay.el]] - Highlight symbols with overlays while providing a keymap
    for various operations about highlighted symbols.
 
-   #+begin_src emacs-lisp
+   #+begin_src emacs-lisp :results output silent
      (use-package symbol-overlay
        :ensure t
        :bind (:map symbol-overlay-mode-map
@@ -308,7 +308,7 @@
 ** Spell checking
 *** aspell
 
-    #+begin_src emacs-lisp
+    #+begin_src emacs-lisp :results output silent
       (use-package ispell
         :defer t
         :config (setq ispell-program-name (executable-find "aspell")
@@ -321,7 +321,7 @@
 
 *** [[https://gitlab.com/ideasman42/emacs-spell-fu][spell-fu]] - Fast highlighting of misspelled words.
 
-    #+begin_src emacs-lisp
+    #+begin_src emacs-lisp :results output silent
       (use-package spell-fu
         :ensure t
         :hook ((prog-mode text-mode) . spell-fu-mode))
@@ -330,7 +330,7 @@
 ** Multiple cursors
    [[https://github.com/magnars/multiple-cursors.el][Multiple cursors for emacs.]]
 
-   #+begin_src emacs-lisp
+   #+begin_src emacs-lisp :results output silent
      (use-package multiple-cursors
        :ensure t
        :bind* (("C-c m n" . mc/mark-next-like-this)
@@ -342,7 +342,7 @@
 ** undo-fu
    [[https://gitlab.com/ideasman42/emacs-undo-fu][Undo Fu]] - Simple, stable undo with redo for emacs.
 
-   #+begin_src emacs-lisp
+   #+begin_src emacs-lisp :results output silent
      (use-package undo-fu
        :ensure t
        :bind* (("C-z" . undo-fu-only-undo)
@@ -354,7 +354,7 @@
 ** Selectrum, Consult, Embark and Marginalia 
 *** Selectrum
 
-    #+begin_src emacs-lisp
+    #+begin_src emacs-lisp :results output silent
       (use-package selectrum
         :ensure t
         :init (selectrum-mode t))
@@ -368,7 +368,7 @@
 
 *** Embark, Consult and Marginalia
 
-    #+begin_src emacs-lisp
+    #+begin_src emacs-lisp :results output silent
       (use-package marginalia
         :ensure t
         :config
@@ -409,7 +409,7 @@
 ** Crux
    [[https://github.com/bbatsov/crux][crux]] - A Collection of Ridiculously Useful eXtensions for Emacs.
 
-   #+begin_src emacs-lisp
+   #+begin_src emacs-lisp :results output silent
      (use-package crux
        :ensure t
        :bind* (("C-^" . crux-top-join-line)
@@ -425,7 +425,7 @@
    warnings and errors directly in the buffer and in an optional IDE-like error
    list.
 
-   #+begin_src emacs-lisp
+   #+begin_src emacs-lisp :results output silent
      (use-package flycheck
        :ensure t
        :hook (prog-mode . flycheck-mode)
@@ -440,7 +440,7 @@
    a nice set of features operating on a project level without introducing
    external dependencies (when feasible).
 
-   #+begin_src emacs-lisp
+   #+begin_src emacs-lisp :results output silent
      (use-package projectile
        :ensure t
        :bind
@@ -456,7 +456,7 @@
 ** Magit configuration
    [[https://github.com/magit/magit][Magit]] - A Git porcelain inside Emacs.
 
-   #+begin_src emacs-lisp
+   #+begin_src emacs-lisp :results output silent
      (use-package magit
        :ensure t
        :bind (("C-c v c" . magit-clone)
@@ -475,7 +475,7 @@
 
    [[https://github.com/magit/forge][Forge]] - Work with Git forges from the comfort of Magit
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :results output silent
   (use-package forge
     :ensure t
     :after magit)
@@ -485,7 +485,7 @@
    [[https://github.com/dgutov/diff-hl][diff-hl-mode]] highlights uncommitted changes on the left side of the window,
    allows you to jump between and revert them selectively.
 
-   #+begin_src emacs-lisp
+   #+begin_src emacs-lisp :results output silent
      (use-package diff-hl
        :ensure t
        :config (add-hook 'magit-post-refresh-hook
@@ -499,7 +499,7 @@
    Smartparens - Minor mode for Emacs that deals with parens pairs and tries to
    be smart about it.
 
-   #+begin_src emacs-lisp
+   #+begin_src emacs-lisp :results output silent
      (use-package smartparens
        :ensure t
        :bind (:map smartparens-mode-map
@@ -516,7 +516,7 @@
 ** Direnv
    direnv integration for emacs.
 
-   #+begin_src emacs-lisp
+   #+begin_src emacs-lisp :results output silent
      (use-package direnv
        :ensure t
        :config (direnv-mode))
@@ -526,7 +526,7 @@
    [[https://github.com/mhayashi1120/Emacs-wgrep][wgrep.el]] - allows you to edit a grep buffer and apply those changes to the
    file buffer.
 
-   #+begin_src emacs-lisp
+   #+begin_src emacs-lisp :results output silent
      (use-package wgrep
        :ensure t)
    #+end_src
@@ -534,7 +534,7 @@
 ** ace-windows
    [[https://github.com/abo-abo/ace-window][ace-windows]] - GNU Emacs package for selecting a window to switch to
 
-   #+begin_src emacs-lisp
+   #+begin_src emacs-lisp :results output silent
      (use-package ace-window
        :ensure t
        :config (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
@@ -544,7 +544,7 @@
 ** Paradox
    [[https://github.com/Malabarba/paradox][Malabarba/paradox: Project for modernizing Emacs' Package Menu.]]
 
-#+begin_src emacs-lisp :results output silent
+#+begin_src emacs-lisp :results output silent :results output silent
   (use-package paradox
     :ensure t
     :config (setq paradox-github-token paradox-gh-token)
@@ -556,7 +556,7 @@
 ** dumb-jump
    [[https://github.com/jacktasia/dumb-jump][dumb-jump: an Emacs "jump to definition".]]
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :results output silent
   (use-package dumb-jump
     :ensure t
     :init (add-hook 'xref-backend-functions #'dumb-jump-xref-activate))
@@ -566,7 +566,7 @@
 * Productivity
 ** org-mode
 *** org settings
-    #+begin_src emacs-lisp
+    #+begin_src emacs-lisp :results output silent
       (use-package org
         :ensure t
         :bind* (("C-c o t" . 'org-capture)
@@ -591,7 +591,7 @@
 *** org-bullets
     Pretty bullets instead of asterisks.
 
-    #+begin_src emacs-lisp
+    #+begin_src emacs-lisp :results output silent
       (use-package org-bullets
         :ensure t
         :hook (org-mode . org-bullets-mode)
@@ -599,7 +599,7 @@
     #+end_src
 
 *** org-cliplink
-    #+begin_src emacs-lisp
+    #+begin_src emacs-lisp :results output silent
       (use-package org-cliplink
         :ensure t
         :bind ("C-c o i" . org-cliplink))
@@ -612,7 +612,7 @@
     clocks regardless of whether you just started Emacs or have had it running
     for decades.
 
-    #+begin_src emacs-lisp
+    #+begin_src emacs-lisp :results output silent
       (use-package org-mru-clock
         :ensure t
         :bind* (("C-c o i" . org-mru-clock-in)
@@ -625,7 +625,7 @@
 *** yankpad
     [[https://github.com/Kungsgeten/yankpad][GitHub - Kungsgeten/yankpad: Paste snippets from an org-mode file]]
 
-    #+begin_src emacs-lisp
+    #+begin_src emacs-lisp :results output silent
       (use-package yasnippet
         :ensure t)
 
@@ -645,7 +645,7 @@
 
 *** capture templates
 
-    #+begin_src emacs-lisp
+    #+begin_src emacs-lisp :results output silent
       (setq org-capture-templates
             '(("t" "Task" entry (file "inbox.org")
                "* TODO %?\n")
@@ -662,7 +662,7 @@
    "complete anything". It uses pluggable back-ends and front-ends to retrieve
    and display completion candidates.
 
-   #+begin_src emacs-lisp
+   #+begin_src emacs-lisp :results output silent
      (use-package company
        :ensure t
        :bind (:map company-active-map
@@ -683,7 +683,7 @@
 
 *** Clojure development environment
 
-    #+begin_src emacs-lisp
+    #+begin_src emacs-lisp :results output silent
       (use-package cider
         :ensure t
         :hook  ((cider-mode . eldoc-mode)
@@ -714,14 +714,14 @@
 *** Clojure Flycheck
     Flycheck using clj-kondo
 
-    #+begin_src emacs-lisp
+    #+begin_src emacs-lisp :results output silent
       (use-package flycheck-clj-kondo
         :ensure t)
     #+end_src
 
 *** Font-locking for Clojure mode
 
-    #+begin_src emacs-lisp
+    #+begin_src emacs-lisp :results output silent
       (use-package clojure-mode-extra-font-locking
         :ensure t
         :after clojure-mode)
@@ -729,7 +729,7 @@
 
 *** Client for Clojure nREPL
 
-    #+begin_src emacs-lisp
+    #+begin_src emacs-lisp :results output silent
       (use-package nrepl-client
         :after cider
         :config (setq nrepl-hide-special-buffers t))
@@ -738,7 +738,7 @@
 *** Kaocha test runner
     An emacs package for running Kaocha tests via CIDER.
 
-    #+begin_src emacs-lisp
+    #+begin_src emacs-lisp :results output silent
       (use-package kaocha-runner
         :ensure t
         :after cider
@@ -756,7 +756,7 @@
 ** Common Lisp
    Common Lisp settings
 
-   #+begin_src emacs-lisp
+   #+begin_src emacs-lisp :results output silent
      (use-package sly
        :ensure t
        :config (setq inferior-lisp-program "/usr/bin/sbcl"))
@@ -770,7 +770,7 @@
 
 *** web-mode
 
-    #+begin_src emacs-lisp
+    #+begin_src emacs-lisp :results output silent
       (use-package web-mode
         :ensure t
         :mode "\\.html\\'"
@@ -782,7 +782,7 @@
 
 *** js2 - A better JavaScript support
 
-    #+begin_src emacs-lisp
+    #+begin_src emacs-lisp :results output silent
       (use-package js2-mode
         :ensure t
         :mode "\\.js\\'"
@@ -792,7 +792,7 @@
 
 *** Better CSS support
 
-    #+begin_src emacs-lisp
+    #+begin_src emacs-lisp :results output silent
       (use-package css-mode
         :ensure t
         :mode "\\.css\\'"
@@ -802,7 +802,7 @@
 
 *** Eldoc for CSS.
 
-    #+begin_src emacs-lisp
+    #+begin_src emacs-lisp :results output silent
       (use-package css-eldoc
         :ensure t
         :hook (css-mode . turn-on-css-eldoc)
@@ -811,7 +811,7 @@
 
 *** JSON specific mode.
 
-    #+begin_src emacs-lisp
+    #+begin_src emacs-lisp :results output silent
       (use-package json-mode                  ; JSON editing
         :ensure t
         :mode "\\.json\\'")
@@ -820,7 +820,7 @@
 ** Janet
    [[https://janet-lang.org][Janet]] is a functional and imperative programming language.
 
-   #+begin_src emacs-lisp
+   #+begin_src emacs-lisp :results output silent
      (use-package janet-mode
        :ensure t
        :mode ("\\.janet\\'" . janet-mode))
@@ -828,7 +828,7 @@
 
 ** LUA
 
-   #+begin_src emacs-lisp
+   #+begin_src emacs-lisp :results output silent
      (use-package lua-mode
        :ensure t
        :defer t
@@ -841,7 +841,7 @@
    [[https://fennel-lang.org/][Fennel]] is a programming language that brings together the speed, simplicity,
    and reach of Lua with the flexibility of a lisp syntax and macro system.
 
-   #+begin_src emacs-lisp
+   #+begin_src emacs-lisp :results output silent
      (use-package fennel-mode
        :ensure t
        :mode ("\\.fnl" . fennel-mode))
@@ -850,7 +850,7 @@
 ** YAML
    Editing YAML files.
 
-   #+begin_src emacs-lisp
+   #+begin_src emacs-lisp :results output silent
      (use-package yaml-mode
        :ensure t
        :defer t)
