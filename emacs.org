@@ -622,6 +622,16 @@
                     org-mru-clock-files #'org-agenda-files))
     #+end_src
 
+*** org-notifications
+    [[https://github.com/doppelc/org-notifications][org-notifications]] - Creates system notifications for org-agenda items with
+    timestamps
+
+    #+begin_src emacs-lisp :results output silent
+      (use-package org-notifications
+        :ensure t
+        :config (org-notifications-start))
+    #+end_src
+
 *** yankpad
     [[https://github.com/Kungsgeten/yankpad][GitHub - Kungsgeten/yankpad: Paste snippets from an org-mode file]]
 
