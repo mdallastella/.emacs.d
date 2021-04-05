@@ -74,6 +74,13 @@
       (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
     #+end_src
 
+*** Rebind default-indent-new-line
+    #+begin_src emacs-lisp :results output silent
+      (global-unset-key (kbd "C-M-j"))
+      (global-unset-key (kbd "M-j"))
+      (global-key-binding (kbd "S-<return>") 'default-indent-new-line)
+    #+end_src
+
 
 * Graphics and looks
 ** Frame title
@@ -866,6 +873,21 @@
        :defer t)
    #+end_src
 
+
+* Stuff
+** Smudge
+   [[https://github.com/danielfm/smudge][Smudge]] - Control Spotify app from within Emacs.
+
+   #+begin_src emacs-lisp :results output silent
+     (use-package smudge
+       :ensure t
+       :config
+       (setq smudge-oauth2-client-id spotify-client-id
+             smudge-oauth2-client-secret spotify-client-secret
+             smudge-status-location 'title-bar)
+       (define-key smudge-mode-map (kbd "C-c .") 'smudge-command-map)
+       :init (global-smudge-remote-mode))
+   #+end_src
 
 * BEERWARE LICENSE
   "THE BEER-WARE LICENSE" (Revision 42): <marco@dallastella.name> wrote this
