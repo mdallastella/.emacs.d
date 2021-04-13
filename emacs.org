@@ -454,10 +454,11 @@
        (:map projectile-mode-map
              ("C-c p" . projectile-command-map))
        :init
-       (projectile-mode +1)
        (setq projectile-find-dir-includes-top-level t
+             projectile-switch-project-action #'projectile-find-file
              projectile-sort-order 'recentf
-             projectile-completion-system 'auto))
+             projectile-completion-system 'default)
+       (projectile-mode t))
    #+end_src
 
 ** Magit configuration
@@ -644,10 +645,14 @@
 
     #+begin_src emacs-lisp :results output silent
       (use-package yasnippet
-        :ensure t)
+        :ensure t
+        :config
+        (setq yas-verbosity 1)
+        (yas-global-mode))
 
       (use-package yankpad
         :ensure t
+        :after yasnippet
         :init
         (setq yankpad-file "~/org/yankpad.org")
         (bind-keys :prefix-map yank-map
@@ -888,6 +893,7 @@
        (define-key smudge-mode-map (kbd "C-c .") 'smudge-command-map)
        :init (global-smudge-remote-mode))
    #+end_src
+
 
 * BEERWARE LICENSE
   "THE BEER-WARE LICENSE" (Revision 42): <marco@dallastella.name> wrote this
