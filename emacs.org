@@ -101,16 +101,19 @@
    #+end_src
 
 ** Theme
-   My current theme is gruvbox by [[https://github.com/hlissner/emacs-doom-themes][Doom Themes]].
+   My current theme is solarized-dark by [[https://github.com/hlissner/emacs-doom-themes][Doom Themes]].
 
    #+begin_src emacs-lisp :results output silent
      (use-package doom-themes
        :ensure t
        :config
        ;; Global settings (defaults)
-       (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
-             doom-themes-enable-italic t) ; if nil, italics is universally disabled
-       (load-theme 'doom-gruvbox t)
+       (setq doom-themes-enable-bold t
+             doom-themes-enable-italic t
+             doom-solarized-dark-brighter-comments t
+             doom-solarized-dark-brighter-text t
+             doom-solarized-dark-padded-modeline 2)
+       (load-theme 'doom-solarized-dark t)
 
        ;; Enable flashing mode-line on errors
        (doom-themes-visual-bell-config)
