@@ -358,19 +358,21 @@
 
 
 * Tools
-** Selectrum, Consult, Embark and Marginalia 
-*** Selectrum
+** Vertico, Consult, Embark and Marginalia 
+*** Vertico
 
     #+begin_src emacs-lisp :results output silent
-      (use-package selectrum
+      (use-package vertico
         :ensure t
-        :init (selectrum-mode t))
+        :init
+        (vertico-mode))
 
-      (use-package selectrum-prescient
+      (use-package orderless
         :ensure t
-        :init (selectrum-prescient-mode t))
-
-      (prescient-persist-mode t)
+        :init
+        (setq completion-styles '(orderless)
+              completion-category-defaults nil
+              completion-category-overrides '((file (styles . (partial-completion))))))
     #+end_src
 
 *** Embark, Consult and Marginalia
@@ -889,7 +891,7 @@
        :config
        (setq smudge-oauth2-client-id spotify-client-id
              smudge-oauth2-client-secret spotify-client-secret
-             smudge-status-location 'title-bar)
+             smudge-status-location nil)
        (define-key smudge-mode-map (kbd "C-c .") 'smudge-command-map)
        :init (global-smudge-remote-mode))
    #+end_src
