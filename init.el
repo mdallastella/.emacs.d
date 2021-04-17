@@ -70,12 +70,17 @@
   (setq auth-sources `((:source ,authinfo.gpg))))
 
 ;; Load emacs.org - my Emacs configuration
-(org-babel-load-file (expand-file-name "emacs.org" user-emacs-directory))
+(message "Loading emacs.org...")
+(let* ((emacs-org-file (expand-file-name "emacs.org" user-emacs-directory))
+       (emacs-el-file (concat (file-name-sans-extension emacs-org-file) ".el")))
+  (if (file-newer-than-file-p emacs-org-file emacs-el-file)
+      (org-babel-load-file emacs-org-file t)
+    (load-file emacs-el-file)))
 
 ;; My custom file
+(message "Loading custom-file...")
 (setq custom-file (no-littering-expand-etc-file-name "custom.el"))
 (load custom-file)
-(message "Loaded %s" custom-file)
 
 ;; Garbage collector - decrease threshold to 5 MB
 (add-hook 'after-init-hook (lambda () (setq gc-cons-threshold (* 5 1024 1024))))
