@@ -48,6 +48,7 @@
       (use-package saveplace
         :init (save-place-mode 1))
     #+end_src
+    
 *** Kill ring features
     More killed items, no duplicates in kill ring.
 
@@ -392,14 +393,8 @@
                 ("C-c c b" . consult-buffer)
                 ("C-c c r" . consult-ripgrep)
                 ("C-c c g" . consult-goto-line)
-                ("M-y" . consult-yank))
+                ("M-y" . consult-yank-from-kill-ring))
         :config (setq consult-project-root-function #'projectile-project-root))
-
-      (use-package consult-selectrum
-        :ensure t
-        :disabled t
-        :after selectrum
-        :demand t)
 
       (use-package embark
         :ensure t
@@ -415,7 +410,7 @@
         :ensure t
         :after (embark consult)
         :demand t
-        :hook (embark-collect-mode . embark-consult-preview-minor-mode))
+        :hook (embark-collect-mode . consult-preview-at-point-mode))
     #+end_src
 
 ** Crux
@@ -474,7 +469,7 @@
        :ensure t
        :bind (("C-c v c" . magit-clone)
               ("C-c v C" . magit-checkout)
-              ("C-c v d" . magit-dispatch-popup)
+              ("C-c v d" . magit-dispatch)
               ("C-c v g" . magit-blame)
               ("C-c v l" . magit-log-buffer-file)
               ("C-c v p" . magit-pull)
@@ -482,8 +477,7 @@
               ("C-c v f" . magit-fetch-all)
               ("C-c v R" . vc-refresh-state))
        :config (setq magit-save-repository-buffers 'dontask
-                     magit-refs-show-commit-count 'all
-                     magit-completing-read-function #'selectrum-completing-read))
+                     magit-refs-show-commit-count 'all))
    #+end_src
 
    [[https://github.com/magit/forge][Forge]] - Work with Git forges from the comfort of Magit
@@ -684,25 +678,39 @@
 
 
 * Coding
-** Completion with company
-   [[http://company-mode.github.io/][Company]] is a text completion framework for Emacs. The name stands for
-   "complete anything". It uses pluggable back-ends and front-ends to retrieve
-   and display completion candidates.
+** Completion
+   [[https://github.com/minad/corfu][Corfu]] enhances the default completion in region function with a completion
+   overlay.
 
    #+begin_src emacs-lisp :results output silent
-     (use-package company
+     (use-package corfu
+       :hook ((prog-mode . corfu-mode)
+              (shell-mode . corfu-mode)
+              (eshell-mode . corfu-mode))
+       :config (corfu-global-mode))
+
+     (use-package dabbrev
+       :bind (("M-/" . dabbrev-completion)
+              ("C-M-/" . dabbrev-expand)))
+   #+end_src
+** LSP
+   #+begin_src emacs-lisp :results output silent
+     (use-package lsp-mode
+       :disabled t
        :ensure t
-       :bind (:map company-active-map
-                   ("C-n" . company-select-next)
-                   ("C-p" . company-select-previous))
-       :config (setq company-mode-idle-dalay nil
-                     company-tooltip-align-annotations t
-                     company-dabbrev-ignore-case t
-                     company-show-numbers t
-                     company-dabbrev-downcase nil)
-       :bind (:map prog-mode-map
-                   ("TAB" . company-indent-or-complete-common))
-       :init (global-company-mode))
+       :hook ((clojure-mode . lsp)
+              (clojurec-mode . lsp)
+              (clojurescript-mode . lsp)
+              (lsp-mode . (lambda () (setq-local idle-highlight-mode nil))))
+       :custom
+       (lsp-enable-file-watchers nil)
+       (lsp-headerline-breadcrumb-enable nil)
+       (lsp-keymap-prefix "C-c l")
+       (lsp-enable-indentation nil)
+       (lsp-completion-provider :none)
+       (lsp-eldoc-enable-hover nil)
+       :config
+       (lsp-enable-which-key-integration t))
    #+end_src
 
 ** Clojure
@@ -726,11 +734,9 @@
                     ("C-RET" . cider-repl-return)
                     ("C-c C-l" . cider-repl-clear-buffer))
         :config (setq cider-offer-to-open-cljs-app-in-browser nil
-                      cider-auto-select-error-buffer nil
                       cider-font-lock-dynamically t
                       cider-invert-insert-eval-p t
                       cider-save-file-on-load t
-                      cider-switch-to-repl-after-insert-p nil
                       cider-repl-pop-to-buffer-on-connect 'display-only
                       cider-repl-wrap-history t
                       cider-repl-history-size 1000
@@ -762,6 +768,8 @@
         :config (setq nrepl-hide-special-buffers t))
     #+end_src
 
+*** Clojure LSP
+
 *** Kaocha test runner
     An emacs package for running Kaocha tests via CIDER.
 
@@ -784,12 +792,12 @@
    Common Lisp settings
 
    #+begin_src emacs-lisp :results output silent
-     (use-package sly
-       :ensure t
-       :config (setq inferior-lisp-program "/usr/bin/sbcl"))
+     ;; (use-package sly
+     ;;   :ensure t
+     ;;   :config (setq inferior-lisp-program "/usr/bin/sbcl"))
 
-     (use-package sly-quicklisp
-       :ensure t)
+     ;; (use-package sly-quicklisp
+     ;;   :ensure t)
    #+end_src
 
 ** Web Development
