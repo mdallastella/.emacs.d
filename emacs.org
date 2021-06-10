@@ -679,24 +679,30 @@
 
 * Coding
 ** Completion
-   [[https://github.com/minad/corfu][Corfu]] enhances the default completion in region function with a completion
-   overlay.
+   [[http://company-mode.github.io/][Company]] is a text completion framework for Emacs. The name stands for
+   "complete anything". It uses pluggable back-ends and front-ends to retrieve
+   and display completion candidates.
 
    #+begin_src emacs-lisp :results output silent
-     (use-package corfu
-       :hook ((prog-mode . corfu-mode)
-              (shell-mode . corfu-mode)
-              (eshell-mode . corfu-mode))
-       :config (corfu-global-mode))
-
-     (use-package dabbrev
-       :bind (("M-/" . dabbrev-completion)
-              ("C-M-/" . dabbrev-expand)))
+     (use-package company
+       :ensure t
+       :bind  ((:map company-active-map
+                     ("C-n" . company-select-next)
+                     ("C-p" . company-select-previous)))
+       :hook ((cider-mode . cider-company-enable-fuzzy-completion)
+              (cider-repl-mode . cider-company-enable-fuzzy-completion))
+       :init (setq company-idle-delay nil
+                   company-require-match nil
+                   company-tooltip-align-annotations t
+                   company-show-numbers nil
+                   company-dabbrev-ignore-case t
+                   company-dabbrev-downcase nil)
+       (global-company-mode))
    #+end_src
+   
 ** LSP
    #+begin_src emacs-lisp :results output silent
      (use-package lsp-mode
-       :disabled t
        :ensure t
        :hook ((clojure-mode . lsp)
               (clojurec-mode . lsp)
