@@ -577,7 +577,8 @@
        :ensure t
        :defer t
        :bind (:map global-map
-                   ("C-c c t" . treemacs)))
+                   ("C-c c t" . treemacs)
+                   ("C-c 1" . treemacs-select-window)))
 
      (use-package treemacs-projectile
        :after (treemacs projectile)
@@ -587,11 +588,12 @@
        :after (treemacs magit)
        :ensure t)
 
-     (use-package treemacs-persp
-       :after (treemacs persp-mode)
+     (use-package treemacs-perspective
+       :after (treemacs perspective)
        :ensure t
        :config (treemacs-set-scope-type 'Perspectives))
    #+end_src
+
 
 * Productivity
 ** org-mode
@@ -797,8 +799,6 @@
         :config (setq nrepl-hide-special-buffers t))
     #+end_src
 
-*** Clojure LSP
-
 *** Kaocha test runner
     An emacs package for running Kaocha tests via CIDER.
 
@@ -837,7 +837,8 @@
     #+begin_src emacs-lisp :results output silent
       (use-package web-mode
         :ensure t
-        :mode "\\.html\\'"
+        :mode (("\\.html\\'" . web-mode)
+               ("\\.njk\\'" . web-mode))
         :config
         (setq web-mode-markup-indent-offset 2
               web-mode-css-indent-offset 2
@@ -927,6 +928,7 @@
 
    #+begin_src emacs-lisp :results output silent
      (use-package smudge
+       :disabled t
        :ensure t
        :config
        (setq smudge-oauth2-client-id spotify-client-id
