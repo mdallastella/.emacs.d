@@ -23,7 +23,9 @@
       use-file-dialog nil
       inhibit-startup-echo-area-message "mds"
       inhibit-startup-screen t
-      inhibit-startup-buffer-menu t)
+      inhibit-startup-buffer-menu t
+      package-enable-at-startup nil
+      visible-bell t)
 (fset 'yes-or-no-p 'y-or-n-p)
 
 ;;; early-init.el ends here
