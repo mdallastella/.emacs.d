@@ -216,9 +216,9 @@
    #+end_src
 ** Use ALWAYS spaces to indent, NEVER tabs
    #+begin_src elisp
-     (setq-default indent-tab-mode nil            ; Never use tabs
+     (setq-default indent-tabs-mode nil           ; Never use tabs
                    tab-always-indent 'complete    ; Indent or complete
-                   tab-width 4)                    ; Show eventual tabs as 4 spaces
+                   tab-width 4)                   ; Show eventual tabs as 4 spaces
    #+end_src
 ** Newline at the end of a file
    #+begin_src elisp
@@ -668,7 +668,6 @@
               org-refile-targets '((org-agenda-files :maxlevel . 1))
               org-refile-allow-creating-parent-nodes 'confirm))
     #+end_src
-
 *** org-bullets
     Pretty bullets instead of asterisks.
     #+begin_src elisp
@@ -678,20 +677,17 @@
         :config
         (setq org-bullets-bullet-list '("◉" "○" "●" "►" "◇" "◎")))
     #+end_src
-
 *** org-cliplink
     #+begin_src elisp
       (use-package org-cliplink
         :bind
         ("C-c o i" . org-cliplink))
     #+end_src
-
 *** TODO org-mru-clock
     [[https://github.com/unhammer/org-mru-clock][org-mru-clock]] - Pre-fill your clock history with clocks from your agenda
     files (and other open org files) so you can clock in to your most recent
     clocks regardless of whether you just started Emacs or have had it running
     for decades.
-
     #+begin_src elisp
       (use-package org-mru-clock
         :bind*
@@ -702,10 +698,8 @@
         (setq org-mru-clock-how-many 25
               org-mru-clock-files #'org-agenda-files))
     #+end_src
-
 *** yankpad
     [[https://github.com/Kungsgeten/yankpad][GitHub - Kungsgeten/yankpad: Paste snippets from an org-mode file]]
-
     #+begin_src elisp
       (use-package yasnippet
         :ensure t
@@ -727,9 +721,7 @@
                    ("r" . yankpad-reload)
                    ("x" . yankpad-expand)))
     #+END_SRC
-
 *** capture templates
-
     #+begin_src elisp
       (setq org-capture-templates
             '(("t" "Task" entry (file "inbox.org")
