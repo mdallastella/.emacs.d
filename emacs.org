@@ -148,6 +148,10 @@
      (setq show-paren-when-point-inside-paren t
            show-paren-when-point-in-periphery t)
      (show-paren-mode t)
+
+     (use-package rainbow-delimiters
+       :hook
+       ((prog-mode cider-repl-mode) . rainbow-delimiters-mode))
    #+end_src
 ** Use icons
    [[https://github.com/domtronn/all-the-icons.el][all-the-icons.el]]: A utility package to collect various Icon Fonts
