@@ -612,7 +612,7 @@
    #+end_src
 
 
-* Keybinding
+* TODO Keybinding
   The most frequent keybindings are structured in a mnemonic way for
   me. ~C-c~ is the "leader", then a letter that identify the scope:
   ~c~ for generic functions, ~b~ for buffer, ~d~ for directories, ~f~
@@ -652,6 +652,9 @@
         (("C-c o t" . 'org-capture)
          ("C-c o a" . 'org-agenda)
          ("C-c o r" . 'org-refile))
+        :custom-face
+        (org-block-begin-line ((t (:underline nil))))
+        (org-block-end-line ((t (:overline nil))))
         :config
         (setq org-agenda-files (list "~/org/")
               org-default-notes-file "inbox.org"
