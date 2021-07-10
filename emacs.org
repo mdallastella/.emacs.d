@@ -28,13 +28,16 @@
    #+end_src
 ** Save history
    #+begin_src elisp
-     (savehist-mode t)
-     (setq history-length 10000
+     (use-package savehist
+       :config
+       (setq history-length 10000
            history-delete-duplicates t
            savehist-save-minibuffer-history t
            savehist-additional-variables '(kill-ring
                                            search-ring
                                            regexp-search-ring))
+       :init
+       (savehist-mode t))
    #+end_src
 ** Keep backups out of the way
    Store backups and autosave files in ~/tmp~
@@ -98,6 +101,54 @@
    #+end_src
 
 
+* TODO Keybinding
+  The most frequent keybindings are structured in a mnemonic way for
+  me. On evil-mode, ~SPC~ is the "leader", then a letter that identify
+  the scope: ~c~ for generic functions, ~b~ for buffer, ~d~ for directories,
+  ~f~ for files, ~p~ for projects, ~m~ for the active major-modes and so
+  on.
+** evil-mode
+   I like modal editing.
+   #+begin_src elisp
+     (use-package evil
+       :init
+       (setq evil-want-integration t
+             evil-want-keybinding nil
+             evil-want-C-u-scroll t
+             evil-want-C-i-jump nil
+             evil-respect-visual-line-mode t)
+       :config
+       (evil-mode t)
+       (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
+       (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char-and-join)
+
+       ;; Use visual line motions even outside of visual-line-mode buffers
+       (evil-global-set-key 'motion "j" 'evil-next-visual-line)
+       (evil-global-set-key 'motion "k" 'evil-previous-visual-line))
+   #+end_src
+** evil-collection
+   #+begin_src elisp
+     (use-package evil-collection
+       :after evil
+       :config
+       (evil-collection-init))
+   #+end_src
+** general
+   #+begin_src elisp
+     (use-package general
+       :config
+       (general-evil-setup t)
+
+       (general-create-definer my/leader-key-def
+         :keymaps '(normal insert visual emacs)
+         :prefix "SPC"
+         :global-prefix "C-SPC")
+
+        (general-create-definer my/ctrl-c-keys
+         :prefix "C-c"))
+   #+end_src
+
+
 * UI
 ** Frame title
    Show the current buffer name and the full path of the file on the app title bar
@@ -145,9 +196,12 @@
    #+end_src
 ** Show matching parenthesis
    #+begin_src elisp
-     (setq show-paren-when-point-inside-paren t
-           show-paren-when-point-in-periphery t)
-     (show-paren-mode t)
+     (use-package paren
+       :config
+       (setq show-paren-when-point-inside-paren t
+             show-paren-when-point-in-periphery t)
+       :init
+       (show-paren-mode t))
 
      (use-package rainbow-delimiters
        :hook
@@ -390,15 +444,15 @@
         ((prog-mode text-mode) . spell-fu-mode))
     #+end_src
 ** Company
-   Company:
    #+begin_src elisp
      (use-package company
        :config
        (setq company-begin-commands '(self-insert-command)
              company-idle-delay 0.1
-             company-show-numbers t
+             company-show-quick-access t
              company-tooltip-align-annotations t)
-       :hook (after-init . global-company-mode))
+       :hook
+       (after-init . global-company-mode))
    #+end_src
 ** TODO Smartparens
    #+begin_src elisp
@@ -417,7 +471,7 @@
              ("C-M-<backspace>" . sp-splice-sexp-killing-backward)
              ("C-S-<backspace>" . sp-splice-sexp-killing-around)
              ("C-]" . sp-select-next-thing-exchange))
-       :config
+       :init
        (setq sp-escape-quotes-after-insert nil)
        ;; Stop pairing single quotes in elisp
        (sp-local-pair 'emacs-lisp-mode "'" nil :actions nil)
@@ -485,6 +539,7 @@
 *** LSP
     #+begin_src elisp
       (use-package lsp-mode
+        :disabled
         :defer t
         :commands lsp
         :config
@@ -501,6 +556,7 @@
 *** TODO LSP ui
     #+begin_src elisp
       (use-package lsp-ui
+        :disabled
         :after lsp-mode
         :commands lsp-ui-mode
         :bind
@@ -614,36 +670,6 @@
      (use-package docker :defer t)
      (use-package dockerfile-mode :defer t)
    #+end_src
-
-
-* TODO Keybinding
-  The most frequent keybindings are structured in a mnemonic way for
-  me. ~C-c~ is the "leader", then a letter that identify the scope:
-  ~c~ for generic functions, ~b~ for buffer, ~d~ for directories, ~f~
-  for files, ~p~ for projects, ~m~ for the active major-modes and so
-  on. There can be exceptions (like ~C-z~ for undo).
-
-** Use bind-key
-   Explicit require =bind-key=
-   #+begin_src elisp
-     (use-package bind-key
-       :bind ("C-h B" . describe-personal-keybindings))
-   #+end_src
-** Mostly global keybindings.
-*** Adjust font size like web browsers
-   #+begin_src elisp
-     (bind-key "C-c b +" 'text-scale-increase)
-     (bind-key "C-c b -" 'text-scale-decrease)
-   #+end_src
-*** Move up/down paragraph
-    #+begin_src elisp
-      (bind-key "M-n" 'forward-paragraph)
-      (bind-key "M-p" 'backward-paragraph)
-    #+end_src
-*** Kill current buffer
-    #+begin_src elisp
-      (bind-key "C-c b k" 'kill-current-buffer)
-    #+end_src
 
 
 * Productivity
