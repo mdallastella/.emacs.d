@@ -51,8 +51,12 @@
 ** Auto Revert
    Automatically reload changes on a file if needed.
    #+begin_src elisp
-     (setq global-auto-revert-non-file-buffers t)
-     (global-auto-revert-mode t)
+     (use-package autorevert
+       :ensure nil
+       :config
+       (setq global-auto-revert-non-file-buffers t)
+       :init
+       (global-auto-revert-mode t))
    #+end_src
 ** Uniquify buffer names
    Meaningful names for buffers with the same name.
