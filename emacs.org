@@ -133,10 +133,21 @@
        (general-create-definer my/leader-key-def
          :keymaps '(normal insert visual emacs)
          :prefix "SPC"
-         :global-prefix "C-SPC")
+         :global-prefix "M-SPC")
 
         (general-create-definer my/ctrl-c-keys
          :prefix "C-c"))
+
+     (my/leader-key-def
+       "SPC" '(counsel-M-x :wk "M-x")
+       "b" '(:ignore t :wk "Buffers")
+       "b b" #'counsel-buffer-or-recentf
+       "b f" #'counsel-find-file
+       "b s" #'evil-save
+       "b k" #'kill-this-buffer
+       "p" '(:keymap projectile-command-map :package projectile :wk "Projects")
+       "x" '(:keymap perspective-map :package perspective :wk "Workspaces")
+       "g" 'magit-status)
    #+end_src
 
 
