@@ -11,7 +11,7 @@
 ;;; Code:
 
 ;; Increase the garbage collection threshold to 500 MB to ease startup
-(setq gc-cons-threshold (* 500 1024 1024))
+(setq gc-cons-threshold most-positive-fixnum)
 
 ;; List package archives and initialize them
 (require 'package)
@@ -26,13 +26,13 @@
 
 (when (boundp 'package-pinned-packages)
   (setq package-pinned-packages
-    `((org			. "org")
+    `((org . "org")
       (org-super-agenda . "melpa"))))
 
 (setq package-archive-priorities
-      '(("gnu"          . 100)
-    ("org"          . 90)
-    ("melpa"        . 80)))
+      '(("gnu"   . 100)
+        ("org"   . 90)
+        ("melpa" . 80)))
 
 (unless (bound-and-true-p package--initialized)
   (setq package-enable-at-startup nil)          ; To prevent initializing twice
@@ -77,6 +77,14 @@
         `((".*" . ,(no-littering-expand-var-file-name "backup/")))
         auto-save-file-name-transforms
         `((".*" ,(no-littering-expand-var-file-name "auto-save/") t))))
+
+;; GCMH - the Garbage Collector Magic Hack
+(use-package gcmh
+  :custom
+  (gcmh-idle-delay 1000)
+  (gcmh-high-cons-threshold (* 16 1024 1024)) ;; 16 MB
+  :hook
+  (after-init . gcmh-mode))
 
 ;; My secrets
 (let ((secret.el (expand-file-name ".secrets/.secret.el.gpg" user-emacs-directory)))
