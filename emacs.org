@@ -786,13 +786,8 @@
 
 * TODO Useful packages to look at
 
-- [[https://github.com/quelpa/quelpa][Quelpa]]: Build and install your Emacs Lisp packages on-the-fly and
-  directly from source.
 - [[https://github.com/purcell/page-break-lines][page-break-lines.el]]: provides a global mode which displays ugly form
   feed characters as tidy horizontal rules.
-- [[https://github.com/abo-abo/hydra][Hydra]]: This is a package for GNU Emacs that can be used to tie
-  related commands into a family of short bindings with a common
-  prefix - a Hydra.
 
 
 * BEERWARE LICENSE
