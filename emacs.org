@@ -163,16 +163,17 @@
      (set-frame-font "PragmataPro Mono Liga 12")
    #+end_src
 ** Theme
-   [[https://github.com/bbatsov/solarized-emacs][Solarized Dark]] theme
+   [[https://github.com/hlissner/emacs-doom-themes][Solarized theme by emacs-doom-themes]]
    #+begin_src elisp
-     (use-package solarized-theme
+     (use-package doom-themes
        :config
-       (setq solarized-use-less-bold t
-             solarized-use-more-italic t
-             solarized-use-variable-pitch nil
-             solarized-scale-org-headlines nil
-             x-underline-at-descent-line t)
-       (load-theme 'solarized-dark t))
+       (load-theme 'doom-solarized-dark t)
+       (doom-themes-visual-bell-config)
+       (doom-themes-org-config)
+       (custom-set-faces
+        `(org-block ((t (:background nil))))
+        `(org-block-begin-line ((t (:background nil))))
+        `(org-block-end-line ((t (:background nil))))))
    #+end_src
 ** Modeline
    Modeline from [[https://github.com/seagle0128/doom-modeline][Doom]]
