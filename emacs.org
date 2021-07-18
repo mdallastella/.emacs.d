@@ -620,8 +620,6 @@
             cider-invert-insert-eval-p t
             cider-save-file-on-load t
             cider-repl-pop-to-buffer-on-connect 'display-only
-            cider-repl-wrap-history t
-            cider-repl-history-size 1000
             cider-repl-history-file (locate-user-emacs-file "cider-repl-history")
             cider-repl-display-help-banner nil))
     #+end_src
