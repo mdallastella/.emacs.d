@@ -91,16 +91,64 @@
    #+end_src
 
 
-* TODO Keybinding
+* Keybinding
   The most frequent keybindings are structured in a mnemonic way for
   me. On evil-mode, ~SPC~ is the "leader", then a letter that identify
   the scope: ~c~ for generic functions, ~b~ for buffer, ~d~ for directories,
   ~f~ for files, ~p~ for projects, ~m~ for the active major-modes and so
   on.
+** general
+   #+begin_src elisp
+     (use-package general
+       :demand t
+       :config
+       (general-evil-setup t)
+       (general-create-definer global-leader
+         :keymaps '(normal insert visual emacs)
+         :prefix "SPC"
+         :prefix-map 'global-leader-map
+         :non-normal-prefix "M-SPC")
+       (global-leader
+         ;; M-x
+         "SPC" 'counsel-M-x
+         ;; Buffers
+         "bb" 'counsel-buffer-or-recentf
+         "bB" 'counsel-ibuffer
+         "bw" 'save-buffer
+         "bk" 'kill-this-buffer
+         "bK" 'kill-buffer
+         ;; Files
+         "ff" 'counsel-find-file
+         "fd" 'dired
+         ;; Windows
+         "wo" 'other-window
+         "wv" 'split-window-vertically
+         "w-" 'split-window-horizontally
+         "w1" 'delete-other-windows
+         ;; Quit
+         "qq" 'save-buffers-kill-emacs))
+   #+end_src
+
+** which-key
+   [[https://github.com/justbur/emacs-which-key][Which-key]] – Emacs package that displays available keybindings in popup.
+   #+begin_src elisp
+     (use-package which-key
+       :diminish
+       :init
+       (setq which-key-idle-delay 0.3
+             which-key-enable-extended-define-key t)
+       :config
+       (which-key-mode t))
+   #+end_src
 ** evil-mode
    I like modal editing.
    #+begin_src elisp
      (use-package evil
+       :defer .1
+       :general
+       (mds-leader-map
+        "wv" 'evil-window-vsplit
+        "wH" 'evil-window-split)
        :init
        (setq evil-want-integration t
              evil-want-keybinding nil
@@ -124,30 +172,13 @@
        :config
        (evil-collection-init))
    #+end_src
-** general
+** evil-goggles
    #+begin_src elisp
-     (use-package general
+     (use-package evil-goggles
+       :ensure t
        :config
-       (general-evil-setup t)
-
-       (general-create-definer my/leader-key-def
-         :keymaps '(normal insert visual emacs)
-         :prefix "SPC"
-         :global-prefix "M-SPC")
-
-        (general-create-definer my/ctrl-c-keys
-         :prefix "C-c"))
-
-     (my/leader-key-def
-       "SPC" '(counsel-M-x :wk "M-x")
-       "b" '(:ignore t :wk "Buffers")
-       "b b" #'counsel-buffer-or-recentf
-       "b f" #'counsel-find-file
-       "b s" #'evil-save
-       "b k" #'kill-this-buffer
-       "p" '(:keymap projectile-command-map :package projectile :wk "Projects")
-       "x" '(:keymap perspective-map :package perspective :wk "Workspaces")
-       "g" 'magit-status)
+       (evil-goggles-mode)
+       (evil-goggles-use-diff-faces))
    #+end_src
 
 
@@ -235,28 +266,6 @@
              highlight-indent-guides-responsive 'top
              highlight-indent-guides-delay 0))
    #+end_src
-** Which-key
-   [[https://github.com/justbur/emacs-which-key][Which-key]] – Emacs package that displays available keybindings in popup.
-   #+begin_src elisp
-     (use-package which-key
-       :init
-       (which-key-mode)
-       :config
-       (setq which-key-idle-delay 1
-             which-key-sort-order 'which-key-prefix-then-key-order))
-   #+end_src
-** Highlight symbols
-   [[https://github.com/wolray/symbol-overlay][symbol-overlay.el]] - Highlight symbols with overlays while providing a keymap
-   for various operations about highlighted symbols.
-   #+begin_src elisp
-     (use-package symbol-overlay
-       :bind
-       (:map symbol-overlay-mode-map
-             ("M-n" . symbol-overlay-jump-next)
-             ("M-p" . symbol-overlay-jump-prev))
-       :hook
-       ((prog-mode html-mode css-mode) . symbol-overlay-mode))
-   #+end_src
 ** Prettify symbols
    #+begin_src elisp
      (global-prettify-symbols-mode t)
@@ -290,7 +299,7 @@
    #+begin_src elisp
      (delete-selection-mode t)
    #+end_src
-** TODO Deal with whitespaces
+** Deal with whitespaces
    #+begin_src elisp
      (use-package whitespace
        :ensure nil
@@ -303,14 +312,19 @@
    Direnv integration with Emacs
    #+begin_src elisp
      (use-package direnv
+       :general
+       (global-leader-map
+        "uda" 'direnv-allow)
        :config
        (direnv-mode))
    #+end_src
-** TODO Avy zap
+** Avy zap
    Zap to char using avy.
    #+begin_src elisp
      (use-package avy-zap
-       :bind ("M-z" . avy-zap-to-char-dwim))
+       :general
+       (global-leader-map
+        "uz" 'avy-zap-to-char-dwim))
    #+end_src
 ** TODO Multiple cursors
    [[https://github.com/magnars/multiple-cursors.el][Multiple cursors for Emacs]]
@@ -321,21 +335,10 @@
                ("C-c m a" . mc/mark-all-like-this)
                ("C-c m >" . mc/edit-lines)))
    #+end_src
-** Easykill
-   [[https://github.com/leoliu/easy-kill][Easykill]] - Better kill text.
-   #+begin_src elisp
-     (use-package easy-kill
-       :bind (([remap kill-ring-save] . easy-kill)
-              ([remap mark-sexp]      . easy-mark)))
-   #+end_src
-
 ** undo-fu
    [[https://gitlab.com/ideasman42/emacs-undo-fu][Undo Fu]] - Simple, stable undo with redo for emacs.
    #+begin_src elisp
-     (use-package undo-fu
-       :bind*
-       (("C-c z" . undo-fu-only-undo)
-        ("C-c Z" . undo-fu-only-redo)))
+     (use-package undo-fu)
    #+end_src
 ** wgrep
    [[https://github.com/mhayashi1120/Emacs-wgrep][wgrep.el]] - allows you to edit a grep buffer and apply those changes
@@ -346,52 +349,45 @@
 
 
 * Tools
-** TODO Paradox
+** Paradox
    [[https://github.com/Malabarba/paradox][Paradox]]: Project for modernizing Emacs' Package Menu.
    #+begin_src elisp
      (use-package paradox
        :config
        (setq paradox-github-token paradox-gh-token)
-       :bind*
-       (("C-c c p" . paradox-list-packages)
-        ("C-c c P" . paradox-upgrade-packages))
+       :general
+       (global-leader-map
+        "up" 'paradox-list-packages
+        "uP" 'paradox-upgrade-packages)
        :init
        (paradox-enable))
    #+end_src
-** TODO Avy
+** Avy
    [[https://github.com/abo-abo/avy][Avy]] is a GNU Emacs package for jumping to visible text using a
    char-based decision tree.
    #+begin_src elisp
      (use-package avy
        :defer t
        :bind
-       (("C-c b c" . avy-goto-char-timer)
-        ("C-c b l" . avy-goto-line))
+       ((:map evil-motion-state-map
+             ("g o" . avy-goto-char-timer)
+             ("g l" . avy-goto-line)))
        :config
        (setq avy-timeout-seconds 0.3
              avy-style 'pre))
    #+end_src
-** TODO Crux
+** Crux
    A [[https://github.com/bbatsov/crux][Collection of Ridiculously Useful eXtensions for Emacs]]. Crux
    bundles many useful interactive commands to enhance your overall
    Emacs experience.
    #+begin_src elisp
      (use-package crux
-       :bind
-       (("C-a" . crux-move-beginning-of-line)
-        ("C-c b K" . crux-kill-other-buffers)
-        ("C-k" . crux-smart-kill-line)
-        ("C-c b C-s" . crux-sudo-edit)
-        ("C-c c o" . crux-smart-open-line-above)
-        ("C-c c O" . crux-smart-open-line)
-        ("C-c f r" . crux-rename-file-and-buffer))
-       :config
-       (crux-with-region-or-buffer indent-region)
-       (crux-with-region-or-buffer untabify)
-       (crux-with-region-or-point-to-eol kill-ring-save)
-       (defalias 'rename-file-and-buffer #'crux-rename-file-and-buffer))
+       :general
+       (global-leader-map
+        "uU" 'crux-sudo-edit
+        "fr" 'crux-rename-file-and-buffer))
    #+end_src
-** TODO Ivy, Amx, Counsel, Swiper
+** Ivy, Amx, Counsel, Swiper
    [[https://github.com/abo-abo/swiper][Ivy]] is a generic completion mechanism for Emacs. While it operates
    similarly to other completion schemes such as icomplete-mode, Ivy
    aims to be more efficient, smaller, simpler, and smoother to use
@@ -404,14 +400,13 @@
        (use-package counsel :diminish :config (counsel-mode t))
        (use-package swiper :defer t)
        (ivy-mode t)
+       :general
+       (global-leader-map
+        "bs" 'counsel-grep-or-swiper
+        "bS" 'swiper-thing-at-point
+        "fg" 'counsel-rg)
        :bind
-       (("C-s" . counsel-grep-or-swiper)
-        ("C-M-s" . swiper-thing-at-point)
-        ("C-c p s" . counsel-rg)
-        ("C-c b b" . counsel-buffer-or-recentf)
-        ("C-c b B" . counsel-ibuffer)
-        ("C-c f f" . counsel-find-file)
-        (:map ivy-minibuffer-map
+       ((:map ivy-minibuffer-map
               ("C-r" . ivy-previous-line-or-history)
               ("M-RET" . ivy-immediate-done)))
        :custom
@@ -488,6 +483,11 @@
    like Awesome and XMonad, and Spaces on the Mac.
    #+begin_src elisp
      (use-package perspective
+       :general
+       (global-leader-map
+        "xx" 'persp-switch
+        "xr" 'persp-rename
+        "xk" 'persp-kill)
        :config
        (persp-mode t)
        (setq persp-state-default-file (no-littering-expand-etc-file-name "default-persp"))
@@ -519,9 +519,9 @@
    #+begin_src elisp
      (use-package projectile
        :ensure t
-       :bind
-       (:map projectile-mode-map
-             ("C-c p" . projectile-command-map))
+       :general
+       (global-leader-map
+        "p" '(:keymap projectile-command-map :package projectile :wk "Projectile"))
        :init
        (setq projectile-find-dir-includes-top-level t
              projectile-switch-project-action #'projectile-find-file
@@ -530,20 +530,19 @@
        (projectile-mode t))
    #+end_src
 ** Git
-*** TODO Magit
+*** Magit
     [[https://github.com/magit/magit][Magit]] - A Git porcelain inside Emacs.
    #+begin_src elisp
      (use-package magit
-       :bind
-       (("C-c v c" . magit-clone)
-        ("C-c v C" . magit-checkout)
-        ("C-c v d" . magit-dispatch)
-        ("C-c v g" . magit-blame)
-        ("C-c v l" . magit-log-buffer-file)
-        ("C-c v p" . magit-pull)
-        ("C-c v v" . magit-status)
-        ("C-c v f" . magit-fetch-all)
-        ("C-c v R" . vc-refresh-state))
+       :general
+       (global-leader-map
+        "gg" 'magit-status
+        "gf" 'magit-fetch
+        "gp" 'magit-pull
+        "gb" 'magit-branch
+        "gB" 'magit-blame
+        "gr" 'vc-refresh-state
+        "gl" 'magit-log)
        :config
        (setq magit-save-repository-buffers 'dontask
              magit-refs-show-commit-count 'all))
@@ -691,14 +690,13 @@
 
 * Productivity
 ** org-mode
-*** TODO org settings
+*** org settings
     #+begin_src elisp
       (use-package org
-        :ensure t
-        :bind*
-        (("C-c o t" . 'org-capture)
-         ("C-c o a" . 'org-agenda)
-         ("C-c o r" . 'org-refile))
+        :general
+        (global-leader-map
+         "ot" 'org-capture
+         "oa" 'org-agenda)
         :custom-face
         (org-block-begin-line ((t (:underline nil))))
         (org-block-end-line ((t (:overline nil))))
@@ -733,17 +731,18 @@
         :bind
         ("C-c o i" . org-cliplink))
     #+end_src
-*** TODO org-mru-clock
+*** org-mru-clock
     [[https://github.com/unhammer/org-mru-clock][org-mru-clock]] - Pre-fill your clock history with clocks from your agenda
     files (and other open org files) so you can clock in to your most recent
     clocks regardless of whether you just started Emacs or have had it running
     for decades.
     #+begin_src elisp
       (use-package org-mru-clock
-        :bind*
-        (("C-c o i" . org-mru-clock-in)
-         ("C-c o j" . org-mru-clock-select-recent-task)
-         ("C-c o o" . org-clock-out))
+        :general
+        (global-leader-map
+         "oci" 'org-mru-clock-in
+         "ocr" 'org-mru-clock-select-recent-task
+         "oco" 'org-clock-out)
         :init
         (setq org-mru-clock-how-many 25
               org-mru-clock-files #'org-agenda-files))
@@ -760,16 +759,16 @@
       (use-package yankpad
         :ensure t
         :after yasnippet
+        :general
+        (global-leader-map
+         "yc" 'yankpad-set-category
+         "ye" 'yankpad-edit
+         "yi" 'yankpad-insert
+         "ym" 'yankpad-map
+         "yr" 'yankpad-reload
+         "yx" 'yankpad-expand)
         :init
-        (setq yankpad-file "~/org/yankpad.org")
-        (bind-keys :prefix-map yank-map
-                   :prefix "C-c y"
-                   ("c" . yankpad-set-category)
-                   ("e" . yankpad-edit)
-                   ("i" . yankpad-insert)
-                   ("m" . yankpad-map)
-                   ("r" . yankpad-reload)
-                   ("x" . yankpad-expand)))
+        (setq yankpad-file "~/org/yankpad.org"))
     #+END_SRC
 *** capture templates
     #+begin_src elisp
