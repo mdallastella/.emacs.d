@@ -21,10 +21,6 @@
        :ensure t
        :config
        (exec-path-from-shell-initialize))
-
-     (use-package keychain-environment
-       :init
-       (keychain-refresh-environment))
    #+end_src
 ** Save history
    #+begin_src elisp
