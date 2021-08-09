@@ -393,14 +393,39 @@
               ispell-local-dictionary "en")
         (unless ispell-program-name
           (warn "No spell checker available. Please install hunspell.")))
-
     #+end_src
-*** [[https://gitlab.com/ideasman42/emacs-spell-fu][spell-fu]]: Fast highlighting of misspelled words.
+*** flyspell
     #+begin_src elisp
-      (use-package spell-fu
+      (defun flyspell-italian ()
+        (interactive)
+        (ispell-change-dictionary "italian")
+        (flyspell-buffer))
+
+      (defun flyspell-english ()
+        (interactive)
+        (ispell-change-dictionary "default")
+        (flyspell-buffer))
+
+      (use-package flyspell
+        :ensure nil
+        :general
+        (global-leader-map
+         "sd" 'flyspell-english
+         "si" 'flyspell-italian
+         "sb" 'flyspell-buffer
+         "sr" 'flyspell-region)
         :hook
-        ((prog-mode text-mode) . spell-fu-mode))
+        ((text-mode . flyspell-mode)
+         (prog-mode . flyspell-prog-mode)))
+
+      (use-package flyspell-correct
+        :after flyspell
+        :bind (:map flyspell-mode-map ("C-;" . flyspell-correct-wrapper)))
+
+      (use-package flyspell-correct-ivy
+        :after flyspell-correct)
     #+end_src
+
 ** Company
    #+begin_src elisp
      (use-package company
