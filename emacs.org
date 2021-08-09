@@ -98,25 +98,24 @@
      (use-package general
        :demand t
        :config
-       (general-evil-setup t)
        (general-create-definer global-leader
-         :keymaps '(normal insert visual emacs)
-         :prefix "SPC"
-         :prefix-map 'global-leader-map
-         :non-normal-prefix "M-SPC")
+         :prefix "C-c"
+         :prefix-map 'global-leader-map)
        (global-leader
          ;; M-x
          "SPC" 'counsel-M-x
-         ;; Buffers
+         ;; Buffers (b)
          "bb" 'counsel-buffer-or-recentf
-         "bB" 'counsel-ibuffer
+         "bl" 'counsel-ibuffer
          "bw" 'save-buffer
          "bk" 'kill-this-buffer
          "bK" 'kill-buffer
-         ;; Files
+         ;; Files (f)
          "ff" 'counsel-find-file
          "fd" 'dired
-         ;; Windows
+         ;; Utility (u)
+         "uD" 'package-delete
+         ;; Windows (w)
          "wo" 'other-window
          "wv" 'split-window-vertically
          "w-" 'split-window-horizontally
@@ -130,51 +129,8 @@
    #+begin_src elisp
      (use-package which-key
        :diminish
-       :init
-       (setq which-key-idle-delay 0.3
-             which-key-enable-extended-define-key t)
        :config
        (which-key-mode t))
-   #+end_src
-** evil-mode
-   I like modal editing.
-   #+begin_src elisp
-     (use-package evil
-       :defer .1
-       :general
-       (mds-leader-map
-        "wv" 'evil-window-vsplit
-        "wH" 'evil-window-split)
-       :init
-       (setq evil-want-integration t
-             evil-want-keybinding nil
-             evil-want-C-u-scroll t
-             evil-want-C-i-jump nil
-             evil-respect-visual-line-mode t
-             evil-search-module 'evil-search)
-       :config
-       (evil-mode)
-       (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
-       (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char-and-join)
-
-       ;; Use visual line motions even outside of visual-line-mode buffers
-       (evil-global-set-key 'motion "j" 'evil-next-visual-line)
-       (evil-global-set-key 'motion "k" 'evil-previous-visual-line))
-   #+end_src
-** evil-collection
-   #+begin_src elisp
-     (use-package evil-collection
-       :after evil
-       :config
-       (evil-collection-init))
-   #+end_src
-** evil-goggles
-   #+begin_src elisp
-     (use-package evil-goggles
-       :ensure t
-       :config
-       (evil-goggles-mode)
-       (evil-goggles-use-diff-faces))
    #+end_src
 
 
@@ -322,14 +278,16 @@
        (global-leader-map
         "uz" 'avy-zap-to-char-dwim))
    #+end_src
-** TODO Multiple cursors
+** Multiple cursors
    [[https://github.com/magnars/multiple-cursors.el][Multiple cursors for Emacs]]
    #+begin_src elisp
      (use-package multiple-cursors
-       :bind* (("C-c m n" . mc/mark-next-like-this)
-               ("C-c m p" . mc/mark-previous-like-this)
-               ("C-c m a" . mc/mark-all-like-this)
-               ("C-c m >" . mc/edit-lines)))
+       :general
+       (global-leader-map
+        "mn" 'mc/mark-next-like-this
+        "mp" 'mc/mark-previous-like-this
+        "ma" 'mc/mark-all-like-this
+        "m>" 'mc/edit-lines))
    #+end_src
 ** undo-fu
    [[https://gitlab.com/ideasman42/emacs-undo-fu][Undo Fu]] - Simple, stable undo with redo for emacs.
@@ -364,10 +322,10 @@
    #+begin_src elisp
      (use-package avy
        :defer t
-       :bind
-       ((:map evil-motion-state-map
-             ("g o" . avy-goto-char-timer)
-             ("g l" . avy-goto-line)))
+       :general
+       (global-leader-map
+        "j" 'avy-goto-char-timer
+        "J" 'avy-goto-line)
        :config
        (setq avy-timeout-seconds 0.3
              avy-style 'pre))
@@ -381,7 +339,12 @@
        :general
        (global-leader-map
         "uU" 'crux-sudo-edit
-        "fr" 'crux-rename-file-and-buffer))
+        "fr" 'crux-rename-file-and-buffer)
+       :config
+       (global-set-key [remap move-beginning-of-line] #'crux-move-beginning-of-line)
+       (global-set-key [remap kill-whole-line] #'crux-smart-kill-line)
+       (global-set-key [(shift return)] #'crux-smart-open-line)
+       (global-set-key [(ctrl shift return)] #'crux-smart-open-line-above))
    #+end_src
 ** Ivy, Amx, Counsel, Swiper
    [[https://github.com/abo-abo/swiper][Ivy]] is a generic completion mechanism for Emacs. While it operates
@@ -416,7 +379,7 @@
      (use-package ivy-rich
        :after ivy
        :config
-       (setcdr (assq t ivy-format-functions-alist) #'ivy-format-function-line)
+       (setcdr (assq t ivy-format-functions-alist) 'ivy-format-function-line)
        (ivy-rich-mode t))
    #+end_src
 ** Spell checking
@@ -691,8 +654,14 @@
       (use-package org
         :general
         (global-leader-map
-         "ot" 'org-capture
-         "oa" 'org-agenda)
+         "oo" 'counsel-org-capture
+         "oa" 'org-agenda
+         "ot" 'counsel-org-tag
+         "o'" 'org-edit-special
+         "og" 'counsel-org-goto
+         "os" 'org-todo
+         "oS" 'org-schedule
+         "oD" 'org-deadline)
         :custom-face
         (org-block-begin-line ((t (:underline nil))))
         (org-block-end-line ((t (:overline nil))))
@@ -702,15 +671,48 @@
               org-todo-keywords '((sequence "TODO" "NEXT" "HOLD" "|" "DONE" "CANCEL"))
               org-log-done t
               org-archive-location "~/org/archive.org::datatree/"
-              org-archive-mark-done t
               org-hide-emphasis-markers t
               org-ellipsis " ↴"
               org-src-fontify-natively t
               org-src-window-setup 'current-window
               org-fontify-quote-and-verse-blocks t
-              org-confirm-babel-evaluate nil
-              org-refile-targets '((org-agenda-files :maxlevel . 1))
+              org-confirm-babel-evaluate nil))
+
+      (use-package org-refile
+        :ensure nil
+        :config
+        (setq org-refile-targets '((org-agenda-files :maxlevel . 1))
               org-refile-allow-creating-parent-nodes 'confirm))
+    #+end_src
+*** ox-latext
+    #+begin_src elisp
+      (use-package ox-latex
+        :ensure nil
+        :config
+        (setq org-latex-listings 'minted
+              org-latex-packages-alist '(("" "minted"))
+              org-latex-pdf-process
+              '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+                "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+                "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f")
+              org-latex-minted-options '(("breaklines" "true")
+                                         ("breakanywhere" "true")))
+        (add-to-list 'org-latex-classes
+                     '("article"
+                       "\\documentclass{article}"
+                       ("\\section{%s}" . "\\section*{%s}")
+                       ("\\subsection{%s}" . "\\subsection*{%s}")
+                       ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                       ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                       ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+        (add-to-list 'org-latex-classes
+                     '("koma-article"
+                       "\\documentclass{scrartcl}"
+                       ("\\section{%s}" . "\\section*{%s}")
+                       ("\\subsection{%s}" . "\\subsection*{%s}")
+                       ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                       ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                       ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
     #+end_src
 *** org-bullets
     Pretty bullets instead of asterisks.
