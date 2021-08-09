@@ -723,12 +723,6 @@
         :config
         (setq org-bullets-bullet-list '("◉" "○" "●" "►" "◇" "◎")))
     #+end_src
-*** org-cliplink
-    #+begin_src elisp
-      (use-package org-cliplink
-        :bind
-        ("C-c o i" . org-cliplink))
-    #+end_src
 *** org-mru-clock
     [[https://github.com/unhammer/org-mru-clock][org-mru-clock]] - Pre-fill your clock history with clocks from your agenda
     files (and other open org files) so you can clock in to your most recent
@@ -744,6 +738,27 @@
         :init
         (setq org-mru-clock-how-many 25
               org-mru-clock-files #'org-agenda-files))
+    #+end_src
+*** org-tree-slide
+    Presentation tool
+    #+begin_src elisp
+      (defun my/presentation-setup ()
+        (setq text-scale-mode-amount 3)
+        (org-display-inline-images)
+        (text-scale-mode 1))
+
+      (defun my/presentation-end ()
+        (text-scale-mode 0))
+
+      (use-package org-tree-slide
+        :hook
+        ((org-tree-slide-play . my/presentation-setup)
+         (org-tree-slide-stop . my/presentation-end))
+        :custom
+        (org-image-actual-width nil)
+        (org-tree-slide-activate-message "Welcome!")
+        (org-tree-slide-deactivate-message "Fin!")
+        (org-tree-slide-breadcrumbs " // "))
     #+end_src
 *** yankpad
     [[https://github.com/Kungsgeten/yankpad][GitHub - Kungsgeten/yankpad: Paste snippets from an org-mode file]]
