@@ -437,29 +437,16 @@
        :hook
        (after-init . global-company-mode))
    #+end_src
-** TODO Smartparens
+** Smartparens
    #+begin_src elisp
      (use-package smartparens
-       :hook
-       (prog-mode . smartparens-mode)
-       :bind
-       (:map smartparens-mode-map
-             ("C-M-f" . sp-forward-sexp)
-             ("C-M-b" . sp-backward-sexp)
-             ("C-M-a" . sp-backward-down-sexp)
-             ("C-M-e" . sp-up-sexp)
-             ("C-M-w" . sp-copy-sexp)
-             ("C-M-k" . sp-change-enclosing)
-             ("M-k" . sp-kill-sexp)
-             ("C-M-<backspace>" . sp-splice-sexp-killing-backward)
-             ("C-S-<backspace>" . sp-splice-sexp-killing-around)
-             ("C-]" . sp-select-next-thing-exchange))
-       :init
+       :config
        (setq sp-escape-quotes-after-insert nil)
        ;; Stop pairing single quotes in elisp
-       (sp-local-pair 'emacs-lisp-mode "'" nil :actions nil)
-       (sp-local-pair 'clojure-mode "'" nil :actions nil)
-       (sp-local-pair 'org-mode "[" nil :actions nil))
+       (sp-with-modes '(lisp-mode clojure-mode cider-repl-mode)
+         (sp-local-pair "'" nil))
+       :init
+       (smartparens-global-strict-mode t))
    #+end_src
 ** Perspective
    The [[https://github.com/nex3/perspective-el][Perspective]] package provides multiple named workspace (or
