@@ -300,6 +300,15 @@
    #+begin_src elisp
      (use-package wgrep)
    #+end_src
+** easy-kill
+   [[https://github.com/leoliu/easy-kill][easy-kill]]: Provide commands easy-kill and easy-mark to let users
+   kill or mark things easily.
+
+   #+begin_src elisp
+     (use-package easy-kill
+       :bind (([remap kill-ring-save] . easy-kill)
+              ([remap mark-sexp] . easy-mark)))
+   #+end_src
 
 
 * Tools
