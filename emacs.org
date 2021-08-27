@@ -480,7 +480,16 @@
        ([remap describe-command] . helpful-command)
        ([remap describe-key] . helpful-key))
    #+end_src
+** vterm
+   [[https://github.com/akermu/emacs-libvterm][vterm]] is fully-fledged terminal emulator inside GNU Emacs based on
+   libvterm.
 
+   #+begin_src elisp
+     (use-package vterm
+       :general
+       (:prefix leader-key
+                "ut" '(vterm :wk "Terminal")))
+   #+end_src
 
 * Programming
 ** Projectile
