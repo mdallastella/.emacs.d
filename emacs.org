@@ -63,7 +63,6 @@
        (setq uniquify-buffer-name-style 'post-forward-angle-brackets
              uniquify-separator "/"
              uniquify-ignore-buffers-re "^\\*"))
-
    #+end_src
 ** Recent files
    Save recent files
@@ -95,27 +94,33 @@
   on.
 ** general
    #+begin_src elisp
+     (setq leader-key "C-z")
+
      (use-package general
        :demand t
        :config
-       (general-create-definer global-leader
-         :prefix "C-c"
-         :prefix-map 'global-leader-map)
-       (global-leader
-         ;; M-x
-         "SPC" 'counsel-M-x
+       (general-define-key
+        :prefix leader-key
          ;; Buffers (b)
+         "b" '(:ignore t :wk "Buffers")
          "bb" 'counsel-buffer-or-recentf
          "bl" 'counsel-ibuffer
          "bw" 'save-buffer
          "bk" 'kill-this-buffer
          "bK" 'kill-buffer
          ;; Files (f)
+         "f" '(:ignore t :wk "Files")
          "ff" 'counsel-find-file
          "fd" 'dired
          ;; Utility (u)
+         "u" '(:ignore t :wk "Utility")
          "uD" 'package-delete
+         ;; Toggle (t)
+         "t" '(:ignore t :wk "Toggle")
+         "tp" 'smartparens-strict-mode
+         "ts" 'flyspell-mode
          ;; Windows (w)
+         "w" '(:ignore t :wk "Windows")
          "wo" 'other-window
          "wv" 'split-window-vertically
          "w-" 'split-window-horizontally
@@ -129,7 +134,15 @@
    #+begin_src elisp
      (use-package which-key
        :diminish
+       :init
+       (setq which-key-sort-order #'which-key-key-order-alpha
+             which-key-sort-uppercase-first nil
+             which-key-add-column-padding 1
+             which-key-max-display-columns nil
+             which-key-min-display-lines 6
+             which-key-side-window-slot -10)
        :config
+       (which-key-setup-side-window-bottom)
        (which-key-mode t))
    #+end_src
 
@@ -265,8 +278,9 @@
    #+begin_src elisp
      (use-package direnv
        :general
-       (global-leader-map
-        "uda" 'direnv-allow)
+       (:prefix leader-key
+                "ud" '(:ignore t :wk "Direnv")
+                "uda" '(direnv-allow :wk "Direnv allow"))
        :config
        (direnv-mode))
    #+end_src
@@ -275,19 +289,20 @@
    #+begin_src elisp
      (use-package avy-zap
        :general
-       (global-leader-map
-        "uz" 'avy-zap-to-char-dwim))
+       (:prefix leader-key
+                "uz" '(avy-zap-to-char-dwim :wk "Avy zap")))
    #+end_src
 ** Multiple cursors
    [[https://github.com/magnars/multiple-cursors.el][Multiple cursors for Emacs]]
    #+begin_src elisp
      (use-package multiple-cursors
        :general
-       (global-leader-map
-        "mn" 'mc/mark-next-like-this
-        "mp" 'mc/mark-previous-like-this
-        "ma" 'mc/mark-all-like-this
-        "m>" 'mc/edit-lines))
+       (:prefix leader-key
+                "m" '(:ignore t :which-key "Multiple cursors")
+                "mn" 'mc/mark-next-like-this
+                "mp" 'mc/mark-previous-like-this
+                "ma" 'mc/mark-all-like-this
+                "m>" 'mc/edit-lines))
    #+end_src
 ** undo-fu
    [[https://gitlab.com/ideasman42/emacs-undo-fu][Undo Fu]] - Simple, stable undo with redo for emacs.
@@ -319,9 +334,9 @@
        :config
        (setq paradox-github-token paradox-gh-token)
        :general
-       (global-leader-map
-        "up" 'paradox-list-packages
-        "uP" 'paradox-upgrade-packages)
+       (:prefix leader-key
+                "up" '(paradox-list-packages :wk "Packages list")
+                "uP" '(paradox-upgrade-packages :wk "Packages update"))
        :init
        (paradox-enable))
    #+end_src
@@ -332,9 +347,9 @@
      (use-package avy
        :defer t
        :general
-       (global-leader-map
-        "j" 'avy-goto-char-timer
-        "J" 'avy-goto-line)
+       (:prefix leader-key
+                "j" '(avy-goto-char-timer :wk "Goto char")
+                "J" '(avy-goto-line :wk "Goto line"))
        :config
        (setq avy-timeout-seconds 0.3
              avy-style 'pre))
@@ -346,9 +361,9 @@
    #+begin_src elisp
      (use-package crux
        :general
-       (global-leader-map
-        "uU" 'crux-sudo-edit
-        "fr" 'crux-rename-file-and-buffer)
+       (:prefix leader-key
+                "uU" '(crux-sudo-edit :wk "Sudo edit")
+                "fr" '(crux-rename-file-and-buffer :wk "Rename file/buffer"))
        :config
        (global-set-key [remap move-beginning-of-line] #'crux-move-beginning-of-line)
        (global-set-key [remap kill-whole-line] #'crux-smart-kill-line)
@@ -369,10 +384,10 @@
        (use-package swiper :defer t)
        (ivy-mode t)
        :general
-       (global-leader-map
-        "bs" 'counsel-grep-or-swiper
-        "bS" 'swiper-thing-at-point
-        "fg" 'counsel-rg)
+       (:prefix leader-key
+                "bs" '(counsel-grep-or-swiper :wk "Search/Grep")
+                "bS" '(swiper-thing-at-point :wk "Search thing at poing")
+                "fg" '(counsel-rg :wk "Ripgrep"))
        :bind
        ((:map ivy-minibuffer-map
               ("C-r" . ivy-previous-line-or-history)
@@ -418,18 +433,21 @@
       (use-package flyspell
         :ensure nil
         :general
-        (global-leader-map
-         "sd" 'flyspell-english
-         "si" 'flyspell-italian
-         "sb" 'flyspell-buffer
-         "sr" 'flyspell-region)
+        (:prefix leader-key
+                 "s" '(:ignore t :wk "Flyspell")
+                 "sd" '(flyspell-english :wk "English dictionary")
+                 "si" '(flyspell-italian :wk "Italian dictionary")
+                 "sb" '(flyspell-buffer :wk "Check buffer")
+                 "sr" '(flyspell-region :wk "Check region"))
         :hook
         ((text-mode . flyspell-mode)
          (prog-mode . flyspell-prog-mode)))
 
       (use-package flyspell-correct
         :after flyspell
-        :bind (:map flyspell-mode-map ("C-;" . flyspell-correct-wrapper)))
+        :general
+        (:prefix leader-key
+                 "ss" '(flyspell-correct-wrapper :wk "Correct word")))
 
       (use-package flyspell-correct-ivy
         :after flyspell-correct)
@@ -450,11 +468,7 @@
    #+begin_src elisp
      (use-package smartparens
        :config
-       (setq sp-escape-quotes-after-insert nil)
-       ;; Stop pairing single quotes in elisp
-       (sp-with-modes '(lisp-mode clojure-mode cider-repl-mode)
-         (sp-local-pair "'" nil))
-       :init
+       (use-package smartparens-config :ensure smartparens)
        (smartparens-global-strict-mode t))
    #+end_src
 ** Perspective
@@ -464,10 +478,11 @@
    #+begin_src elisp
      (use-package perspective
        :general
-       (global-leader-map
-        "xx" 'persp-switch
-        "xr" 'persp-rename
-        "xk" 'persp-kill)
+       (:prefix leader-key
+        "x" '(:ignore t :wk "Workspaces")
+        "xx" '(persp-switch :wk "Switch workspace")
+        "xr" '(persp-rename :wk "Rename workspace")
+        "xk" '(persp-kill :wk "Kill workspace"))
        :config
        (persp-mode t)
        (setq persp-state-default-file (no-littering-expand-etc-file-name "default-persp"))
@@ -509,8 +524,8 @@
      (use-package projectile
        :ensure t
        :general
-       (global-leader-map
-        "p" '(:keymap projectile-command-map :package projectile :wk "Projectile"))
+       (:prefix leader-key
+                "p" '(:keymap projectile-command-map :package projectile :wk "Projectile"))
        :init
        (setq projectile-find-dir-includes-top-level t
              projectile-switch-project-action #'projectile-find-file
@@ -524,14 +539,15 @@
    #+begin_src elisp
      (use-package magit
        :general
-       (global-leader-map
-        "gg" 'magit-status
-        "gf" 'magit-fetch
-        "gp" 'magit-pull
-        "gb" 'magit-branch
-        "gB" 'magit-blame
-        "gr" 'vc-refresh-state
-        "gl" 'magit-log)
+       (:prefix leader-key
+                "g" '(:ignore t :wk "Magit")
+                "gg" 'magit-status
+                "gf" 'magit-fetch
+                "gp" 'magit-pull
+                "gb" 'magit-branch
+                "gB" 'magit-blame
+                "gr" 'vc-refresh-state
+                "gl" 'magit-log)
        :config
        (setq magit-save-repository-buffers 'dontask
              magit-refs-show-commit-count 'all))
@@ -683,15 +699,16 @@
     #+begin_src elisp
       (use-package org
         :general
-        (global-leader-map
-         "oo" 'counsel-org-capture
-         "oa" 'org-agenda
-         "ot" 'counsel-org-tag
-         "o'" 'org-edit-special
-         "og" 'counsel-org-goto
-         "os" 'org-todo
-         "oS" 'org-schedule
-         "oD" 'org-deadline)
+        (:prefix leader-key
+                 "o" '(:ignore t :wk "Org-mode")
+                 "oo" '(counsel-org-capture :wk "Capture")
+                 "Oa" '(org-agenda :wk "Agenda")
+                 "o'" '(org-edit-special :wk "Edit special")
+                 "og" '(counsel-org-goto :wk "Goto")
+                 "os" '(org-todo :wk "Status")
+                 "ot" '(counsel-org-tag "Tag")
+                 "oS" '(org-schedule :wk "Schedule")
+                 "oD" '(org-deadline :wk "Deadline"))
         :custom-face
         (org-block-begin-line ((t (:underline nil))))
         (org-block-end-line ((t (:overline nil))))
@@ -703,10 +720,7 @@
               org-archive-location "~/org/archive.org::datatree/"
               org-hide-emphasis-markers t
               org-ellipsis " ↴"
-              org-src-fontify-natively t
-              org-src-window-setup 'current-window
-              org-fontify-quote-and-verse-blocks t
-              org-confirm-babel-evaluate nil))
+              org-fontify-quote-and-verse-blocks t))
 
       (use-package org-refile
         :ensure nil
@@ -714,6 +728,31 @@
         (setq org-refile-targets '((org-agenda-files :maxlevel . 1))
               org-refile-allow-creating-parent-nodes 'confirm))
     #+end_src
+*** org-babel
+    Settings for literate programming.
+
+    #+begin_src elisp
+      (org-babel-do-load-languages
+            'org-babel-load-languages
+            '((emacs-lisp . t)
+              (clojure . t)))
+
+      (setq org-confirm-babel-evaluate nil
+            org-src-fontify-natively t
+            org-src-tab-acts-natively t
+            org-src-window-setup 'reorganize-frame)
+    #+end_src
+**** ob-clojure-literate
+     Setup scaffold for Clojure Literate Programming in Org-mode,
+     following [[https://kirang.in/post/setting-up-org-mode-to-run-clojure-code/][this]] guide.
+
+     #+begin_src elisp
+       (use-package ob-clojure
+         :ensure nil
+         :after '(org cider)
+         :config
+         (setq org-babel-clojure-backend 'cider))
+     #+end_src
 *** ox-latext
     #+begin_src elisp
       (use-package ox-latex
@@ -751,7 +790,8 @@
         :hook
         (org-mode . org-bullets-mode)
         :config
-        (setq org-bullets-bullet-list '("◉" "○" "●" "►" "◇" "◎")))
+        (setq org-bullets-bullet-list
+              '("" "" "" "" "")))
     #+end_src
 *** org-mru-clock
     [[https://github.com/unhammer/org-mru-clock][org-mru-clock]] - Pre-fill your clock history with clocks from your agenda
@@ -761,12 +801,13 @@
     #+begin_src elisp
       (use-package org-mru-clock
         :general
-        (global-leader-map
-         "oci" 'org-mru-clock-in
-         "ocr" 'org-mru-clock-select-recent-task
-         "oco" 'org-clock-out)
+        (:prefix leader-key
+                 "oc" '(:ignore t :wk "Clock")
+                 "oci" '(org-mru-clock-in :wk "Clock in")
+                 "ocr" '(org-mru-clock-select-recent-task :wk "Select task")
+                 "oco" '(org-clock-out :wk "Clock out"))
         :init
-        (setq org-mru-clock-how-many 25
+        (setq org-mru-clock-how-many 10
               org-mru-clock-files #'org-agenda-files))
     #+end_src
 *** org-tree-slide
@@ -803,13 +844,14 @@
         :ensure t
         :after yasnippet
         :general
-        (global-leader-map
-         "yc" 'yankpad-set-category
-         "ye" 'yankpad-edit
-         "yi" 'yankpad-insert
-         "ym" 'yankpad-map
-         "yr" 'yankpad-reload
-         "yx" 'yankpad-expand)
+        (:prefix leader-key
+                 "y" '(:ignore t :wk "Snippets")
+                 "yc" 'yankpad-set-category
+                 "ye" 'yankpad-edit
+                 "yi" 'yankpad-insert
+                 "ym" 'yankpad-map
+                 "yr" 'yankpad-reload
+                 "yx" 'yankpad-expand)
         :init
         (setq yankpad-file "~/org/yankpad.org"))
     #+END_SRC
