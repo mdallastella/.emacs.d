@@ -74,7 +74,7 @@
              recentf-max-menu-items 15))
    #+end_src
 ** Unbind Ctrl-z
-   I don't like to hide Emacs, and C-x u is too long.
+   I don't like to hide Emacs.
    #+begin_src elisp
      (global-unset-key (kbd "C-z"))
    #+end_src
@@ -83,6 +83,10 @@
    #+begin_src elisp
      (setq initial-major-mode 'emacs-lisp-mode
            initial-scratch-message ";; Happy coding!\n\n")
+   #+end_src
+** Delete moves to trash
+   #+begin_src elisp
+     (setq delete-by-moving-to-trash t)
    #+end_src
 
 
