@@ -467,8 +467,14 @@
 ** Smartparens
    #+begin_src elisp
      (use-package smartparens
+       :general
+       (:prefix leader-key
+                "(" '(sp-wrap-round :wk "Round wrap")
+                "[" '(sp-wrap-square :wk "Square wrap")
+                "{" '(sp-wrap-curly :wk "Curly wrap"))
        :config
        (use-package smartparens-config :ensure smartparens)
+       (sp-use-smartparens-bindings)
        (smartparens-global-strict-mode t))
    #+end_src
 ** Perspective
@@ -514,6 +520,7 @@
        (:prefix leader-key
                 "ut" '(vterm :wk "Terminal")))
    #+end_src
+
 
 * Programming
 ** Projectile
