@@ -519,6 +519,16 @@
                 "ut" '(my-vsplit-vterm :wk "Terminal other window")
                 "uT" '(vterm :wk "Terminal here")))
    #+end_src
+** Pinboard
+   [[https://github.com/davep/pinboard.el][pinboard.el]] - An Emacs client for Pinboard.
+   #+begin_src elisp
+     (use-package pinboard
+       :general
+       (:prefix leader-key
+                "ub" '(:ignore true :wk "Pinboard")
+                "ubb" '(pinboard :wk "Open")
+                "uba" '(pinboard-add :wk "Add link")))
+   #+end_src
 
 
 * Programming
