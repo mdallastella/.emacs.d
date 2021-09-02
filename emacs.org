@@ -519,10 +519,16 @@
    libvterm.
 
    #+begin_src elisp
+     (defun my-vsplit-vterm ()
+       (interactive)
+       (split-window-horizontally)
+       (vterm))
+
      (use-package vterm
        :general
        (:prefix leader-key
-                "ut" '(vterm :wk "Terminal")))
+                "ut" '(my-vsplit-vterm :wk "Terminal other window")
+                "uT" '(vterm :wk "Terminal here")))
    #+end_src
 
 
