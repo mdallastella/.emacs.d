@@ -224,17 +224,6 @@
    #+begin_src elisp
      (setq-default line-spacing 0.2)
    #+end_src
-** Highlight indent
-   [[https://github.com/DarthFennec/highlight-indent-guides][Highlight Indent Guides]]: highlights indentation levels.
-   #+begin_src elisp
-     (use-package highlight-indent-guides
-       :hook
-       (prog-mode . highlight-indent-guides-mode)
-       :config
-       (setq highlight-indent-guides-method 'bitmap
-             highlight-indent-guides-responsive 'top
-             highlight-indent-guides-delay 0))
-   #+end_src
 ** Prettify symbols
    #+begin_src elisp
      (global-prettify-symbols-mode t)
