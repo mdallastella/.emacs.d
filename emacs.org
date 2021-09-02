@@ -235,6 +235,17 @@
                    right-margin-width 4)
      (set-fringe-mode 10)
    #+end_src
+** Highlight the current line
+   #+begin_src elisp
+     (global-hl-line-mode)
+   #+end_src
+** Highlight uncommitted changes
+   Use the diff-hl package to highlight changed-and-uncommitted lines
+   when programming.
+   #+begin_src elisp
+     (use-package diff-hl
+       :hook (prog-mode . turn-on-diff-hl-mode))
+   #+end_src
 
 
 * Editing
