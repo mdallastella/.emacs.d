@@ -257,8 +257,7 @@
    #+begin_src elisp
      (setq-default indent-tabs-mode nil           ; Never use tabs
                    tab-always-indent 'complete    ; Indent or complete
-                   tab-width 4                    ; Show eventual tabs as 4 spaces
-                   evil-shift-width tab-width)    ; Same for < and > for evil-mode
+                   tab-width 2)                   ; Show eventual tabs as 4 spaces
    #+end_src
 ** Newline at the end of a file
    #+begin_src elisp
@@ -740,14 +739,17 @@
         (org-block-begin-line ((t (:underline nil))))
         (org-block-end-line ((t (:overline nil))))
         :config
-        (setq org-agenda-files (list "~/org/")
+        (setq org-startup-with-inline-images t
+              org-image-actual-width '(600)
+              org-agenda-files (list "~/org/")
               org-default-notes-file "inbox.org"
               org-todo-keywords '((sequence "TODO" "NEXT" "HOLD" "|" "DONE" "CANCEL"))
               org-log-done t
               org-archive-location "~/org/archive.org::datatree/"
               org-hide-emphasis-markers t
               org-ellipsis " ↴"
-              org-fontify-quote-and-verse-blocks t))
+              org-fontify-quote-and-verse-blocks t
+              org-src-tab-acts-natively t))
 
       (use-package org-refile
         :ensure nil
