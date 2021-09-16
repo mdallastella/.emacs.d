@@ -328,6 +328,41 @@
               ([remap mark-sexp] . easy-mark)))
    #+end_src
 
+** Parenthesis
+*** Electric Pair
+    [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Matching.html][Electric Pair]]: provides a way to easily insert matching
+    delimiters: parentheses, braces, brackets, etc.
+
+    #+begin_src elisp
+      (use-package elec-pair
+        :ensure nil
+        :hook
+        (prog-mode . (lambda ()
+                       (setq-local electric-pair-pairs
+                                   (append electric-pair-pairs '((?\{ . ?\}))))))
+        :config
+        (setq electric-pair-preserve-balance t
+              electric-pair-delete-adjacent-pairs t
+              electric-pair-skip-self nil)
+        :init
+        (electric-pair-mode))
+    #+end_src
+
+*** Puni
+    [[https://github.com/AmaiKinono/puni][Puni]]: soft deletion keeping the parentheses balanced.
+   #+begin_src elisp
+     ;; Use puni-mode globally and disable it for term-mode.
+     (use-package puni
+       :defer t
+       :bind*
+       (("C-<right>" . puni-slurp-forward)
+        ("C-<left>"  . puni-barf-forward)
+        ("C-<up>"    . puni-raise))
+       :init
+       (puni-global-mode)
+       (add-hook 'term-mode-hook #'puni-disable-puni-mode))
+   #+end_src
+
 
 * Tools
 ** Paradox
@@ -467,19 +502,7 @@
        :hook
        (after-init . global-company-mode))
    #+end_src
-** Smartparens
-   #+begin_src elisp
-     (use-package smartparens
-       :general
-       (:prefix leader-key
-                "(" '(sp-wrap-round :wk "Round wrap")
-                "[" '(sp-wrap-square :wk "Square wrap")
-                "{" '(sp-wrap-curly :wk "Curly wrap"))
-       :config
-       (use-package smartparens-config :ensure smartparens)
-       (sp-use-smartparens-bindings)
-       (smartparens-global-strict-mode t))
-   #+end_src
+
 ** Perspective
    The [[https://github.com/nex3/perspective-el][Perspective]] package provides multiple named workspace (or
    "perspectives") in Emacs, similar to multiple desktops in window managers
