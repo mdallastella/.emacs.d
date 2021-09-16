@@ -562,7 +562,12 @@
                 "ubb" '(pinboard :wk "Open")
                 "uba" '(pinboard-add :wk "Add link")))
    #+end_src
-
+** hippie-expand
+   Use hippie-expand instead of dabbrev-expand.
+   #+begin_src elisp
+     (use-package hippie-exp
+       :bind* ("M-/" . hippie-expand))
+   #+end_src
 
 * Programming
 ** Projectile
