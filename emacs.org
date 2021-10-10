@@ -98,7 +98,12 @@
   on.
 ** general
    #+begin_src elisp
-     (setq leader-key "C-z")
+     (setq-default leader-key "C-z")
+
+     (defun my-open-config ()
+       "Open the current Emacs configuration."
+       (interactive)
+       (find-file (expand-file-name "emacs.org" user-emacs-directory)))
 
      (use-package general
        :demand t
@@ -107,15 +112,14 @@
         :prefix leader-key
          ;; Buffers (b)
          "b" '(:ignore t :wk "Buffers")
-         "bb" 'counsel-buffer-or-recentf
-         "bl" 'counsel-ibuffer
          "bw" 'save-buffer
          "bk" 'kill-this-buffer
          "bK" 'kill-buffer
          ;; Files (f)
          "f" '(:ignore t :wk "Files")
-         "ff" 'counsel-find-file
+         "ff" 'find-file
          "fd" 'dired
+         "fP" 'my-open-config
          ;; Utility (u)
          "u" '(:ignore t :wk "Utility")
          "uD" 'package-delete
@@ -215,11 +219,19 @@
    and propertize them within Emacs.
    #+begin_src elisp
      (use-package all-the-icons)
-
-     (use-package all-the-icons-ivy-rich
-       :init
-       (all-the-icons-ivy-rich-mode 1))
    #+end_src
+
+   [[https://github.com/iyefrat/all-the-icons-completion][all-the-icons-completion]]: adds icons to completion candidates using
+   the built in completion metadata functions.
+
+   #+begin_src elisp
+     (use-package all-the-icons-completion
+       :hook
+       (marginalia-mode . all-the-icons-completion-marginalia-setup)
+       :init
+       (all-the-icons-completion-mode))
+   #+end_src
+
 ** Increase line-spacing
    #+begin_src elisp
      (setq-default line-spacing 0.2)
@@ -244,7 +256,9 @@
    when programming.
    #+begin_src elisp
      (use-package diff-hl
-       :hook (prog-mode . turn-on-diff-hl-mode))
+       :hook ((prog-mode . turn-on-diff-hl-mode)
+              (magit-pre-refresh . diff-hl-magit-pre-refresh)
+              (magit-post-refresh . diff-hl-magit-post-refresh)))
    #+end_src
 
 
@@ -408,42 +422,91 @@
        (global-set-key [(shift return)] #'crux-smart-open-line)
        (global-set-key [(ctrl shift return)] #'crux-smart-open-line-above))
    #+end_src
-** Ivy, Amx, Counsel, Swiper
-   [[https://github.com/abo-abo/swiper][Ivy]] is a generic completion mechanism for Emacs. While it operates
-   similarly to other completion schemes such as icomplete-mode, Ivy
-   aims to be more efficient, smaller, simpler, and smoother to use
-   yet highly customizable.
-   #+begin_src elisp
-     (use-package ivy
-       :diminish
-       :init
-       (use-package amx :defer t)
-       (use-package counsel :diminish :config (counsel-mode t))
-       (use-package swiper :defer t)
-       (ivy-mode t)
-       :general
-       (:prefix leader-key
-                "bs" '(counsel-grep-or-swiper :wk "Search/Grep")
-                "bS" '(swiper-thing-at-point :wk "Search thing at poing")
-                "fg" '(counsel-rg :wk "Ripgrep"))
-       :bind
-       ((:map ivy-minibuffer-map
-              ("C-r" . ivy-previous-line-or-history)
-              ("M-RET" . ivy-immediate-done)))
-       :custom
-       (ivy-use-virtual-buffers t)
-       (ivy-height 10)
-       (ivy-on-del-error-function nil)
-       (ivy-magic-slash-non-match-action 'ivy-magic-slash-non-match-create)
-       (ivy-count-format "【%d/%d】")
-       (ivy-wrap t))
+** Vertico, Orderless, Consult, Marginalia & Embark
+*** Orderless
+    [[https://github.com/oantolin/orderless][Orderless]] provides an ~orderless~ completion style that divides the
+    pattern into space-separated components, and matches all the
+    components in any order.
+    #+begin_src elisp
+      (use-package orderless
+        :custom
+        (completion-styles '(orderless)))
+    #+end_src
+*** Vertico
+    [[https://github.com/minad/vertico][Vertico]]: provides a performant and minimalistic vertical
+    completion UI based on the default completion system.
+    #+begin_src elisp
+      (use-package vertico
+        :init
+        (vertico-mode))
+    #+end_src
 
-     (use-package ivy-rich
-       :after ivy
-       :config
-       (setcdr (assq t ivy-format-functions-alist) 'ivy-format-function-line)
-       (ivy-rich-mode t))
-   #+end_src
+*** Consult
+    [[https://github.com/minad/consult][Consult]] provides practical commands based on the Emacs completion
+    function completing-read.
+    #+begin_src elisp
+      (use-package consult
+        :general
+        (:prefix leader-key
+                 "bb" 'consult-buffer
+                 "fg" 'consult-ripgrep)
+        :bind
+        (("M-g e" . consult-compile-error)
+         ("M-g f" . consult-flycheck)
+         ("M-g g" . consult-goto-line))
+        :config
+        (consult-customize
+         consult-theme
+         :preview-key '(:debounce 0.2 any)
+         consult-ripgrep consult-git-grep consult-grep
+         consult-bookmark consult-recent-file consult-xref
+         consult--source-file consult--source-project-file consult--source-bookmark
+         :preview-key (kbd "M-."))
+        (setq consult-project-root-function #'projectile-project-root))
+    #+end_src
+
+*** Marginalia
+    [[https://github.com/minad/marginalia][Marginalia]]: provides marks or annotations placed at the margin of
+    the page of a book or in this case helpful colorful annotations
+    placed at the margin of the minibuffer for your completion
+    candidates.
+    #+begin_src elisp
+      (use-package marginalia
+        :bind (("M-A" . marginalia-cycle)
+               :map minibuffer-local-map
+               ("M-A" . marginalia-cycle))
+        :init
+        (marginalia-mode))
+    #+end_src
+
+*** Embark
+    [[https://github.com/oantolin/embark/][Embark]]: rovides a sort of right-click contextual menu for Emacs,
+    accessed through the embark-act command, offering you relevant
+    actions to use on a target determined by the context.
+    #+begin_src elisp
+      (use-package embark
+        :bind
+        (("C-." . embark-act)         ;; pick some comfortable binding
+         ("M-." . embark-dwim)        ;; good alternative: M-.
+         ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
+        :init
+        (setq prefix-help-command #'embark-prefix-help-command)
+        :config
+        ;; Hide the mode line of the Embark live/completions buffers
+        (add-to-list 'display-buffer-alist
+                     '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
+                       nil
+                       (window-parameters (mode-line-format . none)))))
+
+      (use-package embark-consult
+        :after (embark consult)
+        :demand t ; only necessary if you have the hook below
+        ;; if you want to have consult previews as you move around an
+        ;; auto-updating embark collect buffer
+        :hook
+        (embark-collect-mode . consult-preview-at-point-mode))
+    #+end_src
+
 ** Spell checking
 *** ispell
     #+begin_src elisp
@@ -486,9 +549,6 @@
         :general
         (:prefix leader-key
                  "ss" '(flyspell-correct-wrapper :wk "Correct word")))
-
-      (use-package flyspell-correct-ivy
-        :after flyspell-correct)
     #+end_src
 
 ** Company
@@ -569,6 +629,7 @@
        :bind* ("M-/" . hippie-expand))
    #+end_src
 
+
 * Programming
 ** Projectile
    Projectile is a project interaction library for Emacs. Its goal is
@@ -584,7 +645,7 @@
        (setq projectile-find-dir-includes-top-level t
              projectile-switch-project-action #'projectile-find-file
              projectile-sort-order 'recentf
-             projectile-completion-system 'ivy)
+             projectile-completion-system 'default)
        (projectile-mode t))
    #+end_src
 ** Git
@@ -767,7 +828,8 @@
         (org-block-begin-line ((t (:underline nil))))
         (org-block-end-line ((t (:overline nil))))
         :config
-        (setq org-startup-with-inline-images t
+        (setq org-use-speed-commands t
+              org-startup-with-inline-images t
               org-image-actual-width '(600)
               org-agenda-files (list "~/org/")
               org-default-notes-file "inbox.org"
@@ -826,6 +888,18 @@
         (add-to-list 'org-latex-classes
                      '("article"
                        "\\documentclass{article}"
+                       ("\\section{%s}" . "\\section*{%s}")
+                       ("\\subsection{%s}" . "\\subsection*{%s}")
+                       ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                       ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                       ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+        (add-to-list 'org-latex-classes
+                     '("7bdoc"
+                       "\\documentclass[a4paper,12pt]{article}
+                       \\usepackage[utf8]{inputenc}
+                       \\usepackage{lmodern}
+                       \\usepackage[T1]{fontenc}
+                       \\usepackage{fixltx2e}"
                        ("\\section{%s}" . "\\section*{%s}")
                        ("\\subsection{%s}" . "\\subsection*{%s}")
                        ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
@@ -922,12 +996,47 @@
               ("j" "Journal" entry (file+olp+datetree "~/org/journal.org")
                "** %<%H:%M> %?\n")))
     #+end_src
+*** olivetti
+    [[https://github.com/rnkn/olivetti][olivetti]]: A simple Emacs minor mode for a nice writing.
+    environment.
+    #+begin_src elisp
+      (use-package olivetti
+        :defer t
+        :general
+        (:prefix leader-key
+                 "to" 'olivetti-mode)
+        :config
+        (setq olivetti-style 'fancy
+              olivetti-minimum-body-width 80))
+    #+end_src
+** Zetteldeft
+   [[https://www.eliasstorms.net/zetteldeft/][Zetteldeft]]: Combine Zettelkasten with Deft functionalities.
+*** Deft
+    Setup [[https://jblevins.org/projects/deft/][deft]] package
+    #+begin_src elisp
+      (use-package deft
+        :custom
+        (deft-default-extension "org")
+        (deft-extensions '("org"))
+        (deft-directory "~/notes")
+        (deft-use-filename-as-title t))
+    #+end_src
+
+*** Zetteldeft
+    #+begin_src elisp
+      (use-package zetteldeft
+        :after deft
+        :config (zetteldeft-set-classic-keybindings))
+    #+end_src
 
 
 * TODO Useful packages to look at
 
-- [[https://github.com/purcell/page-break-lines][page-break-lines.el]]: provides a global mode which displays ugly form
-  feed characters as tidy horizontal rules.
+** [[https://github.com/purcell/page-break-lines][page-break-lines.el]]
+   provides a global mode which displays ugly form feed characters as tidy horizontal rules.
+
+** project
+   Get rid of projectile.el and start to use built-in project package.
 
 
 * BEERWARE LICENSE
