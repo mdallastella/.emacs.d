@@ -872,48 +872,6 @@
          :config
          (setq org-babel-clojure-backend 'cider))
      #+end_src
-*** ox-latext
-    #+begin_src elisp
-      (use-package ox-latex
-        :ensure nil
-        :config
-        (setq org-latex-listings 'minted
-              org-latex-packages-alist '(("" "minted"))
-              org-latex-pdf-process
-              '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-                "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-                "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f")
-              org-latex-minted-options '(("breaklines" "true")
-                                         ("breakanywhere" "true")))
-        (add-to-list 'org-latex-classes
-                     '("article"
-                       "\\documentclass{article}"
-                       ("\\section{%s}" . "\\section*{%s}")
-                       ("\\subsection{%s}" . "\\subsection*{%s}")
-                       ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-                       ("\\paragraph{%s}" . "\\paragraph*{%s}")
-                       ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
-        (add-to-list 'org-latex-classes
-                     '("7bdoc"
-                       "\\documentclass[a4paper,12pt]{article}
-                       \\usepackage[utf8]{inputenc}
-                       \\usepackage{lmodern}
-                       \\usepackage[T1]{fontenc}
-                       \\usepackage{fixltx2e}"
-                       ("\\section{%s}" . "\\section*{%s}")
-                       ("\\subsection{%s}" . "\\subsection*{%s}")
-                       ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-                       ("\\paragraph{%s}" . "\\paragraph*{%s}")
-                       ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
-        (add-to-list 'org-latex-classes
-                     '("koma-article"
-                       "\\documentclass{scrartcl}"
-                       ("\\section{%s}" . "\\section*{%s}")
-                       ("\\subsection{%s}" . "\\subsection*{%s}")
-                       ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-                       ("\\paragraph{%s}" . "\\paragraph*{%s}")
-                       ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
-    #+end_src
 *** org-bullets
     Pretty bullets instead of asterisks.
     #+begin_src elisp
@@ -923,44 +881,6 @@
         :config
         (setq org-bullets-bullet-list
               '("" "" "" "" "")))
-    #+end_src
-*** org-mru-clock
-    [[https://github.com/unhammer/org-mru-clock][org-mru-clock]] - Pre-fill your clock history with clocks from your agenda
-    files (and other open org files) so you can clock in to your most recent
-    clocks regardless of whether you just started Emacs or have had it running
-    for decades.
-    #+begin_src elisp
-      (use-package org-mru-clock
-        :general
-        (:prefix leader-key
-                 "oc" '(:ignore t :wk "Clock")
-                 "oci" '(org-mru-clock-in :wk "Clock in")
-                 "ocr" '(org-mru-clock-select-recent-task :wk "Select task")
-                 "oco" '(org-clock-out :wk "Clock out"))
-        :init
-        (setq org-mru-clock-how-many 10
-              org-mru-clock-files #'org-agenda-files))
-    #+end_src
-*** org-tree-slide
-    Presentation tool
-    #+begin_src elisp
-      (defun my/presentation-setup ()
-        (setq text-scale-mode-amount 3)
-        (org-display-inline-images)
-        (text-scale-mode 1))
-
-      (defun my/presentation-end ()
-        (text-scale-mode 0))
-
-      (use-package org-tree-slide
-        :hook
-        ((org-tree-slide-play . my/presentation-setup)
-         (org-tree-slide-stop . my/presentation-end))
-        :custom
-        (org-image-actual-width nil)
-        (org-tree-slide-activate-message "Welcome!")
-        (org-tree-slide-deactivate-message "Fin!")
-        (org-tree-slide-breadcrumbs " // "))
     #+end_src
 *** yankpad
     [[https://github.com/Kungsgeten/yankpad][GitHub - Kungsgeten/yankpad: Paste snippets from an org-mode file]]
@@ -986,16 +906,6 @@
         :init
         (setq yankpad-file "~/org/yankpad.org"))
     #+END_SRC
-*** capture templates
-    #+begin_src elisp
-      (setq org-capture-templates
-            '(("t" "Task" entry (file "inbox.org")
-               "* TODO %?\n")
-              ("T" "Clockable task" entry (file+headline "inbox.org")
-               "* TODO %?\n" :clock-in t :clock-keep t)
-              ("j" "Journal" entry (file+olp+datetree "~/org/journal.org")
-               "** %<%H:%M> %?\n")))
-    #+end_src
 *** olivetti
     [[https://github.com/rnkn/olivetti][olivetti]]: A simple Emacs minor mode for a nice writing.
     environment.
