@@ -951,12 +951,14 @@
 
 
 * TODO Useful packages to look at
-
 ** [[https://github.com/purcell/page-break-lines][page-break-lines.el]]
    provides a global mode which displays ugly form feed characters as tidy horizontal rules.
 
 ** project
    Get rid of projectile.el and start to use built-in project package.
+** Hercules
+   An auto-magical, which-key based hydra banisher.
+   https://github.com/wurosh/hercules
 
 
 * BEERWARE LICENSE
