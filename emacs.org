@@ -110,31 +110,33 @@
        :config
        (general-define-key
         :prefix leader-key
-         ;; Buffers (b)
-         "b" '(:ignore t :wk "Buffers")
-         "bw" 'save-buffer
-         "bk" 'kill-this-buffer
-         "bK" 'kill-buffer
-         ;; Files (f)
-         "f" '(:ignore t :wk "Files")
-         "ff" 'find-file
-         "fd" 'dired
-         "fP" 'my-open-config
-         ;; Utility (u)
-         "u" '(:ignore t :wk "Utility")
-         "uD" 'package-delete
-         ;; Toggle (t)
-         "t" '(:ignore t :wk "Toggle")
-         "tp" 'smartparens-strict-mode
-         "ts" 'flyspell-mode
-         ;; Windows (w)
-         "w" '(:ignore t :wk "Windows")
-         "wo" 'other-window
-         "wv" 'split-window-vertically
-         "w-" 'split-window-horizontally
-         "w1" 'delete-other-windows
-         ;; Quit
-         "qq" 'save-buffers-kill-emacs))
+        ;; Generic
+        "." 'set-mark-command
+        ;; Buffers (b)
+        "b" '(:ignore t :wk "Buffers")
+        "bw" 'save-buffer
+        "bk" 'kill-this-buffer
+        "bK" 'kill-buffer
+        ;; Files (f)
+        "f" '(:ignore t :wk "Files")
+        "ff" 'find-file
+        "fd" 'dired
+        "fP" 'my-open-config
+        ;; Utility (u)
+        "u" '(:ignore t :wk "Utility")
+        "uD" 'package-delete
+        ;; Toggle (t)
+        "t" '(:ignore t :wk "Toggle")
+        "tp" 'smartparens-strict-mode
+        "ts" 'flyspell-mode
+        ;; Windows (w)
+        "w" '(:ignore t :wk "Windows")
+        "wo" 'other-window
+        "wv" 'split-window-vertically
+        "w-" 'split-window-horizontally
+        "w1" 'delete-other-windows
+        ;; Quit
+        "qq" 'save-buffers-kill-emacs))
    #+end_src
 
 ** which-key
