@@ -268,7 +268,18 @@
      (use-package idle-highlight-mode
        :config (setq idle-highlight-idle-time 0.2)
        :hook ((prog-mode text-mode) . idle-highlight-mode))
-
+   #+end_src
+** Emoji
+   [[https://github.com/iqbalansari/emacs-emojify][Emojify]]: an Emacs extension to display emojis. It can display
+   github style emojis like :smile: or plain ascii ones like :).
+   #+begin_src elisp
+     (use-package emojify
+       :config
+       ;; Set emojify to only replace Unicode emoji, and do it everywhere.
+       (setq emojify-emoji-styles '(unicode github)
+             emojify-inhibit-major-modes '())
+       ;; Enable it globally.
+       (add-hook 'after-init-hook #'global-emojify-mode))
    #+end_src
 
 
