@@ -583,7 +583,64 @@
        :hook
        (after-init . global-company-mode))
    #+end_src
+** Completion
+*** Corfu
+    [[https://github.com/minad/corfu][Corfu]] enhances the default completion in region function with a
+    completion overlay.
+#+begin_src elisp
+  (use-package corfu
+    :disabled
+    :custom
+    (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
+    ;; (corfu-auto t)                 ;; Enable auto completion
+    ;; (corfu-commit-predicate nil)   ;; Do not commit selected candidates on next input
+    ;; (corfu-quit-at-boundary t)     ;; Automatically quit at word boundary
+    (corfu-quit-no-match t)        ;; Automatically quit if there is no match
+    ;; (corfu-preview-current nil)    ;; Disable current candidate preview
+    (corfu-preselect-first nil)    ;; Disable candidate preselection
+    ;; (corfu-echo-documentation nil) ;; Disable documentation in the echo area
+    ;; (corfu-scroll-margin 5)        ;; Use scroll margin
 
+    ;; You may want to enable Corfu only for certain modes.
+    ;; :hook ((prog-mode . corfu-mode)
+    ;;        (shell-mode . corfu-mode)
+    ;;        (eshell-mode . corfu-mode))
+
+    ;; Recommended: Enable Corfu globally.
+    ;; This is recommended since dabbrev can be used globally (M-/).
+    ;; Use TAB for cycling, default is `corfu-complete'.
+    :bind
+    (:map corfu-map
+          ("TAB" . corfu-next)
+          ([tab] . corfu-next)
+          ("S-TAB" . corfu-previous)
+          ([backtab] . corfu-previous))
+    :init
+    (corfu-global-mode))
+#+end_src
+*** Cape
+    [[https://github.com/minad/cape][Cape]] provides a bunch of Completion At Point Extensions which can
+    be used in combination with Corfu.
+    #+begin_src elisp
+      (use-package cape
+        :disabled
+        :init
+        (add-to-list
+         'completion-at-point-functions
+         (cape-super-capf #'cape-file #'cape-dabbrev #'cape-keyword #'cape-symbol)))
+    #+end_src
+*** kind-icon
+    [[https://github.com/jdtsmith/kind-icon][kind-icon]] adds configurable icon or text-based completion prefixes
+    based on the ~:company-kind~ property.
+    #+begin_src elisp
+      (use-package kind-icon
+        :disabled
+        :after corfu
+        :custom
+        (kind-icon-default-face 'corfu-default) ; to compute blended backgrounds correctly
+        :config
+        (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
+    #+end_src
 ** Perspective
    The [[https://github.com/nex3/perspective-el][Perspective]] package provides multiple named workspace (or
    "perspectives") in Emacs, similar to multiple desktops in window managers
