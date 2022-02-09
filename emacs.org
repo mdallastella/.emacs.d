@@ -698,23 +698,15 @@
 
 
 * Programming
-** Projectile
-   Projectile is a project interaction library for Emacs. Its goal is
-   to provide a nice set of features operating on a project level
-   without introducing external dependencies (when feasible).
-   #+begin_src elisp
-     (use-package projectile
-       :ensure t
-       :general
-       (:prefix leader-key
-                "p" '(:keymap projectile-command-map :package projectile :wk "Projectile"))
-       :init
-       (setq projectile-find-dir-includes-top-level t
-             projectile-switch-project-action #'projectile-find-file
-             projectile-sort-order 'recentf
-             projectile-completion-system 'default)
-       (projectile-mode t))
-   #+end_src
+** Project
+  Let's use the built-in module to manage different projects.
+  #+begin_src elisp
+    (use-package project
+      :ensure nil
+      :general
+      (:prefix leader-key
+               "p" '(:keymap project-prefix-map :package project :wk "Project")))
+  #+end_src
 ** Git
 *** Magit
     [[https://github.com/magit/magit][Magit]] - A Git porcelain inside Emacs.
