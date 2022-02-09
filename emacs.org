@@ -98,7 +98,7 @@
   on.
 ** general
    #+begin_src elisp
-     (setq-default leader-key "C-z")
+     (setq-default leader-key "s-s")
 
      (defun my-open-config ()
        "Open the current Emacs configuration."
@@ -166,7 +166,9 @@
 ** Font setup
    Set my favourite font
    #+begin_src elisp
-     (set-frame-font "PragmataPro Mono Liga 12")
+     (set-face-attribute 'default nil
+                         :family "PragmataPro Mono Liga"
+                         :height 110)
    #+end_src
 ** Theme
    [[https://github.com/hlissner/emacs-doom-themes][Solarized theme by emacs-doom-themes]]
@@ -176,6 +178,7 @@
        (load-theme 'doom-solarized-dark t)
        (doom-themes-visual-bell-config)
        (doom-themes-org-config)
+       :init
        (custom-set-faces
         `(org-block ((t (:background nil))))
         `(org-block-begin-line ((t (:background nil))))
@@ -450,8 +453,10 @@
     components in any order.
     #+begin_src elisp
       (use-package orderless
-        :custom
-        (completion-styles '(orderless)))
+        :init
+        (setq completion-styles '(orderless partial-completion)
+              completion-category-defaults nil
+              completion-category-overrides nil))
     #+end_src
 *** Vertico
     [[https://github.com/minad/vertico][Vertico]]: provides a performant and minimalistic vertical
@@ -674,22 +679,6 @@
        ([remap describe-command] . helpful-command)
        ([remap describe-key] . helpful-key))
    #+end_src
-** vterm
-   [[https://github.com/akermu/emacs-libvterm][vterm]] is fully-fledged terminal emulator inside GNU Emacs based on
-   libvterm.
-
-   #+begin_src elisp
-     (defun my-vsplit-vterm ()
-       (interactive)
-       (split-window-horizontally)
-       (vterm))
-
-     (use-package vterm
-       :general
-       (:prefix leader-key
-                "ut" '(my-vsplit-vterm :wk "Terminal other window")
-                "uT" '(vterm :wk "Terminal here")))
-   #+end_src
 ** Pinboard
    [[https://github.com/davep/pinboard.el][pinboard.el]] - An Emacs client for Pinboard.
    #+begin_src elisp
@@ -756,46 +745,26 @@
     #+begin_src elisp
       (use-package lsp-mode
         :disabled
-        :defer t
-        :commands lsp
+        :commands (lsp lsp-deferred)
+        :general
+        (:prefix leader-key
+                 "l" '(:keymap lsp-command-map :package lsp-mode :wk "LSP"))
+        :init
+        (setq lsp-keymap-prefix "C-z l")
         :config
-        (setq lsp-auto-guess-root nil
-              lsp-prefer-flymake nil
-              lsp-file-watch-threshold 2000
+        (setq lsp-use-plist t
+              lsp-lens-enable nil
+              lsp-file-watch-threshold nil
+              lsp-headerline-breadcrumb-enable nil
               read-process-output-max (* 1024 1024)
-              lsp-eldoc-hook nil
-              lsp-keymap-prefix "C-c l")
+              lsp-eldoc-hook nil)
         :hook
-        ((clojure-mode clojurescript-mode
-          js-mode js2-mode web-mode) . lsp))
-    #+end_src
-*** TODO LSP ui
-    #+begin_src elisp
-      (use-package lsp-ui
-        :disabled
-        :after lsp-mode
-        :commands lsp-ui-mode
-        :bind
-        (:map lsp-ui-mode-map
-              ([remap xref-find-definitions] . lsp-ui-peek-find-definitions)
-              ([remap xref-find-references] . lsp-ui-peek-find-references)
-              ("C-c u" . lsp-ui-imenu)
-              ("M-i" . lsp-ui-doc-focus-frame))
-        (:map lsp-mode-map
-              ("M-n" . forward-paragraph)
-              ("M-p" . backward-paragraph))
-        :config
-        (setq lsp-ui-doc-header t
-              lsp-ui-doc-include-signature t
-              lsp-ui-doc-border (face-foreground 'default)
-              lsp-ui-sideline-enable nil
-              lsp-ui-sideline-ignore-duplicate t
-              lsp-ui-sideline-show-code-actions nil
-              lsp-ui-doc-use-webkit t))
+        ((clojure-mode clojurescript-mode js-mode js2-mode web-mode rust-mode) . lsp-deferred)
+        (lsp-mode . lsp-enable-which-key-integration))
     #+end_src
 ** Clojure/ClojureScript
    Clojure settings for Emacs
-*** TODO Clojure development environment
+*** Clojure development environment
     #+begin_src elisp
       (use-package cider
       :hook
@@ -838,7 +807,7 @@
         :config
         (setq nrepl-hide-special-buffers t))
     #+end_src
-*** TODO Kaocha test runner
+*** Kaocha test runner
     An emacs package for running Kaocha tests via CIDER.
     #+begin_src elisp
       (use-package kaocha-runner
@@ -887,6 +856,22 @@
 
 
 * Productivity
+** vterm
+   [[https://github.com/akermu/emacs-libvterm][vterm]] is fully-fledged terminal emulator inside GNU Emacs based on
+   libvterm.
+
+   #+begin_src elisp
+     (defun my-vsplit-vterm ()
+       (interactive)
+       (split-window-horizontally)
+       (vterm))
+
+     (use-package vterm
+       :general
+       (:prefix leader-key
+                "ut" '(my-vsplit-vterm :wk "Terminal other window")
+                "uT" '(vterm :wk "Terminal here")))
+   #+end_src
 ** org-mode
 *** org settings
     #+begin_src elisp
