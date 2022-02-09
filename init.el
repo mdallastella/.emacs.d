@@ -11,7 +11,10 @@
 ;;; Code:
 
 ;; Increase the garbage collection threshold to 500 MB to ease startup
-(setq gc-cons-threshold most-positive-fixnum)
+(setq gc-cons-threshold 500000000)
+
+;; Emacs 28 - Ignore compilation warnings
+(setq native-comp-async-report-warnings-errors 'silent)
 
 ;; List package archives and initialize them
 (require 'package)
