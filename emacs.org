@@ -480,15 +480,22 @@
         (("M-g e" . consult-compile-error)
          ("M-g f" . consult-flycheck)
          ("M-g g" . consult-goto-line))
+        :init
+        ;; Use Consult to select xref locations with preview
+        (setq xref-show-xrefs-function #'consult-xref
+              xref-show-definitions-function #'consult-xref)
         :config
         (consult-customize
          consult-theme
          :preview-key '(:debounce 0.2 any)
          consult-ripgrep consult-git-grep consult-grep
          consult-bookmark consult-recent-file consult-xref
-         consult--source-file consult--source-project-file consult--source-bookmark
+         consult--source-recent-file consult--source-project-recent-file consult--source-bookmark
          :preview-key (kbd "M-."))
-        (setq consult-project-root-function #'projectile-project-root))
+        (setq consult-project-root-function
+              (lambda ()
+                (when-let (project (project-current))
+                  (car (project-roots project))))))
     #+end_src
 
 *** Marginalia
@@ -816,6 +823,29 @@
               kaocha-runner-ongoing-tests-win-min-height 20
               kaocha-runner-output-win-max-height 20))
     #+end_src
+** Rust
+   Use rustic for Rust coding.
+   #+begin_src elisp
+     (use-package rustic
+       :ensure
+       :bind (:map rustic-mode-map
+                   ("M-j" . lsp-ui-imenu)
+                   ("M-?" . lsp-find-references)
+                   ("C-c C-c l" . flycheck-list-errors)
+                   ("C-c C-c a" . lsp-execute-code-action)
+                   ("C-c C-c r" . lsp-rename)
+                   ("C-c C-c q" . lsp-workspace-restart)
+                   ("C-c C-c Q" . lsp-workspace-shutdown)
+                   ("C-c C-c s" . lsp-rust-analyzer-status))
+       :config
+       ;; uncomment for less flashiness
+       ;; (setq lsp-eldoc-hook nil)
+       ;; (setq lsp-enable-symbol-highlighting nil)
+       ;; (setq lsp-signature-auto-activate nil)
+
+       ;; comment to disable rustfmt on save
+       (setq rustic-format-on-save t))
+   #+end_src
 ** Javascript
    [[https://github.com/mooz/js2-mode][js2-mode]]: Improved JavaScript editing mode for GNU Emacs.
    #+begin_src elisp
@@ -998,7 +1028,6 @@
 * TODO Useful packages to look at
 ** [[https://github.com/purcell/page-break-lines][page-break-lines.el]]
    provides a global mode which displays ugly form feed characters as tidy horizontal rules.
-
 ** project
    Get rid of projectile.el and start to use built-in project package.
 ** Hercules
