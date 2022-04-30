@@ -98,7 +98,7 @@
   on.
 ** general
    #+begin_src elisp
-     (setq-default leader-key "s-s")
+     (setq-default leader-key "C-c")
 
      (defun my-open-config ()
        "Open the current Emacs configuration."
@@ -284,6 +284,19 @@
        ;; Enable it globally.
        (add-hook 'after-init-hook #'global-emojify-mode))
    #+end_src
+** Dashboard
+   [[https://github.com/emacs-dashboard/emacs-dashboard][Dashboard]] - An extensible emacs startup screen showing you what’s
+   most important.
+   #+begin_src elisp
+     (use-package dashboard
+       :config
+       (setq dashboard-items '((recents  . 5)
+                               (bookmarks . 5)
+                               (projects . 5)
+                               (agenda . 5)
+                               (registers . 5)))
+       (dashboard-setup-startup-hook))
+   #+end_src
 
 
 * Editing
@@ -348,7 +361,8 @@
 ** undo-fu
    [[https://gitlab.com/ideasman42/emacs-undo-fu][Undo Fu]] - Simple, stable undo with redo for emacs.
    #+begin_src elisp
-     (use-package undo-fu)
+     (use-package undo-fu
+       :bind ("C-z" . undo-fu-only-undo))
    #+end_src
 ** wgrep
    [[https://github.com/mhayashi1120/Emacs-wgrep][wgrep.el]] - allows you to edit a grep buffer and apply those changes
@@ -588,71 +602,13 @@
    #+begin_src elisp
      (use-package company
        :config
-       (setq company-begin-commands '(self-insert-command)
-             company-idle-delay 0.1
+       (setq company-idle-delay 0.1
              company-show-quick-access t
-             company-tooltip-align-annotations t)
+             company-tooltip-align-annotations t
+             company-require-match 'never)
        :hook
        (after-init . global-company-mode))
    #+end_src
-** Completion
-*** Corfu
-    [[https://github.com/minad/corfu][Corfu]] enhances the default completion in region function with a
-    completion overlay.
-#+begin_src elisp
-  (use-package corfu
-    :disabled
-    :custom
-    (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
-    ;; (corfu-auto t)                 ;; Enable auto completion
-    ;; (corfu-commit-predicate nil)   ;; Do not commit selected candidates on next input
-    ;; (corfu-quit-at-boundary t)     ;; Automatically quit at word boundary
-    (corfu-quit-no-match t)        ;; Automatically quit if there is no match
-    ;; (corfu-preview-current nil)    ;; Disable current candidate preview
-    (corfu-preselect-first nil)    ;; Disable candidate preselection
-    ;; (corfu-echo-documentation nil) ;; Disable documentation in the echo area
-    ;; (corfu-scroll-margin 5)        ;; Use scroll margin
-
-    ;; You may want to enable Corfu only for certain modes.
-    ;; :hook ((prog-mode . corfu-mode)
-    ;;        (shell-mode . corfu-mode)
-    ;;        (eshell-mode . corfu-mode))
-
-    ;; Recommended: Enable Corfu globally.
-    ;; This is recommended since dabbrev can be used globally (M-/).
-    ;; Use TAB for cycling, default is `corfu-complete'.
-    :bind
-    (:map corfu-map
-          ("TAB" . corfu-next)
-          ([tab] . corfu-next)
-          ("S-TAB" . corfu-previous)
-          ([backtab] . corfu-previous))
-    :init
-    (corfu-global-mode))
-#+end_src
-*** Cape
-    [[https://github.com/minad/cape][Cape]] provides a bunch of Completion At Point Extensions which can
-    be used in combination with Corfu.
-    #+begin_src elisp
-      (use-package cape
-        :disabled
-        :init
-        (add-to-list
-         'completion-at-point-functions
-         (cape-super-capf #'cape-file #'cape-dabbrev #'cape-keyword #'cape-symbol)))
-    #+end_src
-*** kind-icon
-    [[https://github.com/jdtsmith/kind-icon][kind-icon]] adds configurable icon or text-based completion prefixes
-    based on the ~:company-kind~ property.
-    #+begin_src elisp
-      (use-package kind-icon
-        :disabled
-        :after corfu
-        :custom
-        (kind-icon-default-face 'corfu-default) ; to compute blended backgrounds correctly
-        :config
-        (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
-    #+end_src
 ** Perspective
    The [[https://github.com/nex3/perspective-el][Perspective]] package provides multiple named workspace (or
    "perspectives") in Emacs, similar to multiple desktops in window managers
@@ -743,13 +699,12 @@
 *** LSP
     #+begin_src elisp
       (use-package lsp-mode
-        :disabled
         :commands (lsp lsp-deferred)
         :general
         (:prefix leader-key
                  "l" '(:keymap lsp-command-map :package lsp-mode :wk "LSP"))
         :init
-        (setq lsp-keymap-prefix "C-z l")
+        (setq lsp-keymap-prefix "C-c l")
         :config
         (setq lsp-use-plist t
               lsp-lens-enable nil
@@ -771,7 +726,8 @@
        (clojure-mode . cider-mode)
        (clojure-mode . subword-mode)
        (cider-repl-mode . eldoc-mode)
-       (cider-repl-mode . subword-mode))
+       (cider-repl-mode . subword-mode)
+       (cider-mode . cider-company-enable-fuzzy-completion))
       :bind
       (:map cider-mode-map
             ("C-c m l" . cider-load-all-project-ns)
@@ -796,7 +752,7 @@
 *** Font-locking for Clojure mode
     #+begin_src elisp
       (use-package clojure-mode-extra-font-locking
-    :after clojure-mode)
+        :after clojure-mode)
     #+end_src
 *** Client for Clojure nREPL
     #+begin_src elisp
@@ -897,30 +853,33 @@
 ** org-mode
 *** org settings
     #+begin_src elisp
+      (setq-default org-depot "~/cloud/mds/Mobile/org/")
+
       (use-package org
         :general
         (:prefix leader-key
                  "o" '(:ignore t :wk "Org-mode")
-                 "oo" '(counsel-org-capture :wk "Capture")
-                 "Oa" '(org-agenda :wk "Agenda")
+                 "oo" '(org-capture :wk "Capture")
+                 "oa" '(org-agenda :wk "Agenda")
                  "o'" '(org-edit-special :wk "Edit special")
-                 "og" '(counsel-org-goto :wk "Goto")
+                 "og" '(org-goto :wk "Goto")
                  "os" '(org-todo :wk "Status")
-                 "ot" '(counsel-org-tag "Tag")
-                 "oS" '(org-schedule :wk "Schedule")
-                 "oD" '(org-deadline :wk "Deadline"))
+                 "ot" '(org-set-tags-command :wk "Tag")
+                 "od" '(org-schedule :wk "Schedule")
+                 "od" '(org-deadline :wk "Deadline"))
         :custom-face
         (org-block-begin-line ((t (:underline nil))))
         (org-block-end-line ((t (:overline nil))))
         :config
-        (setq org-use-speed-commands t
+        (setq org-directory org-depot
+              org-use-speed-commands t
               org-startup-with-inline-images t
               org-image-actual-width '(600)
-              org-agenda-files (list "~/org/")
-              org-default-notes-file "inbox.org"
+              org-agenda-files (list org-depot)
+              org-default-notes-file "todo.org"
               org-todo-keywords '((sequence "TODO" "NEXT" "HOLD" "|" "DONE" "CANCEL"))
               org-log-done t
-              org-archive-location "~/org/archive.org::datatree/"
+              org-archive-location (concat org-depot "archive.org::datatree/")
               org-hide-emphasis-markers t
               org-ellipsis " ↴"
               org-fontify-quote-and-verse-blocks t
@@ -929,9 +888,21 @@
       (use-package org-refile
         :ensure nil
         :config
-        (setq org-refile-targets '((org-agenda-files :maxlevel . 1))
+        (setq org-refile-targets nil
               org-refile-allow-creating-parent-nodes 'confirm))
     #+end_src
+*** org-capture templates
+#+begin_src elisp
+  (setq org-capture-templates
+        '(("t" "Todo" entry (file "todo.org")
+            "* TODO %?\n" :empty-lines 1)
+          ("T" "Todo with Clipboard" entry (file "todo.org")
+           "* TODO %?\n\n   %x" :empty-lines 1)
+          ("b" "Brain dump note" entry (file "braindump.org")
+           "* %?\n   %x" :empty-lines 1)
+          ("l" "Brain dump link" entry (file "braindump.org")
+           "* %(org-cliplink-capture) \n  %?" :empty-lines 1)))
+#+end_src
 *** org-babel
     Settings for literate programming.
 
@@ -1004,31 +975,13 @@
         (setq olivetti-style 'fancy
               olivetti-minimum-body-width 80))
     #+end_src
-** Zetteldeft
-   [[https://www.eliasstorms.net/zetteldeft/][Zetteldeft]]: Combine Zettelkasten with Deft functionalities.
-*** Deft
-    Setup [[https://jblevins.org/projects/deft/][deft]] package
-    #+begin_src elisp
-      (use-package deft
-        :custom
-        (deft-default-extension "org")
-        (deft-extensions '("org"))
-        (deft-directory "~/notes")
-        (deft-use-filename-as-title t))
-    #+end_src
-
-*** Zetteldeft
-    #+begin_src elisp
-      (use-package zetteldeft
-        :after deft
-        :config (zetteldeft-set-classic-keybindings))
-    #+end_src
 
 
 * TODO Useful packages to look at
 ** [[https://github.com/purcell/page-break-lines][page-break-lines.el]]
    provides a global mode which displays ugly form feed characters as tidy horizontal rules.
-** project
+** DONE project
+CLOSED: [2022-03-15 mar 15:13]
    Get rid of projectile.el and start to use built-in project package.
 ** Hercules
    An auto-magical, which-key based hydra banisher.
