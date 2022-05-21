@@ -707,42 +707,43 @@
         (setq lsp-keymap-prefix "C-c l")
         :config
         (setq lsp-use-plist t
-              lsp-lens-enable nil
-              lsp-file-watch-threshold nil
-              lsp-headerline-breadcrumb-enable nil
-              read-process-output-max (* 1024 1024)
-              lsp-eldoc-hook nil)
+              lsp-completion-enable nil
+              read-process-output-max (* 1024 1024))
         :hook
         ((clojure-mode clojurescript-mode js-mode js2-mode web-mode rust-mode) . lsp-deferred)
         (lsp-mode . lsp-enable-which-key-integration))
+
+      (use-package lsp-treemacs
+        :init
+        (setq lsp-treemacs-sync-mode 1))
     #+end_src
 ** Clojure/ClojureScript
    Clojure settings for Emacs
 *** Clojure development environment
     #+begin_src elisp
       (use-package cider
-      :hook
-      ((cider-mode . eldoc-mode)
-       (clojure-mode . cider-mode)
-       (clojure-mode . subword-mode)
-       (cider-repl-mode . eldoc-mode)
-       (cider-repl-mode . subword-mode)
-       (cider-mode . cider-company-enable-fuzzy-completion))
-      :bind
-      (:map cider-mode-map
-            ("C-c m l" . cider-load-all-project-ns)
-            ("C-c m j" . cider-jack-in-clj)
-            ("C-c m J" . cider-jack-in-cljs)
-            :map cider-repl-mode-map
-            ("C-c m l" . cider-repl-clear-buffer))
-      :config
-      (setq cider-offer-to-open-cljs-app-in-browser nil
-            cider-font-lock-dynamically t
-            cider-invert-insert-eval-p t
-            cider-save-file-on-load t
-            cider-repl-pop-to-buffer-on-connect 'display-only
-            cider-repl-history-file (locate-user-emacs-file "cider-repl-history")
-            cider-repl-display-help-banner nil))
+        :hook
+        ((cider-mode . eldoc-mode)
+         (clojure-mode . cider-mode)
+         (clojure-mode . subword-mode)
+         (cider-repl-mode . eldoc-mode)
+         (cider-repl-mode . subword-mode)
+         (cider-mode . cider-company-enable-fuzzy-completion)
+         (cider-repl-mode . cider-company-enable-fuzzy-completion))
+        :bind
+        (:map cider-mode-map
+              ("C-c m l" . cider-load-all-project-ns)
+              ("C-c m j" . cider-jack-in-clj)
+              ("C-c m J" . cider-jack-in-cljs)
+              :map cider-repl-mode-map
+              ("C-c m l" . cider-repl-clear-buffer))
+        :init
+        (setq cider-eldoc-display-for-symbol-at-point nil
+              cider-font-lock-dynamically t
+              cider-save-file-on-load t
+              cider-repl-pop-to-buffer-on-connect 'display-only
+              cider-repl-history-file (locate-user-emacs-file "cider-repl-history")
+              cider-repl-display-help-banner nil))
     #+end_src
 *** Clojure Flycheck
     Flycheck using clj-kondo
