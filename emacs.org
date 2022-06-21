@@ -708,6 +708,7 @@
         :config
         (setq lsp-use-plist t
               lsp-completion-enable nil
+              lsp-headerline-breadcrumb-enable nil
               read-process-output-max (* 1024 1024))
         :hook
         ((clojure-mode clojurescript-mode js-mode js2-mode web-mode rust-mode) . lsp-deferred)
