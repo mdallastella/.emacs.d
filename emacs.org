@@ -918,6 +918,16 @@
         (setq org-refile-targets nil
               org-refile-allow-creating-parent-nodes 'confirm))
     #+end_src
+*** org-modern
+    org-modern: This package implements a “modern” style for your Org
+    buffers using font locking and text properties.
+
+    #+begin_src emacs-lisp
+      (use-package org-modern
+        :hook
+        (org-mode . org-modern-mode)
+        (org-agenda-finalize . org-modern-mode))
+    #+end_src
 *** org-capture templates
 #+begin_src elisp
   (setq org-capture-templates
@@ -955,16 +965,6 @@
          :config
          (setq org-babel-clojure-backend 'cider))
      #+end_src
-*** org-bullets
-    Pretty bullets instead of asterisks.
-    #+begin_src elisp
-      (use-package org-bullets
-        :hook
-        (org-mode . org-bullets-mode)
-        :config
-        (setq org-bullets-bullet-list
-              '("" "" "" "" "")))
-    #+end_src
 *** yankpad
     [[https://github.com/Kungsgeten/yankpad][GitHub - Kungsgeten/yankpad: Paste snippets from an org-mode file]]
     #+begin_src elisp
