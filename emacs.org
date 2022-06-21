@@ -1002,6 +1002,38 @@
         (setq olivetti-style 'fancy
               olivetti-minimum-body-width 80))
     #+end_src
+*** org-roam
+    [[https://www.orgroam.com/][org-roam]]: A plain-text personal knowledge management system.
+
+    #+begin_src emacs-lisp
+      (use-package org-roam
+        :init
+        (setq org-roam-directory (file-truename "~/org/roam")
+              org-roam-dailies-directory "."
+              org-roam-node-display-template (concat "${title:*} " (propertize "${tags:10}" 'face 'org-tag))
+              org-roam-completion-everywhere t)
+        :general
+        (:prefix leader-key
+                 "rf" 'org-roam-node-find
+                 "rl" 'org-roam-buffer-toggle
+                 "rd" 'org-roam-dailies-capture-today
+                 "ri" 'org-roam-node-insert
+                 "rh" 'org-roam-dailies-goto-today
+                 "rta" 'org-roam-tag-add
+                 "rtd" 'org-roam-tag-remove)
+        :config
+        (setq org-roam-dailies-capture-templates
+            '(("d" "default" entry
+               "* %?"
+               :target (file+datetree "journal.org" year))))
+        (add-to-list 'display-buffer-alist
+                   '("\\*org-roam\\*"
+                     (display-buffer-in-direction)
+                     (direction . right)
+                     (window-width . 0.33)
+                     (window-height . fit-window-to-buffer)))
+        (org-roam-db-autosync-mode))
+    #+end_src
 
 
 * TODO Useful packages to look at
