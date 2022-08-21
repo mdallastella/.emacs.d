@@ -92,10 +92,9 @@
 
 * Keybinding
   The most frequent keybindings are structured in a mnemonic way for
-  me. On evil-mode, ~SPC~ is the "leader", then a letter that identify
-  the scope: ~c~ for generic functions, ~b~ for buffer, ~d~ for directories,
-  ~f~ for files, ~p~ for projects, ~m~ for the active major-modes and so
-  on.
+  me. ~C-c~ is the "leader", then a letter that identify the scope: ~c~
+  for generic functions, ~b~ for buffer, ~d~ for directories, ~f~ for files,
+  ~p~ for projects, ~m~ for the active major-modes and so on.
 ** general
    #+begin_src elisp
      (setq-default leader-key "C-c")
@@ -125,16 +124,10 @@
         ;; Utility (u)
         "u" '(:ignore t :wk "Utility")
         "uD" 'package-delete
+        "ub" 'browse-url-at-point
         ;; Toggle (t)
         "t" '(:ignore t :wk "Toggle")
-        "tp" 'smartparens-strict-mode
         "ts" 'flyspell-mode
-        ;; Windows (w)
-        "w" '(:ignore t :wk "Windows")
-        "wo" 'other-window
-        "wv" 'split-window-vertically
-        "w-" 'split-window-horizontally
-        "w1" 'delete-other-windows
         ;; Quit
         "qq" 'save-buffers-kill-emacs))
    #+end_src
@@ -284,19 +277,6 @@
        ;; Enable it globally.
        (add-hook 'after-init-hook #'global-emojify-mode))
    #+end_src
-** Dashboard
-   [[https://github.com/emacs-dashboard/emacs-dashboard][Dashboard]] - An extensible emacs startup screen showing you what’s
-   most important.
-   #+begin_src elisp
-     (use-package dashboard
-       :config
-       (setq dashboard-items '((recents  . 5)
-                               (bookmarks . 5)
-                               (projects . 5)
-                               (agenda . 5)
-                               (registers . 5)))
-       (dashboard-setup-startup-hook))
-   #+end_src
 
 
 * Editing
@@ -337,14 +317,6 @@
                 "uda" '(direnv-allow :wk "Direnv allow"))
        :config
        (direnv-mode))
-   #+end_src
-** Avy zap
-   Zap to char using avy.
-   #+begin_src elisp
-     (use-package avy-zap
-       :general
-       (:prefix leader-key
-                "uz" '(avy-zap-to-char-dwim :wk "Avy zap")))
    #+end_src
 ** Multiple cursors
    [[https://github.com/magnars/multiple-cursors.el][Multiple cursors for Emacs]]
@@ -407,13 +379,39 @@
      (use-package puni
        :defer t
        :bind*
-       (("C-<right>" . puni-slurp-forward)
-        ("C-<left>"  . puni-barf-forward)
-        ("C-<up>"    . puni-raise))
+       (:map puni-mode-map
+             ("C-<right>" . puni-slurp-forward)
+             ("C-<left>" . puni-barf-forward)
+             ("C-<up>" . puni-raise))
        :init
        (puni-global-mode)
        (add-hook 'term-mode-hook #'puni-disable-puni-mode))
    #+end_src
+
+** yankpad
+    [[https://github.com/Kungsgeten/yankpad][GitHub - Kungsgeten/yankpad: Paste snippets from an org-mode file]]
+    #+begin_src elisp
+      (use-package yasnippet
+        :ensure t
+        :config
+        (setq yas-verbosity 1)
+        (yas-global-mode))
+
+      (use-package yankpad
+        :ensure t
+        :after yasnippet
+        :general
+        (:prefix leader-key
+                 "y" '(:ignore t :wk "Snippets")
+                 "yc" 'yankpad-set-category
+                 "ye" 'yankpad-edit
+                 "yi" 'yankpad-insert
+                 "ym" 'yankpad-map
+                 "yr" 'yankpad-reload
+                 "yx" 'yankpad-expand)
+        :init
+        (setq yankpad-file (expand-file-name "yankpad.org" user-emacs-directory)))
+    #+END_SRC
 
 
 * Tools
@@ -441,7 +439,7 @@
                 "j" '(avy-goto-char-timer :wk "Goto char")
                 "J" '(avy-goto-line :wk "Goto line"))
        :config
-       (setq avy-timeout-seconds 0.3
+       (setq avy-timeout-seconds 0.5
              avy-style 'pre))
    #+end_src
 ** Crux
@@ -622,10 +620,7 @@
         "xr" '(persp-rename :wk "Rename workspace")
         "xk" '(persp-kill :wk "Kill workspace"))
        :config
-       (persp-mode t)
-       (setq persp-state-default-file (no-littering-expand-etc-file-name "default-persp"))
-       (when (file-exists-p persp-state-default-file)
-         (persp-state-load persp-state-default-file)))
+       (persp-mode t))
    #+end_src
 ** Helpful
    [[https://github.com/Wilfred/helpful][Helpful]] is an alternative to the built-in Emacs help that provides
@@ -648,9 +643,9 @@
      (use-package pinboard
        :general
        (:prefix leader-key
-                "ub" '(:ignore true :wk "Pinboard")
-                "ubb" '(pinboard :wk "Open")
-                "uba" '(pinboard-add :wk "Add link")))
+                "uB" '(:ignore true :wk "Pinboard")
+                "uBb" '(pinboard :wk "Open")
+                "uBa" '(pinboard-add :wk "Add link")))
    #+end_src
 ** hippie-expand
    Use hippie-expand instead of dabbrev-expand.
@@ -689,11 +684,6 @@
        (setq magit-save-repository-buffers 'dontask
              magit-refs-show-commit-count 'all))
    #+end_src
-*** Forge
-    [[https://github.com/magit/forge][Forge]] - Work with Git forges from the comfort of Magit
-    #+begin_src elisp
-      (use-package forge :after magit)
-    #+end_src
 ** LSP
    UI integrations for lsp-mode
 *** LSP
@@ -715,8 +705,14 @@
         (lsp-mode . lsp-enable-which-key-integration))
 
       (use-package lsp-treemacs
+        :after lsp-mode
         :init
         (setq lsp-treemacs-sync-mode 1))
+
+      (use-package eglot
+        :disabled
+        :hook
+        ((clojure-mode clojurescript-mode js2-mode) . eglot-ensure))
     #+end_src
 ** Clojure/ClojureScript
    Clojure settings for Emacs
@@ -781,29 +777,6 @@
               kaocha-runner-ongoing-tests-win-min-height 20
               kaocha-runner-output-win-max-height 20))
     #+end_src
-** Rust
-   Use rustic for Rust coding.
-   #+begin_src elisp
-     (use-package rustic
-       :ensure
-       :bind (:map rustic-mode-map
-                   ("M-j" . lsp-ui-imenu)
-                   ("M-?" . lsp-find-references)
-                   ("C-c C-c l" . flycheck-list-errors)
-                   ("C-c C-c a" . lsp-execute-code-action)
-                   ("C-c C-c r" . lsp-rename)
-                   ("C-c C-c q" . lsp-workspace-restart)
-                   ("C-c C-c Q" . lsp-workspace-shutdown)
-                   ("C-c C-c s" . lsp-rust-analyzer-status))
-       :config
-       ;; uncomment for less flashiness
-       ;; (setq lsp-eldoc-hook nil)
-       ;; (setq lsp-enable-symbol-highlighting nil)
-       ;; (setq lsp-signature-auto-activate nil)
-
-       ;; comment to disable rustfmt on save
-       (setq rustic-format-on-save t))
-   #+end_src
 ** Javascript
    [[https://github.com/mooz/js2-mode][js2-mode]]: Improved JavaScript editing mode for GNU Emacs.
    #+begin_src elisp
@@ -846,11 +819,13 @@
    #+end_src
 ** YAML
    #+begin_src elisp
-     (use-package yaml-mode :defer t)
+     (use-package yaml-mode
+       :defer t)
    #+end_src
 ** JSON
    #+begin_src elisp
      (use-package json-mode
+       :defer t
        :mode "\\.json\\'")
    #+end_src
 ** Docker
@@ -861,26 +836,20 @@
 
 
 * Productivity
-** vterm
-   [[https://github.com/akermu/emacs-libvterm][vterm]] is fully-fledged terminal emulator inside GNU Emacs based on
-   libvterm.
+** pdf-tools
+[[https://github.com/vedang/pdf-tools][PDF Tools]] is, among other things, a replacement of DocView for PDF
+files. See also the [[https://pdftools.wiki/][wiki]].
 
-   #+begin_src elisp
-     (defun my-vsplit-vterm ()
-       (interactive)
-       (split-window-horizontally)
-       (vterm))
+#+begin_src emacs-lisp
+  (use-package pdf-tools
+    :config
+    (pdf-tools-install))
+#+end_src
 
-     (use-package vterm
-       :general
-       (:prefix leader-key
-                "ut" '(my-vsplit-vterm :wk "Terminal other window")
-                "uT" '(vterm :wk "Terminal here")))
-   #+end_src
 ** org-mode
 *** org settings
     #+begin_src elisp
-      (setq-default org-depot "~/cloud/mds/Mobile/org/")
+      (setq-default org-depot (file-truename "~/cloud/Sputnik/org"))
 
       (use-package org
         :general
@@ -902,9 +871,7 @@
               org-use-speed-commands t
               org-startup-with-inline-images t
               org-image-actual-width '(600)
-              org-agenda-files (list org-depot)
-              org-default-notes-file "todo.org"
-              org-todo-keywords '((sequence "TODO" "NEXT" "HOLD" "|" "DONE" "CANCEL"))
+              org-agenda-files (list "~/cloud/Sputink/org")
               org-log-done t
               org-archive-location (concat org-depot "archive.org::datatree/")
               org-hide-emphasis-markers t
@@ -925,20 +892,15 @@
     #+begin_src emacs-lisp
       (use-package org-modern
         :hook
-        (org-mode . org-modern-mode)
-        (org-agenda-finalize . org-modern-mode))
+        (org-mode . org-modern-mode))
     #+end_src
 *** org-capture templates
 #+begin_src elisp
   (setq org-capture-templates
-        '(("t" "Todo" entry (file "todo.org")
-            "* TODO %?\n" :empty-lines 1)
-          ("T" "Todo with Clipboard" entry (file "todo.org")
-           "* TODO %?\n\n   %x" :empty-lines 1)
-          ("b" "Brain dump note" entry (file "braindump.org")
-           "* %?\n   %x" :empty-lines 1)
-          ("l" "Brain dump link" entry (file "braindump.org")
-           "* %(org-cliplink-capture) \n  %?" :empty-lines 1)))
+     '(("t" "Todo" entry (file "todo.org")
+         "* TODO %?\n" :empty-lines 1)
+       ("T" "Todo with Clipboard" entry (file "todo.org")
+        "* TODO %?\n\n   %x" :empty-lines 1)))
 #+end_src
 *** org-babel
     Settings for literate programming.
@@ -965,30 +927,6 @@
          :config
          (setq org-babel-clojure-backend 'cider))
      #+end_src
-*** yankpad
-    [[https://github.com/Kungsgeten/yankpad][GitHub - Kungsgeten/yankpad: Paste snippets from an org-mode file]]
-    #+begin_src elisp
-      (use-package yasnippet
-        :ensure t
-        :config
-        (setq yas-verbosity 1)
-        (yas-global-mode))
-
-      (use-package yankpad
-        :ensure t
-        :after yasnippet
-        :general
-        (:prefix leader-key
-                 "y" '(:ignore t :wk "Snippets")
-                 "yc" 'yankpad-set-category
-                 "ye" 'yankpad-edit
-                 "yi" 'yankpad-insert
-                 "ym" 'yankpad-map
-                 "yr" 'yankpad-reload
-                 "yx" 'yankpad-expand)
-        :init
-        (setq yankpad-file "~/org/yankpad.org"))
-    #+END_SRC
 *** olivetti
     [[https://github.com/rnkn/olivetti][olivetti]]: A simple Emacs minor mode for a nice writing.
     environment.
@@ -1001,38 +939,6 @@
         :config
         (setq olivetti-style 'fancy
               olivetti-minimum-body-width 80))
-    #+end_src
-*** org-roam
-    [[https://www.orgroam.com/][org-roam]]: A plain-text personal knowledge management system.
-
-    #+begin_src emacs-lisp
-      (use-package org-roam
-        :init
-        (setq org-roam-directory (file-truename "~/org/roam")
-              org-roam-dailies-directory "."
-              org-roam-node-display-template (concat "${title:*} " (propertize "${tags:10}" 'face 'org-tag))
-              org-roam-completion-everywhere t)
-        :general
-        (:prefix leader-key
-                 "rf" 'org-roam-node-find
-                 "rl" 'org-roam-buffer-toggle
-                 "rd" 'org-roam-dailies-capture-today
-                 "ri" 'org-roam-node-insert
-                 "rh" 'org-roam-dailies-goto-today
-                 "rta" 'org-roam-tag-add
-                 "rtd" 'org-roam-tag-remove)
-        :config
-        (setq org-roam-dailies-capture-templates
-            '(("d" "default" entry
-               "* %?"
-               :target (file+datetree "journal.org" year))))
-        (add-to-list 'display-buffer-alist
-                   '("\\*org-roam\\*"
-                     (display-buffer-in-direction)
-                     (direction . right)
-                     (window-width . 0.33)
-                     (window-height . fit-window-to-buffer)))
-        (org-roam-db-autosync-mode))
     #+end_src
 
 

@@ -1,0 +1,11 @@
+* clojure-mode
+** deps                                                                  :src:
+A deps.edn template for generic projects
+#+begin_src clojure
+  {:paths ["src/clj"]
+   :deps  {$0}
+   :aliases
+   {:outdated {:extra-deps {com.github.liquidz/antq {:mvn/version "RELEASE"}}
+               :main-opts  ["-m" "antq.core"]}
+    :test     {:extra-deps {lambdaisland/kaocha {:mvn/version "1.69.1069"}}}}}
+#+end_src
