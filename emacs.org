@@ -620,6 +620,7 @@
         "xr" '(persp-rename :wk "Rename workspace")
         "xk" '(persp-kill :wk "Kill workspace"))
        :config
+       (setq persp-suppress-no-prefix-key-warning t)
        (persp-mode t))
    #+end_src
 ** Helpful
