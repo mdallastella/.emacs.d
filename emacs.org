@@ -856,32 +856,25 @@ files. See also the [[https://pdftools.wiki/][wiki]].
 ** org-mode
 *** org settings
     #+begin_src elisp
-      (setq-default org-depot (file-truename "~/cloud/Sputnik/org"))
-
       (use-package org
         :general
         (:prefix leader-key
                  "o" '(:ignore t :wk "Org-mode")
                  "oo" '(org-capture :wk "Capture")
-                 "oa" '(org-agenda :wk "Agenda")
-                 "o'" '(org-edit-special :wk "Edit special")
-                 "og" '(org-goto :wk "Goto")
-                 "os" '(org-todo :wk "Status")
-                 "ot" '(org-set-tags-command :wk "Tag")
-                 "od" '(org-schedule :wk "Schedule")
-                 "od" '(org-deadline :wk "Deadline"))
+                 "oa" '(org-agenda :wk "Agenda"))
         :custom-face
         (org-block-begin-line ((t (:underline nil))))
         (org-block-end-line ((t (:overline nil))))
-        :config
-        (setq org-directory org-depot
-              org-use-speed-commands t
-              org-startup-with-inline-images t
+        :init
+        (setq org-use-speed-commands t
               org-image-actual-width '(600)
-              org-agenda-files (list "~/cloud/Sputink/org")
+              org-agenda-files '("~/org/todo.org"
+                                 "~/org/inbox.org")
               org-log-done t
-              org-archive-location (concat org-depot "archive.org::datatree/")
+              org-archive-location "~/org/archive.org::datatree/"
               org-hide-emphasis-markers t
+              org-agenda-skip-deadline-if-done t
+              org-agenda-skip-scheduled-if-done t
               org-ellipsis " ↴"
               org-fontify-quote-and-verse-blocks t
               org-src-tab-acts-natively t))
@@ -893,8 +886,8 @@ files. See also the [[https://pdftools.wiki/][wiki]].
               org-refile-allow-creating-parent-nodes 'confirm))
     #+end_src
 *** org-modern
-    org-modern: This package implements a “modern” style for your Org
-    buffers using font locking and text properties.
+org-modern: This package implements a “modern” style for your Org
+buffers using font locking and text properties.
 
     #+begin_src emacs-lisp
       (use-package org-modern
@@ -906,8 +899,12 @@ files. See also the [[https://pdftools.wiki/][wiki]].
   (setq org-capture-templates
      '(("t" "Todo" entry (file "todo.org")
          "* TODO %?\n" :empty-lines 1)
-       ("T" "Todo with Clipboard" entry (file "todo.org")
-        "* TODO %?\n\n   %x" :empty-lines 1)))
+       ("T" "Todo and paste" entry (file "todo.org")
+        "* TODO %?\n\n%x" :empty-lines 1)
+       ("i" "Inbox" entry (file "inbox.org")
+        "* %?\n" :empty-lines 1)
+       ("I" "Inbox and paste" entry (file "inbox.org")
+         "* %?\n\n%x" :empty-lines 1)))
 #+end_src
 *** org-babel
     Settings for literate programming.
@@ -934,7 +931,62 @@ files. See also the [[https://pdftools.wiki/][wiki]].
          :config
          (setq org-babel-clojure-backend 'cider))
      #+end_src
-*** olivetti
+
+** Denote
+[[https://protesilaos.com/emacs/denote][Denote]] aims to be a simple-to-use, focused-in-scope, and effective
+note-taking tool for Emacs.
+
+#+begin_src emacs-lisp
+  (defun my-denote-journal ()
+    "Create an entry tagged 'journal', while prompting for a title."
+    (interactive)
+    (denote (denote--title-prompt (format-time-string "%F %a"))
+            '("journal")
+            nil
+            "journals"))
+
+  (use-package denote
+    :general
+    (:prefix leader-key
+             "nn" 'denote
+             "nN" 'denote-type
+             "nd" 'denote-date
+             "ns" 'denote-subdirectory
+             "nt" 'denote-template
+             "ni" 'denote-link
+             "nI" 'denote-link-add-links
+             "nl" 'denote-link-find-file
+             "nb" 'denote-link-backlinks
+             "nr" 'denote-rename-file
+             "nR" 'denote-rename-file-using-front-matter
+             "nj" 'my-denote-journal)
+    :hook
+    ((find-file . denote-link-buttonize-buffer)
+     (dired-mode . denote-dired-mode))
+    :config
+    (setq denote-directory (expand-file-name "~/cloud/Sputnik/denote/")
+          denote-allow-multi-word-keywords t
+          denote-infer-keywords t
+          denote-sort-keywords t
+          denote-prompts '(title keywords)))
+#+end_src
+** consult-notes
+[[https://github.com/mclear-tools/consult-notes][consult-notes]] — easily selecting notes via consult.
+#+begin_src emacs-lisp
+      (use-package consult-notes
+        :general
+        (:prefix leader-key
+                 "no" 'consult-notes
+                 "nS" 'consult-notes-search-in-all-notes)
+        :commands
+        (consult-notes
+         consult-notes-search-in-all-notes)
+        :config
+        (setq consult-notes-sources `(("Denote" ?n ,denote-directory)
+                                      ("Org" ?o ,org-directory))))
+#+end_src
+
+** olivetti
     [[https://github.com/rnkn/olivetti][olivetti]]: A simple Emacs minor mode for a nice writing.
     environment.
     #+begin_src elisp
