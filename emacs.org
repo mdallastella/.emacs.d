@@ -827,7 +827,13 @@
    #+begin_src elisp
      (use-package json-mode
        :defer t
-       :mode "\\.json\\'")
+       :mode "\\.json\\'"
+       :bind
+       (:map json-mode-map
+             ("C-c C-j" . jq-interactively)))
+
+     (use-package jq-mode
+       :after json-mode)
    #+end_src
 ** Docker
    #+begin_src elisp
