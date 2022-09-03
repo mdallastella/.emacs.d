@@ -861,15 +861,16 @@ files. See also the [[https://pdftools.wiki/][wiki]].
         (:prefix leader-key
                  "o" '(:ignore t :wk "Org-mode")
                  "oo" '(org-capture :wk "Capture")
-                 "oa" '(org-agenda :wk "Agenda"))
+                 "oa" '(org-agenda :wk "Agenda")
+                 "of" 'org-attach)
         :custom-face
         (org-block-begin-line ((t (:underline nil))))
         (org-block-end-line ((t (:overline nil))))
-        :init
-        (setq org-use-speed-commands t
+        :config
+        (setq org-directory "~/org"
+              org-agenda-files '("~/org/todo.org" "~/org/inbox.org")
+              org-use-speed-commands t
               org-image-actual-width '(600)
-              org-agenda-files '("~/org/todo.org"
-                                 "~/org/inbox.org")
               org-log-done t
               org-archive-location "~/org/archive.org::datatree/"
               org-hide-emphasis-markers t
@@ -878,12 +879,6 @@ files. See also the [[https://pdftools.wiki/][wiki]].
               org-ellipsis " ↴"
               org-fontify-quote-and-verse-blocks t
               org-src-tab-acts-natively t))
-
-      (use-package org-refile
-        :ensure nil
-        :config
-        (setq org-refile-targets nil
-              org-refile-allow-creating-parent-nodes 'confirm))
     #+end_src
 *** org-modern
 org-modern: This package implements a “modern” style for your Org
