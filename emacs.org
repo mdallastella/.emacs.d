@@ -936,35 +936,6 @@ Settings for literate programming.
          :config
          (setq org-babel-clojure-backend 'cider))
      #+end_src
-
-** org-roam
-[[https://www.orgroam.com/][org-roam]]: A plain-text personal knowledge management system.
-
-#+begin_src emacs-lisp
-  (use-package org-roam
-    :general
-    (:prefix leader-key
-             "rf" 'org-roam-node-find
-             "rb" 'org-roam-buffer-toggle
-             "rr" 'org-roam-dailies-capture-today
-             "ri" 'org-roam-node-insert
-             "rI" 'org-roam-node-insert-section
-             "rta" 'org-roam-tag-add
-             "rtr" 'org-roam-tag-remove)
-    :init
-    (setq org-roam-directory (file-truename "~/org/roam")
-          org-roam-node-display-template (concat "${title:*} " (propertize "${tags:10}" 'face 'org-tag))
-          org-roam-completion-everywhere t)
-    :config
-    (add-to-list 'display-buffer-alist
-                 '("\\*org-roam\\*"
-                   (display-buffer-in-direction)
-                   (direction . right)
-                   (window-width . 0.25)
-                   (window-height . fit-window-to-buffer)))
-    (org-roam-db-autosync-mode))
-#+end_src
-
 ** org-gcal
 [[https://github.com/kidd/org-gcal.el][org-gcal]]: Sync between Org and Gcal
 #+begin_src emacs-lisp
@@ -982,16 +953,13 @@ Settings for literate programming.
   (use-package consult-notes
     :general
     (:prefix leader-key
-             "ro" 'consult-notes
-             "rS" 'consult-notes-search-in-all-notes)
+             "no" 'consult-notes
+             "nS" 'consult-notes-search-in-all-notes)
     :commands (consult-notes
-               consult-notes-search-in-all-notes
-               consult-notes-org-roam-find-node
-               consult-notes-org-roam-find-node-relation)
+               consult-notes-search-in-all-notes)
     :config
     (setq consult-notes-sources '(("Org"   ?o "~/org")
-                                  ("Roam"  ?r "~/org/roam")))
-    (consult-notes-org-roam-mode))
+                                  ("Denote"  ?r "~/denote"))))
 #+end_src
 
 ** olivetti
@@ -999,15 +967,15 @@ Settings for literate programming.
 environment.
 
     #+begin_src elisp
-  (use-package olivetti
-    :general
-    (:prefix leader-key
-             "to" 'olivetti-mode)
-    :hook
-    (org-roam-mode . olivetti-mode)
-    :config
-    (setq olivetti-style 'fancy
-          olivetti-minimum-body-width 80))
+      (use-package olivetti
+        :general
+        (:prefix leader-key
+                 "to" 'olivetti-mode)
+        :hook
+        (org-roam-mode . olivetti-mode)
+        :config
+        (setq olivetti-style 'fancy
+              olivetti-minimum-body-width 80))
     #+end_src
 ** dashboard
 [[https://github.com/emacs-dashboard/emacs-dashboard][emacs-dashboard]]: An extensible emacs startup screen showing you what’s
