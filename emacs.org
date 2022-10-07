@@ -103,6 +103,8 @@ me. ~C-c~ is the "leader", then a letter that identify the scope: ~c~
 for generic functions, ~b~ for buffer, ~d~ for directories, ~f~ for files,
 ~p~ for projects, ~m~ for the active major-modes and so on.
 ** general
+general.el provides a more convenient method for binding keys in emacs (for both evil and non-evil users).
+
    #+begin_src elisp
   (setq-default leader-key "C-c")
 
@@ -120,23 +122,24 @@ for generic functions, ~b~ for buffer, ~d~ for directories, ~f~ for files,
      "." 'set-mark-command
      ;; Buffers (b)
      "b" '(:ignore t :wk "Buffers")
-     "bw" 'save-buffer
-     "bk" 'kill-this-buffer
-     "bK" 'kill-buffer
+     "bw" '(save-buffer :wk "Write")
+     "bk" '(kill-this-buffer :wk "Kill this buffer")
+     "bK" '(kill-buffer :wk "Kill a buffer")
+     "br" '(revert-buffer :wk "Revert this buffer")
      ;; Files (f)
      "f" '(:ignore t :wk "Files")
-     "ff" 'find-file
-     "fd" 'dired
-     "fP" 'my-open-config
+     "ff" '(find-file :wk "Find file")
+     "fd" '(dired :wk "Open Dired")
+     "fP" '(my-open-config :wk "Open emacs.org")
      ;; Utility (u)
      "u" '(:ignore t :wk "Utility")
      "uD" 'package-delete
      "ub" 'browse-url-at-point
      ;; Toggle (t)
      "t" '(:ignore t :wk "Toggle")
-     "ts" 'flyspell-mode
+     "ts" '(flyspell-mode :wk "Flyspell")
      ;; Quit
-     "qq" 'save-buffers-kill-emacs))
+     "qq" '(save-buffers-kill-emacs :wk "Save and quit")))
    #+end_src
 
 ** which-key
