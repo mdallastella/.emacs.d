@@ -715,33 +715,9 @@ Use hippie-expand instead of dabbrev-expand.
        (setq magit-save-repository-buffers 'dontask
              magit-refs-show-commit-count 'all))
    #+end_src
-** LSP
-UI integrations for lsp-mode
-*** LSP
+** Eglot
     #+begin_src elisp
-  (use-package lsp-mode
-    :commands (lsp lsp-deferred)
-    :general
-    (:prefix leader-key
-             "l" '(:keymap lsp-command-map :package lsp-mode :wk "LSP"))
-    :init
-    (setq lsp-keymap-prefix "C-c l")
-    :config
-    (setq lsp-use-plist t
-          lsp-completion-enable nil
-          lsp-headerline-breadcrumb-enable nil
-          read-process-output-max (* 1024 1024))
-    :hook
-    ((clojure-mode clojurescript-mode js-mode js2-mode web-mode rust-mode) . lsp-deferred)
-    (lsp-mode . lsp-enable-which-key-integration))
-
-  (use-package lsp-treemacs
-    :after lsp-mode
-    :init
-    (setq lsp-treemacs-sync-mode 1))
-
   (use-package eglot
-    :disabled
     :hook
     ((clojure-mode clojurescript-mode js2-mode) . eglot-ensure))
     #+end_src
