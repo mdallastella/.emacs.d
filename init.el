@@ -16,10 +16,11 @@
 ;; Emacs 28 - Ignore compilation warnings
 (setq native-comp-async-report-warnings-errors 'silent)
 
+;; Maximize the window on startup
+(add-hook 'window-setup-hook 'toggle-frame-fullscreen t)
+
 ;; List package archives and initialize them
 (require 'package)
-
-(setq package-enable-at-startup nil)
 
 (setq package-archives
       ;; Package archives, the usual suspects
@@ -105,10 +106,10 @@
       (org-babel-load-file emacs-org-file t)
     (load-file emacs-el-file)))
 
-
 ;; My custom file
 (message "Loading custom-file...")
 (setq custom-file (no-littering-expand-etc-file-name "custom.el"))
-(load custom-file)
+(when (file-exists-p custom-file)
+  (load custom-file))
 
 ;;; init.el ends here

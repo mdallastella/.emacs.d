@@ -5,26 +5,26 @@
 
 * General
 ** Use lexical-binding, see why [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Lexical-Binding.html][here]].
-   #+begin_src elisp
+#+begin_src elisp
   ;;; -*- lexical-binding: t -*-
-   #+end_src
+#+end_src
 ** My personal information
-   #+begin_src elisp
+#+begin_src elisp
   (setq user-full-name "Marco Dalla Stella"
         user-mail-address "marco@dallastella.name")
-   #+end_src
+#+end_src
 ** Access to shell PATH
 Ensure environment variables inside Emacs look the same as in the
 user’s shell. Also, load keychain environment variables.
 
-   #+begin_src elisp
+#+begin_src elisp
   (use-package exec-path-from-shell
     :ensure t
     :config
     (exec-path-from-shell-initialize))
-   #+end_src
+#+end_src
 ** Save history
-   #+begin_src elisp
+#+begin_src elisp
   (use-package savehist
     :ensure nil
     :config
@@ -34,67 +34,65 @@ user’s shell. Also, load keychain environment variables.
         savehist-additional-variables '(kill-ring
                                         search-ring
                                         regexp-search-ring))
-    :init
     (savehist-mode t))
-   #+end_src
+#+end_src
 ** Keep backups out of the way
 Store backups and autosave files in ~/tmp~
 
-   #+begin_src elisp
+#+begin_src elisp
   (setq backup-directory-alist
         `((".*" . ,temporary-file-directory)))
   (setq auto-save-file-name-transforms
         `((".*" ,temporary-file-directory t)))
-   #+end_src
+#+end_src
 ** Auto Revert
 Automatically reload changes on a file if needed.
 
-   #+begin_src elisp
+#+begin_src elisp
   (use-package autorevert
     :ensure nil
     :config
     (setq global-auto-revert-non-file-buffers t)
-    :init
     (global-auto-revert-mode t))
-   #+end_src
+#+end_src
 ** Uniquify buffer names
 Meaningful names for buffers with the same name.
 
-   #+begin_src elisp
+#+begin_src elisp
   (use-package uniquify
     :ensure nil
     :config
     (setq uniquify-buffer-name-style 'post-forward-angle-brackets
           uniquify-separator "/"
           uniquify-ignore-buffers-re "^\\*"))
-   #+end_src
+#+end_src
 ** Recent files
 Save recent files
 
-   #+begin_src elisp
+#+begin_src elisp
   (use-package recentf
     :ensure nil
     :config
     (setq recentf-max-saved-items 500
           recentf-max-menu-items 15))
-   #+end_src
+#+end_src
 ** Unbind Ctrl-z
 I don't like to hide Emacs.
 
-   #+begin_src elisp
+#+begin_src elisp
   (global-unset-key (kbd "C-z"))
-   #+end_src
+#+end_src
 ** Scratch buffer
 Use `emacs-lisp-mode’ instead of `lisp-interaction-mode’ for scratch buffer.
 
-   #+begin_src elisp
+#+begin_src elisp
   (setq initial-major-mode 'emacs-lisp-mode
         initial-scratch-message ";; Happy coding!\n\n")
-   #+end_src
+#+end_src
 ** Delete moves to trash
-   #+begin_src elisp
+#+begin_src elisp
   (setq delete-by-moving-to-trash t)
-   #+end_src
+#+end_src
 
 
 * Keybinding
@@ -103,9 +101,10 @@ me. ~C-c~ is the "leader", then a letter that identify the scope: ~c~
 for generic functions, ~b~ for buffer, ~d~ for directories, ~f~ for files,
 ~p~ for projects, ~m~ for the active major-modes and so on.
 ** general
-general.el provides a more convenient method for binding keys in emacs (for both evil and non-evil users).
+general.el provides a more convenient method for binding keys in emacs
+(for both evil and non-evil users).
 
-   #+begin_src elisp
+#+begin_src elisp
   (setq-default leader-key "C-c")
 
   (defun my-open-config ()
@@ -140,55 +139,54 @@ general.el provides a more convenient method for binding keys in emacs (for both
      "ts" '(flyspell-mode :wk "Flyspell")
      ;; Quit
      "qq" '(save-buffers-kill-emacs :wk "Save and quit")))
-   #+end_src
+#+end_src
 
 ** which-key
 [[https://github.com/justbur/emacs-which-key][Which-key]] – Emacs package that displays available keybindings in popup.
-   #+begin_src elisp
+#+begin_src elisp
   (use-package which-key
     :diminish
-    :init
+    :config
     (setq which-key-sort-order 'which-key-key-order-alpha
           which-key-add-column-padding 1
           which-key-min-display-lines 6)
     (which-key-setup-side-window-bottom)
     (which-key-mode t))
-   #+end_src
+#+end_src
 
 
 * UI
 ** Frame title
 Show the current buffer name and the full path of the file on the app title bar
 
-   #+begin_src elisp
+#+begin_src elisp
   (setq-default frame-title-format "%b (%f)")
-   #+end_src
+#+end_src
 ** Font setup
 Set my favourite font
 
-   #+begin_src elisp
+#+begin_src elisp
   (set-face-attribute 'default nil
                       :family "PragmataPro Mono Liga"
                       :height 110)
-   #+end_src
+#+end_src
 ** Theme
 [[https://github.com/hlissner/emacs-doom-themes][Solarized theme by emacs-doom-themes]]
 
-   #+begin_src elisp
+#+begin_src elisp
   (use-package doom-themes
     :config
     (load-theme 'doom-solarized-dark t)
     (doom-themes-visual-bell-config)
     (doom-themes-org-config)
-    :init
-    (custom-set-faces
-     `(org-block ((t (:background nil))))
-     `(org-block-begin-line ((t (:background nil))))
-     `(org-block-end-line ((t (:background nil))))))
-   #+end_src
+    :custom-face
+    (org-block ((t (:background nil))))
+    (org-block-begin-line ((t (:background nil))))
+    (org-block-end-line ((t (:background nil)))))
+#+end_src
 ** Modeline
 Modeline from [[https://github.com/seagle0128/doom-modeline][Doom]]
-   #+begin_src elisp
+#+begin_src elisp
   (use-package minions
     :ensure t
     :init
@@ -207,136 +205,134 @@ Modeline from [[https://github.com/seagle0128/doom-modeline][Doom]]
           doom-modeline-height 15)
 
     (doom-modeline-mode))
-   #+end_src
+#+end_src
 ** Show matching parenthesis
-   #+begin_src elisp
+#+begin_src elisp
   (use-package paren
     :config
     (setq show-paren-when-point-inside-paren t
           show-paren-when-point-in-periphery t)
-    :init
     (show-paren-mode t))
 
   (use-package rainbow-delimiters
     :hook
     ((prog-mode cider-repl-mode) . rainbow-delimiters-mode))
-   #+end_src
+#+end_src
 ** Use icons
 [[https://github.com/domtronn/all-the-icons.el][all-the-icons.el]]: A utility package to collect various Icon Fonts and
 propertize them within Emacs.
 
-   #+begin_src elisp
+#+begin_src elisp
   (use-package all-the-icons)
-   #+end_src
+#+end_src
 
 [[https://github.com/iyefrat/all-the-icons-completion][all-the-icons-completion]]: adds icons to completion candidates using
 the built in completion metadata functions.
 
-   #+begin_src elisp
+#+begin_src elisp
   (use-package all-the-icons-completion
     :hook
     (marginalia-mode . all-the-icons-completion-marginalia-setup)
     :init
     (all-the-icons-completion-mode))
-   #+end_src
+#+end_src
 
 ** Increase line-spacing
-   #+begin_src elisp
+#+begin_src elisp
   (setq-default line-spacing 0.2)
-   #+end_src
+#+end_src
 ** Prettify symbols
-   #+begin_src elisp
+#+begin_src elisp
   (global-prettify-symbols-mode t)
-   #+end_src
+#+end_src
 ** Window margins
 I like to have some space on the left and right edge of the window.
 
-   #+begin_src emacs-lisp :results output silent
+#+begin_src emacs-lisp :results output silent
   (setq-default left-margin-width 4
                 right-margin-width 4)
   (set-fringe-mode 10)
-   #+end_src
+#+end_src
 ** Highlight the current line
-   #+begin_src elisp
+#+begin_src elisp
   (global-hl-line-mode)
-   #+end_src
+#+end_src
 ** Highlight uncommitted changes
 Use the diff-hl package to highlight changed-and-uncommitted lines
 when programming.
 
-   #+begin_src elisp
+#+begin_src elisp
   (use-package diff-hl
     :hook ((magit-pre-refresh . diff-hl-magit-pre-refresh)
            (magit-post-refresh . diff-hl-magit-post-refresh))
-    :init
+    :config
     (global-diff-hl-mode))
-   #+end_src
+#+end_src
 ** Symbol highlight
 [[https://gitlab.com/ideasman42/emacs-idle-highlight-mode/][Idle Highligh Mode]]: Simple symbol highlighting package for Emacs.
 
-   #+begin_src elisp
+#+begin_src elisp
   (use-package idle-highlight-mode
-    :config (setq idle-highlight-idle-time 0.2)
-    :hook ((prog-mode text-mode) . idle-highlight-mode))
-   #+end_src
+    :hook ((prog-mode text-mode) . idle-highlight-mode)
+    :config (setq idle-highlight-idle-time 0.5))
+#+end_src
 ** Emoji
 [[https://github.com/iqbalansari/emacs-emojify][Emojify]]: an Emacs extension to display emojis. It can display
 github style emojis like :smile: or plain ascii ones like :).
 
-   #+begin_src elisp
+#+begin_src elisp
   (use-package emojify
+    :hook
+    (after-init . global-emojify-mode)
     :config
-    ;; Set emojify to only replace Unicode emoji, and do it everywhere.
     (setq emojify-emoji-styles '(unicode github)
-          emojify-inhibit-major-modes '())
-    ;; Enable it globally.
-    (add-hook 'after-init-hook #'global-emojify-mode))
-   #+end_src
+          emojify-inhibit-major-modes '()))
+#+end_src
 
 
 * Editing
 ** UTF-8 by default
-   #+begin_src elisp
+#+begin_src elisp
   (set-charset-priority 'unicode)
-   #+end_src
+#+end_src
 ** Use ALWAYS spaces to indent, NEVER tabs
-   #+begin_src elisp
+#+begin_src elisp
   (setq-default indent-tabs-mode nil           ; Never use tabs
                 tab-always-indent 'complete    ; Indent or complete
                 tab-width 2)                   ; Show eventual tabs as 4 spaces
-   #+end_src
+#+end_src
 ** Newline at the end of a file
-   #+begin_src elisp
+#+begin_src elisp
   (setq require-final-newline t)
-   #+end_src
+#+end_src
 ** Delete/replace current selection
-   #+begin_src elisp
+#+begin_src elisp
   (delete-selection-mode t)
-   #+end_src
+#+end_src
 ** Deal with whitespaces
-   #+begin_src elisp
+#+begin_src elisp
   (use-package whitespace
     :ensure nil
     :hook
     (before-save . whitespace-cleanup)
     :config
     (setq whitespace-line-column nil))
-   #+end_src
+#+end_src
 ** Direnv
 Direnv integration with Emacs
 
-   #+begin_src elisp
+#+begin_src elisp
   (use-package direnv
     :general
     (:prefix leader-key
              "ud" '(:ignore t :wk "Direnv")
              "uda" '(direnv-allow :wk "Direnv allow"))
     :hook (prog-mode . direnv-mode))
-   #+end_src
+#+end_src
 ** Multiple cursors
 [[https://github.com/magnars/multiple-cursors.el][Multiple cursors for Emacs]]
 
-   #+begin_src elisp
+#+begin_src elisp
   (use-package multiple-cursors
     :general
     (:prefix leader-key
@@ -345,37 +341,37 @@ Direnv integration with Emacs
              "mp" 'mc/mark-previous-like-this
              "ma" 'mc/mark-all-like-this
              "m>" 'mc/edit-lines))
-   #+end_src
+#+end_src
 ** undo-fu
 [[https://gitlab.com/ideasman42/emacs-undo-fu][Undo Fu]] - Simple, stable undo with redo for emacs.
 
-   #+begin_src elisp
+#+begin_src elisp
   (use-package undo-fu
     :bind ("C-z" . undo-fu-only-undo))
-   #+end_src
+#+end_src
 ** wgrep
 [[https://github.com/mhayashi1120/Emacs-wgrep][wgrep.el]] - allows you to edit a grep buffer and apply those changes
 to the file buffer.
 
-   #+begin_src elisp
+#+begin_src elisp
   (use-package wgrep)
-   #+end_src
+#+end_src
 ** easy-kill
 [[https://github.com/leoliu/easy-kill][easy-kill]]: Provide commands easy-kill and easy-mark to let users
 kill or mark things easily.
 
-   #+begin_src elisp
+#+begin_src elisp
   (use-package easy-kill
     :bind (([remap kill-ring-save] . easy-kill)
            ([remap mark-sexp] . easy-mark)))
-   #+end_src
+#+end_src
 
 ** Parenthesis
 *** Electric Pair
 [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Matching.html][Electric Pair]]: provides a way to easily insert matching
 delimiters: parentheses, braces, brackets, etc.
 
-    #+begin_src elisp
+ #+begin_src elisp
   (use-package elec-pair
     :ensure nil
     :hook
@@ -386,30 +382,28 @@ delimiters: parentheses, braces, brackets, etc.
     (setq electric-pair-preserve-balance t
           electric-pair-delete-adjacent-pairs t
           electric-pair-skip-self nil)
-    :init
     (electric-pair-mode))
-    #+end_src
+ #+end_src
 
 *** Puni
 [[https://github.com/AmaiKinono/puni][Puni]]: soft deletion keeping the parentheses balanced.
 
-   #+begin_src elisp
+#+begin_src elisp
   ;; Use puni-mode globally and disable it for term-mode.
   (use-package puni
-    :defer t
+    :commands puni-global-mode
     :bind*
     (:map puni-mode-map
           ("C-<right>" . puni-slurp-forward)
           ("C-<left>" . puni-barf-forward)
           ("C-<up>" . puni-raise))
     :init
-    (puni-global-mode)
-    (add-hook 'term-mode-hook #'puni-disable-puni-mode))
-   #+end_src
+    (puni-global-mode))
+#+end_src
 
 ** yankpad
 [[https://github.com/Kungsgeten/yankpad][yankpad]] - Paste snippets from an org-mode file
-    #+begin_src elisp
+ #+begin_src elisp
   (use-package yasnippet
     :ensure t
     :config
@@ -428,29 +422,28 @@ delimiters: parentheses, braces, brackets, etc.
              "ym" 'yankpad-map
              "yr" 'yankpad-reload
              "yx" 'yankpad-expand)
-    :init
+    :config
     (setq yankpad-file (expand-file-name "yankpad.org" user-emacs-directory)))
-    #+END_SRC
+ #+END_SRC
 
 
 * Tools
 ** Paradox
 [[https://github.com/Malabarba/paradox][Paradox]]: Project for modernizing Emacs' Package Menu.
-   #+begin_src elisp
+#+begin_src elisp
   (use-package paradox
     :config
     (setq paradox-github-token paradox-gh-token)
     :general
     (:prefix leader-key
-             "up" '(paradox-list-packages :wk "Packages list")
-             "uP" '(paradox-upgrade-packages :wk "Packages update"))
-    :init
+             "up" '(paradox-list-packages :wk "Packages list"))
+    :config
     (paradox-enable))
-   #+end_src
+#+end_src
 ** Avy
 [[https://github.com/abo-abo/avy][Avy]] is a GNU Emacs package for jumping to visible text using a
 char-based decision tree.
-   #+begin_src elisp
+#+begin_src elisp
   (use-package avy
     :defer t
     :general
@@ -460,13 +453,13 @@ char-based decision tree.
     :config
     (setq avy-timeout-seconds 0.5
           avy-style 'pre))
-   #+end_src
+#+end_src
 ** Crux
 A [[https://github.com/bbatsov/crux][Collection of Ridiculously Useful eXtensions for Emacs]]. Crux bundles
 many useful interactive commands to enhance your overall Emacs
 experience.
 
-   #+begin_src elisp
+#+begin_src elisp
   (use-package crux
     :general
     (:prefix leader-key
@@ -477,108 +470,111 @@ experience.
     (global-set-key [remap kill-whole-line] #'crux-smart-kill-line)
     (global-set-key [(shift return)] #'crux-smart-open-line)
     (global-set-key [(ctrl shift return)] #'crux-smart-open-line-above))
-   #+end_src
+#+end_src
 ** Vertico, Orderless, Consult, Marginalia & Embark
 *** Orderless
 [[https://github.com/oantolin/orderless][Orderless]] provides an ~orderless~ completion style that divides the
 pattern into space-separated components, and matches all the
 components in any order.
 
-    #+begin_src elisp
+ #+begin_src elisp
   (use-package orderless
-    :init
+    :config
     (setq completion-styles '(orderless partial-completion)
           completion-category-defaults nil
           completion-category-overrides nil))
-    #+end_src
+ #+end_src
 *** Vertico
 [[https://github.com/minad/vertico][Vertico]]: provides a performant and minimalistic vertical completion UI
 based on the default completion system.
 
-    #+begin_src elisp
+ #+begin_src elisp
   (use-package vertico
-    :init
+    :config
     (vertico-mode))
-    #+end_src
+ #+end_src
 
 *** Consult
 [[https://github.com/minad/consult][Consult]] provides practical commands based on the Emacs completion
 function completing-read.
 
-    #+begin_src elisp
+ #+begin_src elisp
   (use-package consult
     :general
     (:prefix leader-key
              "bb" 'consult-buffer
-             "fg" 'consult-ripgrep)
-    :bind
-    (("M-g e" . consult-compile-error)
-     ("M-g f" . consult-flycheck)
-     ("M-g g" . consult-goto-line))
-    :init
-    ;; Use Consult to select xref locations with preview
-    (setq xref-show-xrefs-function #'consult-xref
-          xref-show-definitions-function #'consult-xref)
+             "fg" 'consult-ripgrep
+             "cc" 'consult-imenu
+             "ce" 'consult-compile-error
+             "cf" 'consult-flymake
+             "cg" 'consult-goto-line-numbers
+             "cr" 'consult-recent-file)
     :config
+    (require 'consult-xref)
     (consult-customize
-     consult-theme
      :preview-key '(:debounce 0.2 any)
-     consult-ripgrep consult-git-grep consult-grep
-     consult-bookmark consult-recent-file consult-xref
-     consult--source-recent-file consult--source-project-recent-file consult--source-bookmark
+     consult-ripgrep
+     consult-git-grep
+     consult-grep
+     consult-bookmark
+     consult-recent-file
+     consult-xref
+     consult--source-recent-file
+     consult--source-project-recent-file
+     consult--source-bookmark
      :preview-key (kbd "M-."))
-    (setq consult-project-root-function
-          (lambda ()
-            (when-let (project (project-current))
-              (car (project-roots project))))))
-    #+end_src
+    (setq consult-project-root-function (lambda ()
+                                          (when-let (project (project-current))
+                                            (car (project-roots project))))
+          xref-show-xrefs-function #'consult-xref
+          xref-show-definitions-function #'consult-xref))
+ #+end_src
 
 *** Marginalia
 [[https://github.com/minad/marginalia][Marginalia]]: provides marks or annotations placed at the margin of the
 page of a book or in this case helpful colorful annotations placed at
 the margin of the minibuffer for your completion candidates.
 
-    #+begin_src elisp
+ #+begin_src elisp
   (use-package marginalia
     :bind (("M-A" . marginalia-cycle)
            :map minibuffer-local-map
            ("M-A" . marginalia-cycle))
-    :init
+    :config
     (marginalia-mode))
-    #+end_src
+ #+end_src
 
 *** Embark
 [[https://github.com/oantolin/embark/][Embark]]: rovides a sort of right-click contextual menu for Emacs,
 accessed through the embark-act command, offering you relevant actions
 to use on a target determined by the context.
 
-    #+begin_src elisp
-  (use-package embark
-    :bind
-    (("C-." . embark-act)         ;; pick some comfortable binding
-     ("M-." . embark-dwim)        ;; good alternative: M-.
-     ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
-    :init
-    (setq prefix-help-command #'embark-prefix-help-command)
-    :config
-    ;; Hide the mode line of the Embark live/completions buffers
-    (add-to-list 'display-buffer-alist
-                 '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
-                   nil
-                   (window-parameters (mode-line-format . none)))))
+ #+begin_src elisp
+   (use-package embark
+     :bind
+     (("C-." . embark-act)         ;; pick some comfortable binding
+      ("M-." . embark-dwim)        ;; good alternative: M-.
+      ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
+     :config
+     ;; Hide the mode line of the Embark live/completions buffers
+     (add-to-list 'display-buffer-alist
+                  '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
+                    nil
+                    (window-parameters (mode-line-format . none))))
+         (setq prefix-help-command #'embark-prefix-help-command))
 
-  (use-package embark-consult
-    :after (embark consult)
-    :demand t ; only necessary if you have the hook below
-    ;; if you want to have consult previews as you move around an
-    ;; auto-updating embark collect buffer
-    :hook
-    (embark-collect-mode . consult-preview-at-point-mode))
-    #+end_src
+   (use-package embark-consult
+     :after (embark consult)
+     :demand t ; only necessary if you have the hook below
+     ;; if you want to have consult previews as you move around an
+     ;; auto-updating embark collect buffer
+     :hook
+     (embark-collect-mode . consult-preview-at-point-mode))
+ #+end_src
 
 ** Spell checking
 *** ispell
-    #+begin_src elisp
+ #+begin_src elisp
   (use-package ispell
     :config
     (setq ispell-program-name (executable-find "aspell")
@@ -587,9 +583,9 @@ to use on a target determined by the context.
           ispell-local-dictionary "en")
     (unless ispell-program-name
       (warn "No spell checker available. Please install hunspell.")))
-    #+end_src
+ #+end_src
 *** flyspell
-    #+begin_src elisp
+ #+begin_src elisp
   (defun flyspell-italian ()
     (interactive)
     (ispell-change-dictionary "italian")
@@ -605,10 +601,9 @@ to use on a target determined by the context.
     :general
     (:prefix leader-key
              "s" '(:ignore t :wk "Flyspell")
-             "sd" '(flyspell-english :wk "English dictionary")
+             "se" '(flyspell-english :wk "English dictionary")
              "si" '(flyspell-italian :wk "Italian dictionary")
-             "sb" '(flyspell-buffer :wk "Check buffer")
-             "sr" '(flyspell-region :wk "Check region"))
+             "sb" '(flyspell-buffer :wk "Check buffer"))
     :hook
     ((text-mode . flyspell-mode)
      (prog-mode . flyspell-prog-mode)))
@@ -618,10 +613,10 @@ to use on a target determined by the context.
     :general
     (:prefix leader-key
              "ss" '(flyspell-correct-wrapper :wk "Correct word")))
-    #+end_src
+ #+end_src
 
 ** Company
-   #+begin_src elisp
+#+begin_src elisp
   (use-package company
     :config
     (setq company-idle-delay 0.1
@@ -630,13 +625,13 @@ to use on a target determined by the context.
           company-require-match 'never)
     :hook
     (after-init . global-company-mode))
-   #+end_src
+#+end_src
 ** Perspective
 The [[https://github.com/nex3/perspective-el][Perspective]] package provides multiple named workspace (or
 "perspectives") in Emacs, similar to multiple desktops in window
 managers like Awesome and XMonad, and Spaces on the Mac.
 
-   #+begin_src elisp
+#+begin_src elisp
   (use-package perspective
     :general
     (:prefix leader-key
@@ -645,14 +640,16 @@ managers like Awesome and XMonad, and Spaces on the Mac.
      "xr" '(persp-rename :wk "Rename workspace")
      "xk" '(persp-kill :wk "Kill workspace"))
     :config
-    (setq persp-suppress-no-prefix-key-warning t)
-    (persp-mode t))
-   #+end_src
+    (setq persp-suppress-no-prefix-key-warning t
+          persp-state-default-file (no-littering-expand-etc-file-name "perspective-default"))
+    (persp-mode t)
+    (persp-state-load persp-state-default-file))
+#+end_src
 ** Helpful
 [[https://github.com/Wilfred/helpful][Helpful]] is an alternative to the built-in Emacs help that provides
 much more contextual information.
 
-   #+begin_src elisp
+#+begin_src elisp
   (use-package helpful
     :custom
     (counsel-describe-function-function #'helpful-callable)
@@ -663,43 +660,56 @@ much more contextual information.
     ([remap describe-variable] . helpful-variable)
     ([remap describe-command] . helpful-command)
     ([remap describe-key] . helpful-key))
-   #+end_src
+#+end_src
 ** Pinboard
 [[https://github.com/davep/pinboard.el][pinboard.el]] - An Emacs client for Pinboard.
 
-   #+begin_src elisp
+#+begin_src elisp
   (use-package pinboard
     :general
     (:prefix leader-key
              "uB" '(:ignore true :wk "Pinboard")
              "uBb" '(pinboard :wk "Open")
              "uBa" '(pinboard-add :wk "Add link")))
-   #+end_src
+#+end_src
 ** hippie-expand
 Use hippie-expand instead of dabbrev-expand.
 
-   #+begin_src elisp
+#+begin_src elisp
   (use-package hippie-exp
     :bind* ("M-/" . hippie-expand))
-   #+end_src
+#+end_src
+** Dictionary
+Use built-in dictionary-el
 
+#+begin_src elisp
+  (use-package dictionary
+    :ensure nil
+    :general
+    (:prefix leader-key
+             "sd" 'dictionary-search)
+    :config
+    (setq dictionary-server "dict.org"
+          dictionary-use-single-buffer t))
+#+end_src
 
 * Programming
 ** Project
   Let's use the built-in module to manage different projects.
 
-  #+begin_src elisp
+#+begin_src elisp
   (use-package project
     :ensure nil
+    :commands project-roots
     :general
     (:prefix leader-key
              "p" '(:keymap project-prefix-map :package project :wk "Project")))
-  #+end_src
+#+end_src
 ** Git
 *** Magit
 [[https://github.com/magit/magit][Magit]] - A Git porcelain inside Emacs.
 
-   #+begin_src elisp
+#+begin_src elisp
      (use-package magit
        :general
        (:prefix leader-key
@@ -714,17 +724,27 @@ Use hippie-expand instead of dabbrev-expand.
        :config
        (setq magit-save-repository-buffers 'dontask
              magit-refs-show-commit-count 'all))
-   #+end_src
+#+end_src
 ** Eglot
-    #+begin_src elisp
+#+begin_src elisp
+  (use-package consult-eglot)
+
   (use-package eglot
+    :general
+    (:prefix leader-key
+             "l" '(:ignore t :wk "Eglot")
+             "lr" 'eglot-rename
+             "la" 'eglot-code-actions
+             "ld" 'xref-find-definitions
+             "le" 'eldoc-doc-buffer
+             "ls" 'consult-eglot-symbols)
     :hook
     ((clojure-mode clojurescript-mode js2-mode) . eglot-ensure))
-    #+end_src
+#+end_src
 ** Clojure/ClojureScript
 Clojure settings for Emacs
 *** Clojure development environment
-    #+begin_src elisp
+ #+begin_src elisp
   (use-package cider
     :hook
     ((cider-mode . eldoc-mode)
@@ -748,30 +768,30 @@ Clojure settings for Emacs
           cider-repl-pop-to-buffer-on-connect 'display-only
           cider-repl-history-file (locate-user-emacs-file "cider-repl-history")
           cider-repl-display-help-banner nil))
-    #+end_src
+ #+end_src
 *** Clojure Flycheck
 Flycheck using clj-kondo
 
-    #+begin_src elisp
+ #+begin_src elisp
   (use-package flycheck-clj-kondo)
-    #+end_src
+ #+end_src
 *** Font-locking for Clojure mode
-    #+begin_src elisp
+ #+begin_src elisp
   (use-package clojure-mode-extra-font-locking
     :after clojure-mode)
-    #+end_src
+ #+end_src
 *** Client for Clojure nREPL
-    #+begin_src elisp
+ #+begin_src elisp
   (use-package nrepl-client
     :ensure nil
     :after cider
     :config
     (setq nrepl-hide-special-buffers t))
-    #+end_src
+ #+end_src
 *** Kaocha test runner
 An emacs package for running Kaocha tests via CIDER.
 
-    #+begin_src elisp
+ #+begin_src elisp
   (use-package kaocha-runner
     :after cider
     :bind
@@ -785,17 +805,17 @@ An emacs package for running Kaocha tests via CIDER.
     (setq kaocha-runner-failure-win-min-height 20
           kaocha-runner-ongoing-tests-win-min-height 20
           kaocha-runner-output-win-max-height 20))
-    #+end_src
+ #+end_src
 ** Javascript
 [[https://github.com/mooz/js2-mode][js2-mode]]: Improved JavaScript editing mode for GNU Emacs.
 
-   #+begin_src elisp
+#+begin_src elisp
   (use-package rjsx-mode
     :mode "\\.[mc]?js\\'"
     :mode "\\.es6\\'"
     :mode "\\.pac\\'"
-    :interpreter "node")
-
+    :interpreter "node"
+    :config
     (setq js-chain-indent t
           ;; These have become standard in the JS community
           js2-basic-offset 2
@@ -809,12 +829,12 @@ An emacs package for running Kaocha tests via CIDER.
           js2-strict-missing-semi-warning nil
           ;; maximum fontification
           js2-highlight-level 3
-          js2-idle-timer-delay 0.15)
-   #+end_src
+          js2-idle-timer-delay 0.15))
+#+end_src
 ** HTML & CSS
 [[https://github.com/fxbois/web-mode][web-mode]]: an emacs major mode for editing HTML files.
 
-   #+begin_src elisp
+#+begin_src elisp
   (use-package web-mode
     :mode
     ("\\.njk\\'" "\\.tpl\\.php\\'" "\\.[agj]sp\\'" "\\.as[cp]x\\'"
@@ -825,16 +845,16 @@ An emacs package for running Kaocha tests via CIDER.
           web-mode-code-indent-offset 2))
 
   (use-package lsp-tailwindcss
-    :init
+    :config
     (setq lsp-tailwindcss-add-on-mode t))
-   #+end_src
+#+end_src
 ** YAML
-   #+begin_src elisp
+#+begin_src elisp
   (use-package yaml-mode
     :defer t)
-   #+end_src
+#+end_src
 ** JSON
-   #+begin_src elisp
+#+begin_src elisp
   (use-package json-mode
     :defer t
     :mode "\\.json\\'"
@@ -844,12 +864,12 @@ An emacs package for running Kaocha tests via CIDER.
 
   (use-package jq-mode
     :after json-mode)
-   #+end_src
+#+end_src
 ** Docker
-   #+begin_src elisp
+#+begin_src elisp
   (use-package docker :defer t)
   (use-package dockerfile-mode :defer t)
-   #+end_src
+#+end_src
 
 
 * Productivity
@@ -865,7 +885,7 @@ files. See also the [[https://pdftools.wiki/][wiki]].
 
 ** org-mode
 *** org settings
-    #+begin_src elisp
+ #+begin_src elisp
   (use-package org
     :general
     (:prefix leader-key
@@ -889,16 +909,16 @@ files. See also the [[https://pdftools.wiki/][wiki]].
           org-ellipsis " ↴"
           org-fontify-quote-and-verse-blocks t
           org-src-tab-acts-natively t))
-    #+end_src
+ #+end_src
 *** org-modern
 org-modern: This package implements a “modern” style for your Org
 buffers using font locking and text properties.
 
-    #+begin_src emacs-lisp
+ #+begin_src emacs-lisp
   (use-package org-modern
     :hook
     (org-mode . org-modern-mode))
-    #+end_src
+ #+end_src
 *** org-capture templates
 #+begin_src elisp
   (setq org-capture-templates
@@ -914,7 +934,7 @@ buffers using font locking and text properties.
 *** org-babel
 Settings for literate programming.
 
-    #+begin_src elisp
+ #+begin_src elisp
   (org-babel-do-load-languages
         'org-babel-load-languages
         '((emacs-lisp . t)
@@ -924,18 +944,18 @@ Settings for literate programming.
         org-src-fontify-natively t
         org-src-tab-acts-natively t
         org-src-window-setup 'reorganize-frame)
-    #+end_src
+ #+end_src
 **** ob-clojure-literate
      Setup scaffold for Clojure Literate Programming in Org-mode,
      following [[https://kirang.in/post/setting-up-org-mode-to-run-clojure-code/][this]] guide.
 
-     #+begin_src elisp
+  #+begin_src elisp
        (use-package ob-clojure
          :ensure nil
          :after '(org cider)
          :config
          (setq org-babel-clojure-backend 'cider))
-     #+end_src
+  #+end_src
 ** org-gcal
 [[https://github.com/kidd/org-gcal.el][org-gcal]]: Sync between Org and Gcal
 #+begin_src emacs-lisp
@@ -966,17 +986,17 @@ Settings for literate programming.
 [[https://github.com/rnkn/olivetti][olivetti]]: A simple Emacs minor mode for a nice writing.
 environment.
 
-    #+begin_src elisp
-      (use-package olivetti
-        :general
-        (:prefix leader-key
-                 "to" 'olivetti-mode)
-        :hook
-        (org-roam-mode . olivetti-mode)
-        :config
-        (setq olivetti-style 'fancy
-              olivetti-minimum-body-width 80))
-    #+end_src
+ #+begin_src elisp
+   (use-package olivetti
+     :general
+     (:prefix leader-key
+              "to" 'olivetti-mode)
+     :hook
+     (org-roam-mode . olivetti-mode)
+     :config
+     (setq olivetti-style 'fancy
+           olivetti-minimum-body-width 80))
+ #+end_src
 ** dashboard
 [[https://github.com/emacs-dashboard/emacs-dashboard][emacs-dashboard]]: An extensible emacs startup screen showing you what’s
 most important. For me, just the agenda and the most recent files.
@@ -991,6 +1011,32 @@ most important. For me, just the agenda and the most recent files.
           dashboard-set-heading-icons t
           dashboard-week-agenda t)
     (dashboard-setup-startup-hook))
+#+end_src
+
+** zk
+[[https://github.com/localauthor/zk][zk.el]] - A dead-simple, feature-rich Zettelkasten implementation for
+Emacs.
+
+#+begin_src elisp
+  (use-package zk
+    :load-path "lisp/zk"
+    :commands zk-setup-auto-link-buttons
+    :general
+    (:prefix leader-key
+             "nn" 'zk-new-note)
+    :config
+    (require 'zk-consult)
+    (setq zk-directory "~/cloud/Sputnik/memory"
+          zk-file-extension "md")
+    (zk-setup-auto-link-buttons)
+    (zk-setup-embark)
+    (setq zk-search-function #'zk-consult-grep-tag-search))
+
+  (use-package zk-index
+    :after zk
+    :general
+    (:prefix leader-key
+             "ni" 'zk-index))
 #+end_src
 
 
