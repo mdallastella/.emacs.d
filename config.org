@@ -416,7 +416,7 @@ delimiters: parentheses, braces, brackets, etc.
           ("C-<right>" . puni-slurp-forward)
           ("C-<left>" . puni-barf-forward)
           ("C-<up>" . puni-raise))
-    :init
+    :config
     (puni-global-mode))
 #+end_src
 
@@ -491,10 +491,9 @@ Set my favourite font
 Modeline from [[https://github.com/seagle0128/doom-modeline][Doom]]
 #+begin_src emacs-lisp
   (use-package minions
-    :init
-    (minions-mode)
     :config
-    (setq minions-direct '(cider-mode)))
+    (setq minions-direct '(cider-mode))
+    (minions-mode))
 
   (use-package doom-modeline
     :hook
@@ -536,7 +535,7 @@ the built in completion metadata functions.
   (use-package all-the-icons-completion
     :hook
     (marginalia-mode . all-the-icons-completion-marginalia-setup)
-    :init
+    :config
     (all-the-icons-completion-mode))
 #+end_src
 
@@ -559,19 +558,8 @@ the built in completion metadata functions.
 I like to have some space on the left and right edge of the window.
 
 #+begin_src emacs-lisp
-  (setq-default display-line-number 3
-                left-margin-width 1
-                right-margin-width 1)
-
-  (set-fringe-mode 10)
-
-  ;; Enable line numbers for some modes
-  (dolist (mode '(text-mode-hook prog-mode-hook conf-mode-hook))
-    (add-hook mode (lambda () (display-line-numbers-mode t))))
-
-  ;; Disable for some derived modes
-  (dolist (mode '(org-mode-hook))
-    (add-hook mode (lambda () (display-line-numbers-mode nil))))
+  (setq-default left-margin-width 3
+                right-margin-width 3)
 #+end_src
 
 ** Highlight the current line
@@ -1016,31 +1004,27 @@ files. See also the [[https://pdftools.wiki/][wiki]].
  #+begin_src emacs-lisp
    (use-package org
      :straight nil
-     :custom-face
-     (org-block-begin-line ((t (:underline nil))))
-     (org-block-end-line ((t (:overline nil))))
      :config
      (my/leader-key
        "o" '(:ignore t :wk "Org-mode")
        "oo" '(org-capture :wk "Capture")
        "oa" '(org-agenda :wk "Agenda")
-       "of" 'org-attach)
+       "of" '(org-attach :we "Attach file"))
      (setq org-directory "~/org"
            org-agenda-files '("~/org/todo.org" "~/org/inbox.org")
            org-use-speed-commands t
-           org-image-actual-width '(600)
            org-log-done t
            org-archive-location "~/org/archive.org::datatree/"
            org-hide-emphasis-markers t
            org-agenda-skip-deadline-if-done t
            org-agenda-skip-scheduled-if-done t
-           org-ellipsis " ↴"
+           org-ellipsis " ↲"
            org-fontify-quote-and-verse-blocks t
            org-src-tab-acts-natively t))
  #+end_src
 
 *** org-capture templates
-#+begin_src elisp
+#+begin_src emacs-lisp
   (setq org-capture-templates
      '(("t" "Todo" entry (file "todo.org")
          "* TODO %?\n" :empty-lines 1)
