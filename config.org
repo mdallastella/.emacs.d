@@ -249,6 +249,19 @@ Move deleted files to trash, you never know..
 #+end_src
 
 
+** xref tuning
+For xref, prefer ripgrep, then ugrep, and fall back to regular grep.
+
+#+begin_src emacs-lisp
+  ;; Prefer ripgrep, then ugrep, and fall back to regular grep.
+  (setq xref-search-program
+        (cond
+         ((or (executable-find "ripgrep")
+              (executable-find "rg")) 'ripgrep)
+         ((executable-find "ugrep") 'ugrep)
+         (t'grep)))
+#+end_src
+
 
 * Keybindings
 The most frequent keybindings are structured in a mnemonic way for
