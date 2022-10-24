@@ -88,7 +88,11 @@ Integration with ~use-package~:
 #+begin_src emacs-lisp
   (straight-use-package 'use-package)
   (use-package straight
-    :custom (straight-use-package-by-default t))
+    :config
+    (straight-register-package 'org)
+    (straight-register-package 'org-contrib)
+    :custom
+    (straight-use-package-by-default t))
 #+end_src
 
 To clean up unused repositories use ~straight-remove-unused-repos~.
