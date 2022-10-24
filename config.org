@@ -630,6 +630,17 @@ github style emojis like :smile: or plain ascii ones like :).
 
 
 * Tools
+** direnv
+direnv is an extension for your shell. It augments existing shells
+with a new feature that can load and unload environment variables
+depending on the current directory.
+
+#+begin_src emacs-lisp
+  (use-package direnv
+    :config
+    (direnv-mode))
+#+end_src
+
 ** Vertico, Orderless, Consult, Marginalia & Embark
 *** Orderless
 [[https://github.com/oantolin/orderless][Orderless]] provides an ~orderless~ completion style that divides the
