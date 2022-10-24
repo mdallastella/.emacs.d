@@ -463,6 +463,13 @@ delimiters: parentheses, braces, brackets, etc.
      "yx" 'yankpad-expand)
  #+END_SRC
 
+** Sudo save
+Edit files in sudo mode.
+
+#+begin_src emacs-lisp
+  (use-package sudo-save)
+#+end_src
+
 
 * UI
 ** Frame title
