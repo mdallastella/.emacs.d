@@ -903,6 +903,22 @@ Use built-in dictionary-el.
 
   (use-package consult-eglot)
 #+end_src
+** Code formatting
+I like when my code is property formatted. Let's give a try to
+[[https://github.com/lassik/emacs-format-all-the-code][format-all-the-code]].
+
+#+begin_src emacs-lisp
+  (use-package format-all
+    :hook
+    (format-all-mode . format-all-ensure-formatter)
+    :config
+    (setq format-all-show-errors 'errors
+          format-all-formatters '(("Clojure" cljfmt))))
+
+  (my/leader-key
+    "bf" '(format-all-buffer :wk "Format the buffer"))
+#+end_src
+
 ** Clojure/ClojureScript
 Clojure settings for Emacs
 *** Clojure development environment
@@ -1038,7 +1054,7 @@ files. See also the [[https://pdftools.wiki/][wiki]].
 *** org settings
  #+begin_src emacs-lisp
    (use-package org
-     :straight nil
+     :straight (:type built-in)
      :config
      (my/leader-key
        "o" '(:ignore t :wk "Org-mode")
