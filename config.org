@@ -1090,11 +1090,7 @@ files. See also the [[https://pdftools.wiki/][wiki]].
 ** denote
 #+begin_src emacs-lisp
   (use-package denote
-    ;; I want to point to cutting edge development; there's already features I
-    ;; want that have been added since v1.0.0
     :straight (denote :host nil :type git :repo "https://git.sr.ht/~protesilaos/denote")
-    :commands
-    (denote-directory denote-file-prompt denote--title-prompt denote-get-path-by-id)
     :hook
     (dired-mode . denote-dired-mode)
     :config
@@ -1103,6 +1099,20 @@ files. See also the [[https://pdftools.wiki/][wiki]].
           denote-file-type 'markdown-yaml
           denote-date-prompt-denote-date-prompt-use-org-read-date t
           denote-prompts '(title)))
+
+  (my/leader-key
+    "nn" '(denote :wk "Create new note")
+    "nb" '(denote-link-backlinks :wk "Backlinks to note")
+    "nka" '(denote-keywords-add :wk "Add keyword")
+    "nkd" '(denote-keywords-remove :wk "Remove keyword"))
+#+end_src
+
+** markdown
+#+begin_src emacs-lisp
+  (use-package markdown-mode
+    :config
+    (add-to-list 'eglot-server-programs '(markdown-mode . ("marksman")))
+    (add-hook 'markdown-mode-hook #'eglot-ensure))
 #+end_src
 ** consult-notes
 [[https://github.com/mclear-tools/consult-notes][consult-notes]] — easily selecting notes via consult.
