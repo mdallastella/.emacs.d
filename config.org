@@ -173,7 +173,6 @@ Maximize windows by default.
 
 
 * General settings
-
 ** My personal information
 #+begin_src emacs-lisp
   (setq user-full-name "Marco Dalla Stella"
@@ -433,7 +432,7 @@ delimiters: parentheses, braces, brackets, etc.
           ("C-<right>" . puni-slurp-forward)
           ("C-<left>" . puni-barf-forward)
           ("C-<up>" . puni-raise))
-    :config
+    :init
     (puni-global-mode))
 #+end_src
 
