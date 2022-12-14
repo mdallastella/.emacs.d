@@ -889,23 +889,40 @@ libvterm.
     (setq magit-save-repository-buffers 'dontask
           magit-refs-show-commit-count 'all))
 #+end_src
+** eldoc
+#+begin_src emacs-lisp
+  (use-package eldoc
+    :config
+    (setq eldoc-echo-area-display-truncation-message nil
+          eldoc-echo-area-use-multiline-p nil))
+#+end_src
 ** Eglot
 #+begin_src emacs-lisp
   (use-package eglot
+    :straight t
     :config
-    (my/leader-key
-      "l" '(:ignore t :wk "Eglot")
-      "lr" 'eglot-rename
-      "la" 'eglot-code-actions
-      "ld" 'xref-find-definitions
-      "le" 'eldoc-doc-buffer
-      "ls" 'consult-eglot-symbols)
-    (setq eglot-send-changes-idle-time (* 60 60))
+    (setq eglot-send-changes-idle-time (* 60 60)
+          read-process-output-max (* 1024 1024)
+          eglot-extend-to-xref t)
     :hook
-    ((elgot-manage-mode . (lambda () (eldoc-mode -1)))
-     ((clojure-mode clojurescript-mode js2-mode rust-mode) . eglot-ensure)))
+    ((eglot-manage-mode . (lambda () (eldoc-mode -1)))
+     ((clojure-mode clojurescript-mode js2-mode rust-mode markdown-mode) . eglot-ensure)))
 
-  (use-package consult-eglot)
+  (use-package consult-eglot
+    :straight t
+    :after 'eglot)
+
+  (use-package jarchive
+    :straight t
+    :after 'eglot)
+
+  (my/leader-key
+    "l" '(:ignore t :wk "Eglot")
+    "lr" 'eglot-rename
+    "la" 'eglot-code-actions
+    "ld" 'xref-find-definitions
+    "le" 'eldoc-doc-buffer
+    "ls" 'consult-eglot-symbols)
 #+end_src
 
 ** Clojure/ClojureScript
