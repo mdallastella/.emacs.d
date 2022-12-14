@@ -476,16 +476,15 @@ Set my favourite font
 
 #+begin_src emacs-lisp
   (set-face-attribute 'default nil
-                      :family "PragmataPro Mono Liga"
-                      :weight 'light
-                      :height 110)
+                      :family "Iosevka Term SS14"
+                      :weight 'normal
+                      :height 120)
 
   (set-face-attribute 'variable-pitch nil
-                      :family "Atkinson Hyperlegible"
-                      :height 110)
+                      :family "Iosevka Aile"
+                      :weight 'normal
+                      :height 120)
 #+end_src
-
-#+RESULTS:
 
 ** Theme
 [[https://github.com/hlissner/emacs-doom-themes][Solarized theme by emacs-doom-themes]]
