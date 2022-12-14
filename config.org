@@ -361,11 +361,11 @@ For this purpose I use [[https://github.com/noctuid/general.el][general.el]].
 
   ;; Keybindings
   (my/leader-key
-    "m" '(:ignore t :which-key "Multiple cursors")
-    "mn" 'mc/mark-next-like-this
-    "mp" 'mc/mark-previous-like-this
-    "ma" 'mc/mark-all-like-this
-    "m>" 'mc/edit-lines)
+    ">" '(:ignore t :which-key "Multiple cursors")
+    ">n" 'mc/mark-next-like-this
+    ">p" 'mc/mark-previous-like-this
+    ">a" 'mc/mark-all-like-this
+    ">>" 'mc/edit-lines)
 #+end_src
 
 ** undo-fu
