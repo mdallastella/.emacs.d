@@ -846,6 +846,17 @@ Use built-in dictionary-el.
           dictionary-use-single-buffer t))
 #+end_src
 
+** vterm
+vterm is fully-fledged terminal emulator inside GNU Emacs based on
+libvterm.
+
+#+begin_src emacs-lisp
+  (use-package vterm
+    :config
+    (my/leader-key
+      "tv" '(vterm :wk "Open terminal")))
+#+end_src
+
 
 * Programming
 ** Project
