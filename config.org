@@ -660,22 +660,25 @@ function completing-read.
 
  #+begin_src emacs-lisp
    (use-package consult
+     :straight t
+     :bind
+     (("M-g g" . consult-goto-line)
+      ("M-g G" . consult-goto-line-numbers)
+      ("M-g o" . consult-outline)
+      ("M-g m" . consult-mark)
+      ("M-g k" . consult-global-mark)
+      ("C-c h" . consult-history))
      :config
-     (require 'consult-xref)
-     (setq consult-project-root-function (lambda ()
-                                           (when-let (project (project-current))
-                                             (car (project-roots project))))
-           xref-show-xrefs-function #'consult-xref
-           xref-show-definitions-function #'consult-xref))
+     (recentf-mode t))
 
-   ;; Keybindings
+      ;; Keybindings
    (my/leader-key
      "bb" 'consult-buffer
      "cc" 'consult-imenu
      "ce" 'consult-compile-error
      "cf" 'consult-flymake
-     "cg" 'consult-goto-line-numbers
      "cr" 'consult-recent-file
+     "cm" 'consult-mode-command
      "fg" 'consult-ripgrep)
  #+end_src
 
@@ -691,7 +694,7 @@ the margin of the minibuffer for your completion candidates.
  #+end_src
 
 *** Embark
-[[https://github.com/oantolin/embark/][Embark]]: rovides a sort of right-click contextual menu for Emacs,
+[[https://github.com/oantolin/embark/][Embark]]: provides a sort of right-click contextual menu for Emacs,
 accessed through the embark-act command, offering you relevant actions
 to use on a target determined by the context.
 
@@ -711,9 +714,7 @@ to use on a target determined by the context.
 
    (use-package embark-consult
      :after (embark consult)
-     :demand t ; only necessary if you have the hook below
-     ;; if you want to have consult previews as you move around an
-     ;; auto-updating embark collect buffer
+     :demand t
      :hook
      (embark-collect-mode . consult-preview-at-point-mode))
  #+end_src
