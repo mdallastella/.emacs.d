@@ -944,9 +944,10 @@ Clojure settings for Emacs
            ("C-c m j" . cider-jack-in-clj)
            ("C-c m J" . cider-jack-in-cljs)
            :map cider-repl-mode-map
-           ("C-c m l" . cider-repl-clear-buffer))
+           ("C-c m l" . cider-repl-clear-buffer)
+           ("RET" . cider-repl-newline-and-indent)
+           ("C-<return>" . cider-repl-return))
      :config
-     (add-hook 'before-save-hook 'cider-format-buffer t t)
      (setq cider-eldoc-display-for-symbol-at-point nil
            cider-font-lock-dynamically t
            cider-save-file-on-load t
