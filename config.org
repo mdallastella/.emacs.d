@@ -244,7 +244,7 @@ buffer.
 #+end_src
 
 ** Delete moves to trash
-Move deleted files to trash, you never know..
+Move deleted files to trash, you never know...
 
 #+begin_src emacs-lisp
   (setq delete-by-moving-to-trash t)
@@ -326,6 +326,13 @@ For this purpose I use [[https://github.com/noctuid/general.el][general.el]].
 
 
 * Editing
+** Default fill-column
+I use 80 characters.
+#+begin_src emacs-lisp
+  (setq-default fill-column 80)
+  (auto-fill-mode t)
+#+end_src
+
 ** Default coding system
 #+begin_src emacs-lisp
   (set-charset-priority 'unicode)
@@ -341,14 +348,14 @@ For this purpose I use [[https://github.com/noctuid/general.el][general.el]].
 ** Use spaces to indent, no tabs
 #+begin_src emacs-lisp
   (setq-default indent-tabs-mode nil           ; Never use tabs
-          tab-always-indent 'complete    ; Indent or complete
-          tab-width 2)                   ; Show eventual tabs as 4 spaces
+                tab-always-indent 'complete    ; Indent or complete
+                tab-width 2)                   ; Show eventual tabs as 4 spaces
 #+end_src
 
 ** Deal with whitespaces
 #+begin_src emacs-lisp
   (use-package whitespace
-    :ensure nil
+    :straight (:type built-in)
     :hook
     (before-save . whitespace-cleanup))
 #+end_src
@@ -1079,12 +1086,139 @@ Use Rustic
 
 
 * Productivity
-** markdown
+** org-mode
+*** settings
 #+begin_src emacs-lisp
-  (use-package markdown-mode
+  (use-package org
+    :straight (:type built-in)
+    :custom-face
+    (org-block-begin-line ((t (:underline nil))))
+    (org-block-end-line ((t (:overline nil))))
     :config
-    (add-to-list 'eglot-server-programs '(markdown-mode . ("marksman")))
-    (add-hook 'markdown-mode-hook #'eglot-ensure))
+    (setq org-directory "~/org"
+          org-agenda-files '("~/org/todo.org" "~/org/inbox.org")
+          org-use-speed-commands t
+          org-image-actual-width '(600)
+          org-archive-location "~/org/archive.org::datatree/"
+          org-hide-emphasis-markers t
+          org-agenda-skip-deadline-if-done t
+          org-agenda-skip-scheduled-if-done t
+          org-ellipsis " ↴"
+          org-fontify-quote-and-verse-blocks t
+          org-src-tab-acts-natively t))
+
+  (my/leader-key
+    "o" '(:ignore t :wk "Org-mode")
+    "oo" '(org-capture :wk "Capture")
+    "oa" '(org-agenda :wk "Agenda")
+    "of" 'org-attach)
+#+end_src
+*** org-capture templates
+#+begin_src emacs-lisp
+  (setq org-capture-templates
+        '(("t" "Todo" entry (file "todo.org")
+           "* TODO %?\n" :empty-lines 1)
+          ("T" "Todo and paste" entry (file "todo.org")
+           "* TODO %?\n\n%x" :empty-lines 1)
+          ("i" "Inbox" entry (file "inbox.org")
+           "* %?\n" :empty-lines 1)
+          ("I" "Inbox and paste" entry (file "inbox.org")
+           "* %?\n\n%x" :empty-lines 1)))
+#+end_src
+
+*** org-modern
+org-modern: This package implements a “modern” style for your Org buffers using
+font locking and text properties.
+
+#+begin_src emacs-lisp
+  (use-package org-modern
+    :hook
+    (org-mode . org-modern-mode))
+#+end_src
+
+*** org-alert
+org-alert is a simple notification package for org-mode.
+#+begin_src emacs-lisp
+  (use-package org-alert
+    :custom
+    (alert-define-style 'notfications)
+    :config
+    (setq org-alert-interval 300
+          org-alert-notification-title "Org Reminder!")
+    (org-alert-enable))
+#+end_src
+
+** org-roam
+[[https://www.orgroam.com/manual.html][org-roam]] is a tool for networked thought. It reproduces some of Roam
+Research’s key features within Org-mode.
+
+#+begin_src emacs-lisp
+  (use-package org-roam
+    :config
+    (setq org-roam-directory (file-truename "~/org/roam"))
+    (org-roam-db-autosync-mode))
+#+end_src
+
+** denote
+[[https://protesilaos.com/emacs/denote][denote.el]] — Simple notes for Emacs with an efficient file-naming scheme.
+
+#+begin_src emacs-lisp
+  (use-package denote
+    :config
+    (setq denote-directory (expand-file-name "~/funes")
+          denote-infer-keywords t
+          denote-sort-keywords t
+          denote-prompts '(title)
+          denote-date-prompt-use-org-read-date t)
+    :hook (dired-mode . denote-dired-mode-in-directories))
+
+  (my/leader-key
+    "n" '(:ignore t :wk "Notes")
+    "no" '(consult-notes :wk "Note list")
+    "nn" '(denote :wk "New note")
+    "ni" '(denote-link-insert-link :wk "Link to note"))
+#+end_src
+
+** zk
+[[https://github.com/localauthor/zk][zk.el]] - A dead-simple, feature-rich Zettelkasten implementation for Emacs.
+
+#+begin_src emacs-lisp
+  (use-package zk
+    :straight (zk :files (:defaults "zk-consult.el"))
+    :custom
+    (zk-directory (expand-file-name "~/funes"))
+    (zk-file-extension "md")
+    :config
+    (require 'zk-consult)
+    (zk-setup-auto-link-buttons)
+    (zk-setup-embark)
+    (setq zk-tag-grep-function #'zk-consult-grep-tag-search
+          zk-grep-function #'zk-consult-grep))
+#+end_src
+
+** consult-notes
+[[https://github.com/mclear-tools/consult-notes][consult-notes]] — easily selecting notes via consult.
+
+#+begin_src emacs-lisp
+  (use-package consult-notes
+    :commands
+    (consult-notes
+     consult-notes-search-in-all-notes)
+    :config
+    (setq consult-notes-sources
+        '(("Org" ?o "~/org")
+          ("Notes" ?n "~/funes"))))
+#+end_src
+
+
+* Social
+** Mastodon
+#+begin_src emacs-lisp
+  (use-package mastodon
+    :straight (:host nil :type git :repo "https://codeberg.org/martianh/mastodon.el.git")
+    :config
+    (setq mastodon-instance-url "https://functional.cafe"
+          mastodon-active-user "mdallastella"))
 #+end_src
 
 
