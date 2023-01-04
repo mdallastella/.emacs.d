@@ -1233,6 +1233,23 @@ Research’s key features within Org-mode.
 #+end_src
 
 
+* Tangle configuration on save
+Automatically tangle ~config.org~ file when saving.
+
+#+begin_src emacs-lisp
+  (defun my/org-babel-tangle-config ()
+    (when (string-equal (buffer-file-name)
+                        (expand-file-name "~/.emacs.d/config.org"))
+      (message "** Tangle config.org file...")
+      (let ((org-config-babel-evaluate nil))
+        (org-babel-tangle))))
+
+  (add-hook 'org-mode-hook
+            (lambda ()
+              (add-hook 'after-save-hook #'my/org-babel-tangle-config)))
+#+end_src
+
+
 * Packages to look at
 ** TODO Popper
 Popper is a minor-mode to tame the flood of ephemeral windows Emacs
