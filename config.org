@@ -1147,7 +1147,7 @@ font locking and text properties.
     (org-mode . org-modern-mode))
 #+end_src
 
-*** org-alert
+*** TODO org-alert
 org-alert is a simple notification package for org-mode.
 #+begin_src emacs-lisp
   (use-package org-alert
@@ -1159,17 +1159,6 @@ org-alert is a simple notification package for org-mode.
     (org-alert-enable))
 #+end_src
 
-** org-roam
-[[https://www.orgroam.com/manual.html][org-roam]] is a tool for networked thought. It reproduces some of Roam
-Research’s key features within Org-mode.
-
-#+begin_src emacs-lisp
-  (use-package org-roam
-    :config
-    (setq org-roam-directory (file-truename "~/org/roam"))
-    (org-roam-db-autosync-mode))
-#+end_src
-
 ** denote
 [[https://protesilaos.com/emacs/denote][denote.el]] — Simple notes for Emacs with an efficient file-naming scheme.
 
@@ -1177,49 +1166,60 @@ Research’s key features within Org-mode.
   (use-package denote
     :config
     (setq denote-directory (expand-file-name "~/funes")
+          denote-file-type 'markdown-yaml
           denote-infer-keywords t
           denote-sort-keywords t
           denote-prompts '(title)
           denote-date-prompt-use-org-read-date t)
     :hook (dired-mode . denote-dired-mode-in-directories))
 
+  (use-package consult-notes
+    :commands
+    (consult-notes
+     consult-notes-search-in-all-notes)
+    :config
+    (consult-notes-denote-mode t))
+
   (my/leader-key
     "n" '(:ignore t :wk "Notes")
     "no" '(consult-notes :wk "Note list")
     "nn" '(denote :wk "New note")
-    "ni" '(denote-link-insert-link :wk "Link to note"))
+    "ni" '(denote-link-insert-link :wk "Link to note")
+    "nl" '(denote-link-after-creating :"Create and link note")
+    "nta" '(denote-keywords-add :wk "Add tag")
+    "ntr" '(denote-keywords-add :wk "Remove tag"))
 #+end_src
 
 ** zk
 [[https://github.com/localauthor/zk][zk.el]] - A dead-simple, feature-rich Zettelkasten implementation for Emacs.
 
 #+begin_src emacs-lisp
+  (defun my/new-note-header (title new-id &optional orig-id)
+    "Insert header in new notes with args TITLE and NEW-ID.
+  Optionally use ORIG-ID for backlink."
+    (insert (format "---\ntitle: %s\ntags:\nauthor:\nsource:\n---\n\n# %s\n" title title))
+    (when (ignore-errors (zk--parse-id 'title orig-id)) ;; check for file
+      (zk--insert-link-and-title orig-id (zk--parse-id 'title orig-id))))
+
   (use-package zk
     :straight (zk :files (:defaults "zk-consult.el"))
-    :custom
-    (zk-directory (expand-file-name "~/funes"))
-    (zk-file-extension "md")
     :config
     (require 'zk-consult)
+    (setq zk-directory (expand-file-name "~/funes")
+          zk-file-extension "md"
+          zk-id-time-string-format "%Y%m%dT%H%M%S"
+          zk-id-regexp "\\([0-9]\\{8\\}T[0-9]\\{6\\}\\)"
+          zk-new-note-header-function #'my/new-note-header
+          zk-link-and-title-format "[[%i %t]]"
+          zk-tag-grep-function #'zk-consult-grep-tag-search
+          zk-grep-function #'zk-consult-grep)
     (zk-setup-auto-link-buttons)
-    (zk-setup-embark)
-    (setq zk-tag-grep-function #'zk-consult-grep-tag-search
-          zk-grep-function #'zk-consult-grep))
+    (zk-setup-embark))
+
 #+end_src
 
 ** consult-notes
-[[https://github.com/mclear-tools/consult-notes][consult-notes]] — easily selecting notes via consult.
-
-#+begin_src emacs-lisp
-  (use-package consult-notes
-    :commands
-    (consult-notes
-     consult-notes-search-in-all-notes)
-    :config
-    (setq consult-notes-sources
-        '(("Org" ?o "~/org")
-          ("Notes" ?n "~/funes"))))
-#+end_src
+[[https://github.com/mclear-tools/consult-notes][
 
 
 * Social
@@ -1255,7 +1255,7 @@ Automatically tangle ~config.org~ file when saving.
 Popper is a minor-mode to tame the flood of ephemeral windows Emacs
 produces, while still keeping them within arm’s reach.
 https://github.com/karthink/popper
-** TODO Corfu
+** DONE Corfu
 Corfu enhances completion at point with a small completion popup.
 https://github.com/minad/corfu
 
@@ -1263,6 +1263,11 @@ https://github.com/minad/corfu
 Cape provides Completion At Point Extensions which can be used in
 combination with the Corfu completion UI or the default completion UI.
 https://github.com/minad/cape
+
+** TODO Tempel
+Tempel is a tiny template package for Emacs, which uses the syntax of the Emacs
+Tempo library.
+https://github.com/minad/tempel
 
 
 * Inspirations for this configuration
