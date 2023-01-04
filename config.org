@@ -1190,37 +1190,6 @@ org-alert is a simple notification package for org-mode.
     "ntr" '(denote-keywords-add :wk "Remove tag"))
 #+end_src
 
-** zk
-[[https://github.com/localauthor/zk][zk.el]] - A dead-simple, feature-rich Zettelkasten implementation for Emacs.
-
-#+begin_src emacs-lisp
-  (defun my/new-note-header (title new-id &optional orig-id)
-    "Insert header in new notes with args TITLE and NEW-ID.
-  Optionally use ORIG-ID for backlink."
-    (insert (format "---\ntitle: %s\ntags:\nauthor:\nsource:\n---\n\n# %s\n" title title))
-    (when (ignore-errors (zk--parse-id 'title orig-id)) ;; check for file
-      (zk--insert-link-and-title orig-id (zk--parse-id 'title orig-id))))
-
-  (use-package zk
-    :straight (zk :files (:defaults "zk-consult.el"))
-    :config
-    (require 'zk-consult)
-    (setq zk-directory (expand-file-name "~/funes")
-          zk-file-extension "md"
-          zk-id-time-string-format "%Y%m%dT%H%M%S"
-          zk-id-regexp "\\([0-9]\\{8\\}T[0-9]\\{6\\}\\)"
-          zk-new-note-header-function #'my/new-note-header
-          zk-link-and-title-format "[[%i %t]]"
-          zk-tag-grep-function #'zk-consult-grep-tag-search
-          zk-grep-function #'zk-consult-grep)
-    (zk-setup-auto-link-buttons)
-    (zk-setup-embark))
-
-#+end_src
-
-** consult-notes
-[[https://github.com/mclear-tools/consult-notes][
-
 
 * Social
 ** Mastodon
