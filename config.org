@@ -773,6 +773,7 @@ to use on a target determined by the context.
 *** Company
 #+begin_src emacs-lisp
   (use-package company
+    :disabled t
     :config
     (setq company-idle-delay 0.5
           company-tooltip-align-annotations t
@@ -781,6 +782,16 @@ to use on a target determined by the context.
     :hook
     (after-init . global-company-mode))
 #+end_src
+*** corfu
+Corfu enhances completion at point with a small completion popup.
+#+begin_src emacs-lisp
+  (use-package corfu
+    :config
+    (setq corfu-auto t)
+    :init
+    (global-corfu-mode))
+#+end_src
+
 *** hippie-expand
 Use hippie-expand instead of dabbrev-expand.
 
