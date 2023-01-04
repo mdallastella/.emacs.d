@@ -614,8 +614,16 @@ github style emojis like :smile: or plain ascii ones like :).
           emojify-inhibit-major-modes '()))
 #+end_src
 
-
-
+** ace-window
+ace-window
+#+begin_src emacs-lisp
+  (use-package ace-window
+    :bind
+    ("M-o" . ace-window)
+    :config
+    (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)
+          aw-dispatch-always t))
+#+end_src
 
 
 * Tools
