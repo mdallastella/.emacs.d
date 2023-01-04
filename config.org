@@ -4,14 +4,6 @@
 #+property: header-args:emacs-lisp :result silent :tangle ./init.el
 #+startup: fold
 
-* TODO TOC
-:PROPERTIES:
-:TOC: :include all :ignore this
-:END:
-:CONTENTS:
-:END:
-
-
 * Early init file
 See [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Early-Init-File.html][Early Init File]] on Emacs manual.
 
