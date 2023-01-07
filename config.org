@@ -22,9 +22,9 @@ See [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Early-Init-File.
 
   ;; Disable some stuff
   (setq inhibit-startup-screen t
-  inhibit-startup-message t
-  inhibit-startup-buffer-menu t
-  visual-bell t)
+        inhibit-startup-message t
+        inhibit-startup-buffer-menu t
+        visual-bell t)
 #+end_src
 
 
@@ -294,6 +294,7 @@ For this purpose I use [[https://github.com/noctuid/general.el][general.el]].
     ;; Packages
     "up" '(:ignore t :wk "Packages")
     "upp" '(straight-pull-all :wk "Update packages")
+    "upr" '(straight-remove-unused-repos :wk "Purge packages")
     ;; Toggle (t)
     "t" '(:ignore t :wk "Toggle")
     "ts" '(flyspell-mode :wk "Flyspell")
@@ -508,7 +509,13 @@ Modeline from [[https://github.com/seagle0128/doom-modeline][Doom]]
     (setq minions-direct '(cider-mode))
     (minions-mode))
 
+  (use-package mood-line
+    :config
+    (setq mood-line-glyph-alist mood-line-glyphs-unicode)
+    (mood-line-mode))
+
   (use-package doom-modeline
+    :disabled t
     :hook
     (after-init . doom-modeline-mode)
     :config
@@ -516,8 +523,7 @@ Modeline from [[https://github.com/seagle0128/doom-modeline][Doom]]
     doom-modeline-minor-modes t
     doom-modeline-icon t
     doom-modeline-major-mode-color-icon t
-    doom-modeline-height 15)
-    (doom-modeline-mode))
+    doom-modeline-height 15))
 #+end_src
 
 ** Show matching parenthesis
