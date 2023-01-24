@@ -889,7 +889,7 @@ libvterm.
 
 #+begin_src emacs-lisp
   (use-package project
-    :ensure nil
+    :straight (:type built-in)
     :commands project-roots
     :config
     (my/leader-key
@@ -1194,6 +1194,30 @@ org-alert is a simple notification package for org-mode.
     "nl" '(denote-link-after-creating :"Create and link note")
     "nta" '(denote-keywords-add :wk "Add tag")
     "ntr" '(denote-keywords-add :wk "Remove tag"))
+#+end_src
+
+** org-roam
+#+begin_src emacs-lisp
+  (use-package org-roam
+    :custom
+    (org-roam-directory "/home/mds/cloud/Sputnik/roam")
+    (org-roam-complete-everywhere t)
+    :config
+    (org-roam-setup))
+
+  (my/leader-key
+    "r" '(:ignore t :wk "org-roam")
+    "r l" '(org-roam-buffer-toggle :wk "Buffer list")
+    "r f" '(org-roam-node-find :wk "Find node")
+    "r i" '(org-roam-node-insert :wk "Insert node"))
+#+end_src
+
+** wakatime
+[[https://wakatime.com/emacs][wakatime]] for [[https://wakapi.dev/][wakapi.dev]]
+#+begin_src emacs-lisp
+  (use-package wakatime-mode
+    :config
+    (global-wakatime-mode))
 #+end_src
 
 
