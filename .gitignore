@@ -34,3 +34,6 @@ etc/
 var/
 elpa/
 straight/
+/cider-repl-history
+/*.el
+/eln-cache/

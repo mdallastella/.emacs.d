@@ -51,7 +51,8 @@ Native compilation tweaks.
 
 #+begin_src emacs-lisp
   ;; Silence compiler warnings as they can be pretty disruptive
-  (setq native-comp-async-report-warnings-errors nil)
+  (setq native-comp-async-report-warnings-errors nil
+        byte-compile-warnings nil)
 #+end_src
 
 ** Package management
@@ -1153,15 +1154,14 @@ font locking and text properties.
     (org-mode . org-modern-mode))
 #+end_src
 
-*** TODO org-alert
+*** org-alert
 org-alert is a simple notification package for org-mode.
 #+begin_src emacs-lisp
   (use-package org-alert
-    :custom
-    (alert-define-style 'notfications)
     :config
-    (setq org-alert-interval 300
-          org-alert-notification-title "Org Reminder!")
+    (setq org-alert-interval 1800
+          org-alert-notification-title "Org Reminder!"
+          alert-default-style 'libnotify)
     (org-alert-enable))
 #+end_src
 
