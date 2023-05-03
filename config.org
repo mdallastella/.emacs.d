@@ -827,18 +827,6 @@ much more contextual information.
     ([remap describe-key] . helpful-key))
 #+end_src
 
-** Pinboard
-[[https://github.com/davep/pinboard.el][pinboard.el]] - An Emacs client for Pinboard.
-
-#+begin_src emacs-lisp
-  (use-package pinboard
-    :config
-    (my/leader-key
-      "uB" '(:ignore true :wk "Pinboard")
-      "uBb" '(pinboard :wk "Open")
-      "uBa" '(pinboard-add :wk "Add link")))
-#+end_src
-
 ** Dictionary
 Use built-in dictionary-el.
 
