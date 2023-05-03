@@ -1202,6 +1202,24 @@ org-alert is a simple notification package for org-mode.
     (setq mastodon-instance-url "https://functional.cafe"
           mastodon-active-user "mdallastella"))
 #+end_src
+** elfeed
+[[https://github.com/skeeto/elfeed][Elfeed]] is an extensible web feed reader for Emacs.
+
+#+begin_src emacs-lisp
+  (use-package elfeed
+    :commands (elfeed))
+
+  (use-package elfeed-org
+    :after elfeed
+    :config
+    (setq rmh-elfeed-org-files (list "~/org/feeds.org"))
+    (elfeed-org))
+
+  (use-package elfeed-goodies
+    :after elfeed
+    :config
+    (elfeed-goodies/setup))
+#+end_src
 
 
 * Tangle configuration on save
