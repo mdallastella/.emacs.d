@@ -624,6 +624,10 @@ depending on the current directory.
   (use-package direnv
     :config
     (direnv-mode))
+
+  (my/leader-key
+    "uda" '(:ignore true :wk "Direnv")
+    "uda" '(direnv-allow :wk "Allow"))
 #+end_src
 
 ** Vertico, Orderless, Consult, Marginalia & Embark
