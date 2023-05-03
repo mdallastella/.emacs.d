@@ -52,7 +52,7 @@ Native compilation tweaks.
 #+end_src
 
 ** Package management
-Just good old [[https://github.com/jwiegley/use-package][use-package]]:
+Just good old [[https://github.com/jwiegley/use-package][use-package]] and [[https://github.com/slotThe/vc-use-package][vc-use-package]]:
 
 #+begin_src emacs-lisp
   (require 'package)
@@ -61,19 +61,16 @@ Just good old [[https://github.com/jwiegley/use-package][use-package]]:
                            ("melpa" . "https://melpa.org/packages/")
                            ("nongnu" . "https://elpa.nongnu.org/nongnu/")))
 
-  (package-initialize)
+  (setq use-package-always-ensure t
+        package-native-compile t)
 
-  (unless (package-installed-p 'use-package)
-    (package-refresh-contents)
-    (package-install 'use-package))
+  (unless (package-installed-p 'vc-use-package)
+    (package-vc-install "https://github.com/slotThe/vc-use-package"))
 
-  (setq use-package-always-ensure t)
-  (use-package delight)
+  (use-package vc-use-package
+    :ensure nil)
+
   (use-package use-package-ensure-system-package)
-
-  ;; Quelpa for packages not in package-archives
-  (use-package quelpa)
-  (use-package quelpa-use-package)
 #+end_src
 
 ** Benchmark init
@@ -283,6 +280,8 @@ For this purpose I use [[https://github.com/noctuid/general.el][general.el]].
     "ub" 'browse-url-at-point
     ;; Packages
     "up" '(:ignore t :wk "Packages")
+    "upl" '(package-list-packages :wk "List packages")
+    "upu" '(package-update-all :wk "Update packages")
     ;; Toggle (t)
     "t" '(:ignore t :wk "Toggle")
     "ts" '(flyspell-mode :wk "Flyspell")
