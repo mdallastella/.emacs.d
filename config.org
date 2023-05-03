@@ -892,6 +892,15 @@ libvterm.
 
 ** Clojure/ClojureScript
 Clojure settings for Emacs
+*** Neil
+[[https://github.com/babashka/neil][Neil]] - A CLI to add common aliases and features to deps.edn-based projects.
+
+#+begin_src emacs-lisp
+  (use-package neil
+    :config
+    (setq neil-prompt-for-version-p nil
+          neil-inject-dep-to-project-p t))
+#+end_src
 *** Clojure development environment
  #+begin_src emacs-lisp
    (use-package cider
@@ -904,10 +913,11 @@ Clojure settings for Emacs
       (cider-mode . cider-company-enable-fuzzy-completion)
       (cider-repl-mode . cider-company-enable-fuzzy-completion))
      :bind
-     (:map cider-mode-map
+     (:map clojure-mode-map
            ("C-c m l" . cider-load-all-project-ns)
            ("C-c m j" . cider-jack-in-clj)
            ("C-c m J" . cider-jack-in-cljs)
+           ("C-c m d" . neil-find-clojure-package)
            :map cider-repl-mode-map
            ("C-c m l" . cider-repl-clear-buffer)
            ("RET" . cider-repl-newline-and-indent)
