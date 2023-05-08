@@ -857,6 +857,14 @@ libvterm.
     (setq magit-save-repository-buffers 'dontask
           magit-refs-show-commit-count 'all))
 #+end_src
+*** TODO magit-todo
+[[https://github.com/alphapapa/magit-todos][magit-todo]] - displays keyword entries from source code comments and Org files in
+the Magit status buffer.
+
+#+begin_src emacs-lisp
+  (use-package magit-todos)
+#+end_src
+
 ** eldoc
 #+begin_src emacs-lisp
   (use-package eldoc
@@ -1059,21 +1067,23 @@ Use Rustic
 #+begin_src emacs-lisp
   (use-package org
     :ensure nil
-    :custom-face
-    (org-block-begin-line ((t (:underline nil))))
-    (org-block-end-line ((t (:overline nil))))
     :config
     (setq org-directory "~/org"
-          org-agenda-files '("~/org/todo.org")
+          org-agenda-files (directory-files-recursively "~/org/" "\\.org$")
           org-use-speed-commands t
+          org-return-follows-link t
           org-image-actual-width '(600)
-          org-archive-location "~/org/archive.org::datatree/"
+          org-archive-location "~/org/archive/archive.org::datatree/"
           org-hide-emphasis-markers t
           org-agenda-skip-deadline-if-done t
           org-agenda-skip-scheduled-if-done t
-          org-ellipsis " ↴"
+          org-ellipsis "…"
           org-fontify-quote-and-verse-blocks t
-          org-src-tab-acts-natively t))
+          org-src-tab-acts-natively t
+          org-refile-targets '((org-agenda-files :maxlevel . 2))
+          org-refile-use-outline-path 'file
+          org-outline-path-complete-in-steps nil
+          org-refile-allow-creating-parent-nodes 'confirm))
 
   (defun my/org-agenda-view ()
     (interactive (org-agenda nil "a")))
@@ -1090,12 +1100,8 @@ Use Rustic
   (setq org-capture-templates
         '(("t" "Todo" entry (file "todo.org")
            "* TODO %?\n" :empty-lines 1)
-          ("T" "Todo and paste" entry (file "todo.org")
-           "* TODO %?\n\n%x" :empty-lines 1)
           ("i" "Inbox" entry (file "inbox.org")
-           "* %?\n" :empty-lines 1)
-          ("I" "Inbox and paste" entry (file "inbox.org")
-           "* %?\n\n%x" :empty-lines 1)))
+           "* %?\n" :empty-lines 1)))
 #+end_src
 
 *** org-modern
@@ -1106,6 +1112,22 @@ font locking and text properties.
   (use-package org-modern
     :hook
     (org-mode . org-modern-mode))
+#+end_src
+
+*** org-cliplink
+A simple command that takes a URL from the clipboard and inserts an org-mode
+link with a title of a page found by the URL into the current buffer.
+
+#+begin_src emacs-lisp
+  (use-package org-cliplink
+    :after org
+    :bind
+    (:map org-mode-map
+          ("C-c m l" . org-cliplink))
+    :config
+    (add-to-list 'org-capture-templates
+                 '("b" "Bookmark" entry (file "inbox.org")
+                   "* %(org-cliplink-capture) %(org-set-tags \"bookmark\")")))
 #+end_src
 
 *** org-alert
@@ -1120,51 +1142,99 @@ org-alert is a simple notification package for org-mode.
     (org-alert-enable))
 #+end_src
 
-** denote
-[[https://protesilaos.com/emacs/denote][denote.el]] — Simple notes for Emacs with an efficient file-naming scheme.
+** notes
+*** [[https://protesilaos.com/emacs/denote][denote]]
+Simple notes for Emacs with an efficient file-naming scheme.
 
 #+begin_src emacs-lisp
   (use-package denote
-    :config
-    (setq denote-directory (expand-file-name "~/funes")
-          denote-file-type 'markdown-yaml
-          denote-infer-keywords t
-          denote-sort-keywords t
-          denote-prompts '(title)
-          denote-date-prompt-use-org-read-date t)
-    :hook (dired-mode . denote-dired-mode-in-directories))
+      :config
+      (setq denote-directory (expand-file-name "~/org/notes")
+            denote-file-type 'org
+            denote-infer-keywords t
+            denote-sort-keywords t
+            denote-prompts '(title)
+            denote-date-prompt-use-org-read-date t)
+      :hook (dired-mode . denote-dired-mode-in-directories))
+#+end_src
 
+*** consult-notes
+Easily selecting notes via consult
+
+#+begin_src emacs-lisp
   (use-package consult-notes
     :commands
     (consult-notes
      consult-notes-search-in-all-notes)
     :config
     (consult-notes-denote-mode t))
-
-  (my/leader-key
-    "n" '(:ignore t :wk "Notes")
-    "no" '(consult-notes :wk "Note list")
-    "nn" '(denote :wk "New note")
-    "ni" '(denote-link-insert-link :wk "Link to note")
-    "nl" '(denote-link-after-creating :"Create and link note")
-    "nta" '(denote-keywords-add :wk "Add tag")
-    "ntr" '(denote-keywords-add :wk "Remove tag"))
 #+end_src
 
-** zk
+***
+
+*** custom functions
+Some useful Denote custom functions, from the official documentation
+**** Create a note with the region’s contents
 #+begin_src emacs-lisp
-  (use-package zk
-    :custom
-    (zk-directory "~/funes")
-    (zk-file-extension "md")
-    :config
-    (zk-setup-auto-link-buttons)
-    (zk-setup-embark))
-
-  ;; (setq zk-new-note-header-function nil
-  ;;       zk-id-time-string-format nil)
+  (defun my/denote-create-new-note-from-region (beg end)
+    "Create note whose contents include the text between BEG and END.
+  Prompt for title and keywords of the new note."
+    (interactive "r")
+    (if-let (((region-active-p))
+             (text (buffer-substring-no-properties beg end)))
+        (progn
+          (denote (denote-title-prompt) (denote-keywords-prompt))
+          (insert text))
+      (user-error "No region is available")))
 #+end_src
+**** Split an Org subtree into its own note
+#+begin_src emacs-lisp
+  (defun my/denote-org-extract-subtree ()
+    "Create new Denote note using current Org subtree.
+  Make the new note use the Org file type, regardless of the value
+  of `denote-file-type'.
+
+  Use the subtree title as the note's title.  If available, use the
+  tags of the heading are used as note keywords.
+
+  Delete the original subtree."
+    (interactive)
+    (if-let ((text (org-get-entry))
+             (heading (org-get-heading :no-tags :no-todo :no-priority :no-comment)))
+        (progn
+          (delete-region (org-entry-beginning-position) (org-entry-end-position))
+          (denote heading (org-get-tags) 'org)
+          (insert text))
+      (user-error "No subtree to extract; aborting")))
+#+end_src
+
+*** keybindings
+#+begin_src emacs-lisp
+  (my/leader-key
+      "n" '(:ignore t :wk "Notes")
+      "no" '(consult-notes :wk "Note list")
+      "nn" '(denote :wk "New note")
+      "ni" '(denote-link-insert-link :wk "Link to note")
+      "nl" '(denote-link-after-creating :wk "Create and link note")
+      "nf" '(denote-add-front-matter :wk "Front matter")
+      "nr" '(denote-rename-file-using-front-matter :wk "Rename")
+      "nt" '(denote-keywords-add :wk "Add tag")
+      "nT" '(denote-keywords-add :wk "Remove tag")
+      "nw" '(my/denote-org-extract-subtree :wk "Org subtree to note")
+      "nR" '(my/denote-create-new-note-from-region :wk "New note from region"))
+#+end_src
+
+** git auto-commit
+Enable auto-commit for personal notes.
+
+#+begin_src emacs-lisp
+  (use-package git-auto-commit-mode
+    :config
+    (setq gac-ask-for-summary-p t))
+#+end_src
+
 ** wakatime
+
 [[https://wakatime.com/emacs][wakatime]] for [[https://wakapi.dev/][wakapi.dev]]
 #+begin_src emacs-lisp
   (use-package wakatime-mode
@@ -1175,10 +1245,14 @@ org-alert is a simple notification package for org-mode.
 ** wallabag
 [[https://github.com/chenyanming/wallabag.el][Emacs Wallabag client.]]
 #+begin_src emacs-lisp
+  ;; (unless (package-installed-p 'wallabag)
+  ;;   (package-vc-install chenyanming/wallabag))
+
   (use-package wallabag
     :defer t
     :ensure nil
-    :quelpa (wallabag :fetcher github :repo "chenyanming/wallabag.el")
+    :vc (:fetcher github
+         :repo chenyanming/wallabag.el)
     :config
     (setq wallabag-host my/wallabag-host
           wallabag-username my/wallabag-username
@@ -1189,10 +1263,26 @@ org-alert is a simple notification package for org-mode.
     (run-with-timer 0 3540 'wallabag-request-token))
 #+end_src
 
+** markdown
+
+#+begin_src emacs-lisp
+  (use-package markdown-mode
+    :ensure t
+    :mode ("README\\.md\\'" . gfm-mode))
+#+end_src
+
+** pandoc
+
+#+begin_src emacs-lisp
+  (use-package pandoc-mode
+    :hook (markdown-mode . pandoc-mode))
+#+end_src
+
 ** mermaid
 #+begin_src emacs-lisp
   (use-package mermaid-mode)
 #+end_src
+
 
 * Social
 ** Mastodon
@@ -1228,14 +1318,14 @@ Automatically tangle ~config.org~ file when saving.
 #+begin_src emacs-lisp
   (defun my/org-babel-tangle-config ()
     (when (string-equal (buffer-file-name)
-                        (expand-file-name "~/.emacs.d/config.org"))
+      (expand-file-name "~/.emacs.d/config.org"))
       (message "** Tangle config.org file...")
       (let ((org-config-babel-evaluate nil))
-        (org-babel-tangle))))
+  (org-babel-tangle))))
 
   (add-hook 'org-mode-hook
-            (lambda ()
-              (add-hook 'after-save-hook #'my/org-babel-tangle-config)))
+      (lambda ()
+        (add-hook 'after-save-hook #'my/org-babel-tangle-config)))
 #+end_src
 
 
