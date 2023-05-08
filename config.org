@@ -554,6 +554,13 @@ the built in completion metadata functions.
     (all-the-icons-completion-mode))
 #+end_src
 
+[[https://github.com/rainstormstudio/nerd-icons.el][nerd-icons.el]]: is a library for easily using Nerd Font icons inside Emacs, an alternative to all-the-icons.
+This is needed for ~doom-modeline~, sigh...
+
+#+begin_src emacs-lisp
+  (use-package nerd-icons)
+#+end_src
+
 ** Increase line-spacing
 #+begin_src emacs-lisp
   (setq-default line-spacing 0.2)
