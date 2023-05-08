@@ -241,6 +241,20 @@ files, ~p~ for projects, ~m~ for the active major-modes and so on.
   (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 #+end_src
 
+** Devil mode
+[[https://github.com/susam/devil][GitHub - susam/devil: Emacs minor mode that intercepts and translates keystro...]]
+Devil mode trades your comma key in exchange for a modifier-free editing experience!
+
+#+begin_src emacs-lisp
+  (use-package devil
+    :config
+    (setq devil-lighter " \U0001F608"
+          devil-prompt "\U0001F608 %t"
+          devil-translations '(("," . "C-")
+                               ("." . "M-")))
+    (global-devil-mode))
+#+end_src
+
 ** general.el
 For this purpose I use [[https://github.com/noctuid/general.el][general.el]].
 
