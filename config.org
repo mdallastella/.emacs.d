@@ -871,19 +871,24 @@ familiar ones!
     (setq eldoc-echo-area-display-truncation-message nil
           eldoc-echo-area-use-multiline-p nil))
 #+end_src
+
 ** Eglot
 #+begin_src emacs-lisp
   (use-package eglot
     :config
     (setq eglot-send-changes-idle-time (* 60 60)
           read-process-output-max (* 1024 1024)
-          eglot-extend-to-xref t)
+          eglot-extend-to-xref t
+          eglot-connect-timeout 60)
+    (add-to-list 'eglot-server-programs '(org-mode . ("/usr/bin/ltex-ls")))
     :hook
-    ((eglot-manage-mode . (lambda () (eldoc-mode -1)))
-     ((clojure-mode clojurescript-mode js2-mode rust-mode markdown-mode) . eglot-ensure)))
+    ((clojure-mode clojurescript-mode js2-mode rust-mode markdown-mode org-mode) . eglot-ensure))
 
   (use-package consult-eglot
-    :after 'eglot)
+    :after 'eglot
+    :config
+    (setq consult-eglot-ignore-column t
+          consult-eglot-show-kind-name t))
 
   (use-package jarchive
     :after 'eglot)
@@ -908,6 +913,7 @@ Clojure settings for Emacs
     (setq neil-prompt-for-version-p nil
           neil-inject-dep-to-project-p t))
 #+end_src
+
 *** Clojure development environment
  #+begin_src emacs-lisp
    (use-package cider
