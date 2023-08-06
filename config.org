@@ -1275,16 +1275,18 @@ Some useful Denote custom functions, from the official documentation
 #+end_src
 
 
-* Tangle configuration on save
+* Tangle and compite configuration on save
 Automatically tangle ~config.org~ file when saving.
 
 #+begin_src emacs-lisp
   (defun my/org-babel-tangle-config ()
-    (when (string-equal (buffer-file-name)
-      (expand-file-name "~/.emacs.d/config.org"))
+    (when (string-equal (buffer-file-name) (expand-file-name "~/.emacs.d/config.org"))
       (message "** Tangle config.org file...")
       (let ((org-config-babel-evaluate nil))
-  (org-babel-tangle))))
+        (org-babel-tangle)
+        (message "** Compile early-init and init files...")
+        (byte-compile-file early-init-file)
+        (byte-compile-file user-init-file))))
 
   (add-hook 'org-mode-hook
       (lambda ()
