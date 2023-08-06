@@ -1063,6 +1063,14 @@ Thanks to [[https://manueluberti.eu/2022/10/27/cljformat.html][Manuel Uberti]].
 
 
 * Productivity
+** markdown
+#+begin_src emacs-lisp
+  (use-package markdown-mode
+    :init
+    (setq markdown-hide-markup t
+          markdown-hide-urls t))
+#+end_src
+
 ** org-mode
 *** settings
 #+begin_src emacs-lisp
@@ -1070,39 +1078,12 @@ Thanks to [[https://manueluberti.eu/2022/10/27/cljformat.html][Manuel Uberti]].
     :ensure nil
     :config
     (setq org-directory "~/org"
-          org-agenda-files (directory-files-recursively "~/org/" "\\.org$")
           org-use-speed-commands t
           org-return-follows-link t
-          org-image-actual-width '(600)
-          org-archive-location "~/org/archive/archive.org::datatree/"
           org-hide-emphasis-markers t
-          org-agenda-skip-deadline-if-done t
-          org-agenda-skip-scheduled-if-done t
           org-ellipsis "…"
           org-fontify-quote-and-verse-blocks t
-          org-src-tab-acts-natively t
-          org-refile-targets '((org-agenda-files :maxlevel . 2))
-          org-refile-use-outline-path 'file
-          org-outline-path-complete-in-steps nil
-          org-refile-allow-creating-parent-nodes 'confirm))
-
-  (defun my/org-agenda-view ()
-    (interactive (org-agenda nil "a")))
-
-  (my/leader-key
-    "o" '(:ignore t :wk "Org-mode")
-    "oo" '(org-capture :wk "Capture")
-    "oa" '(my/org-agenda-view :wk "Agenda")
-    "of" 'org-attach)
-#+end_src
-
-*** org-capture templates
-#+begin_src emacs-lisp
-  (setq org-capture-templates
-        '(("t" "Todo" entry (file "todo.org")
-           "* TODO %?\n" :empty-lines 1)
-          ("i" "Inbox" entry (file "inbox.org")
-           "* %?\n" :empty-lines 1)))
+          org-src-tab-acts-natively t))
 #+end_src
 
 *** org-modern
@@ -1124,25 +1105,8 @@ link with a title of a page found by the URL into the current buffer.
     :after org
     :bind
     (:map org-mode-map
-          ("C-c m l" . org-cliplink))
-    :config
-    (add-to-list 'org-capture-templates
-                 '("b" "Bookmark" entry (file "inbox.org")
-                   "* %(org-cliplink-capture) %(org-set-tags \"bookmark\")")))
+          ("C-c m l" . org-cliplink)))
 #+end_src
-
-*** org-alert
-org-alert is a simple notification package for org-mode.
-#+begin_src emacs-lisp
-  (use-package org-alert
-    :disabled t
-    :config
-    (setq org-alert-interval 1800
-          org-alert-notification-title "Org Reminder!"
-          alert-default-style 'libnotify)
-    (org-alert-enable))
-#+end_src
-
 ** notes
 *** [[https://protesilaos.com/emacs/denote][denote]]
 Simple notes for Emacs with an efficient file-naming scheme.
@@ -1150,12 +1114,11 @@ Simple notes for Emacs with an efficient file-naming scheme.
 #+begin_src emacs-lisp
   (use-package denote
       :config
-      (setq denote-directory (expand-file-name "~/org/notes")
-            denote-file-type 'org
+      (setq denote-directory (expand-file-name "~/cloud/Sputnik/notes")
+            denote-file-type 'markdown-yaml
             denote-infer-keywords t
             denote-sort-keywords t
-            denote-prompts '(title)
-            denote-date-prompt-use-org-read-date t)
+            denote-prompts '(title))
       :hook (dired-mode . denote-dired-mode-in-directories))
 #+end_src
 
@@ -1225,8 +1188,63 @@ Some useful Denote custom functions, from the official documentation
 
 ** mermaid
 #+begin_src emacs-lisp
-  (use-package mermaid-mode)
+  (use-package mermaid-mode
+    :after 'markdown-mode
+    :hook (markdown-mode . mermaid-mode))
 #+end_src
+
+** mu4e
+#+begin_src emacs-lisp
+  (use-package mu4e
+    :ensure nil
+    :config
+    (setq mu4e-update-interval (* 10 60)
+          mu4e-get-mail-command "mbsync -a"
+          mu4e-maildir-list '("~/.mail"))
+    (setq mu4e-contexts
+          (list
+           ;; Work account
+           (make-mu4e-context
+            :name "7b"
+            :match-func
+              (lambda (msg)
+                (when msg
+                  (string-prefix-p "/7b" (mu4e-message-field msg :maildir))))
+            :vars '((user-mail-address . "marco@7bridges.eu")
+                    (user-full-name    . "Marco Dalla Stella")
+                    (smtpmail-smtp-server . "smtp.gmail.com")
+                    (smtpmail-smtp-service . 465)
+                    (smtpmail-stream-type . ssl)
+                    (mu4e-drafts-folder  . "/7b/[Gmail]/Drafts")
+                    (mu4e-sent-folder  . "/7b/[Gmail]/Sent Mail")
+                    (mu4e-refile-folder  . "/7b/[Gmail]/All Mail")
+                    (mu4e-trash-folder  . "/7b/[Gmail]/Personal")))
+
+           ;; Trash account
+           (make-mu4e-context
+            :name "mds"
+            :match-func
+              (lambda (msg)
+                (when msg
+                  (string-prefix-p "/mds" (mu4e-message-field msg :maildir))))
+            :vars '((user-mail-address . "marco@dallastella.name")
+                    (user-full-name    . "Marco Dalla Stella")
+                    (smtpmail-smtp-server . "smtp.mailbox.org")
+                    (smtpmail-smtp-service . 465)
+                    (smtpmail-stream-type . ssl)
+                    (mu4e-drafts-folder  . "/mds/Drafts")
+                    (mu4e-sent-folder  . "/mds/Sent")
+                    (mu4e-refile-folder  . "/mds/Archive")
+                    (mu4e-trash-folder  . "/mds/Trash"))))))
+#+end_src
+
+#+begin_src emacs-lisp
+  (use-package mu4e-alert
+    :hook (after-init . mu4e-alert-enable-notifications)
+    :config
+    (setq mu4e-alert-style 'libnotify))
+#+end_src
+
 
 
 * Social
