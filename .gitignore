@@ -39,3 +39,6 @@ straight/
 /eln-cache/
 /quelpa/
 /.cache/
+/early-init.elc
+/init.elc
+/*.el~
