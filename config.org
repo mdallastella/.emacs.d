@@ -67,8 +67,7 @@ Just good old [[https://github.com/jwiegley/use-package][use-package]] and [[htt
   (unless (package-installed-p 'vc-use-package)
     (package-vc-install "https://github.com/slotThe/vc-use-package"))
 
-  (use-package vc-use-package
-    :ensure nil)
+  (require 'vc-use-package)
 
   (use-package use-package-ensure-system-package)
 #+end_src
@@ -79,6 +78,16 @@ Just good old [[https://github.com/jwiegley/use-package][use-package]] and [[htt
     :config
     (add-hook 'after-init-hook 'benchmark-init/deactivate))
 #+end_src
+
+** Start server
+#+begin_src emacs-lisp
+  (use-package server
+    :commands (server-running-p)
+    :init
+    (unless (server-running-p)
+      (server-start)))
+#+end_src
+
 ** Keep .emacs.d nice and clean
 Use =no-littering= to keep our directory clean.
 
