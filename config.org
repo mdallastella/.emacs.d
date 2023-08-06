@@ -126,22 +126,10 @@ Store backups and autosave files in ~/tmp~.
 
 ** Set custom file
 #+begin_src emacs-lisp
-  ;; My custom file
   (message "Loading custom-file...")
   (setq custom-file (no-littering-expand-etc-file-name "custom.el"))
   (when (file-exists-p custom-file)
     (load custom-file))
-#+end_src
-
-** Load "secret" files
-#+begin_src emacs-lisp
-  ;; My secrets
-  (let ((secret.el (expand-file-name ".secrets/.secret.el.gpg" user-emacs-directory)))
-    (when (file-exists-p secret.el)
-      (load-library secret.el)))
-
-  (let ((authinfo.gpg (expand-file-name ".secrets/.authinfo.gpg" user-emacs-directory)))
-    (setq auth-sources `((:source ,authinfo.gpg))))
 #+end_src
 
 ** Early UI settings
