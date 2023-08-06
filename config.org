@@ -143,7 +143,7 @@ Disable those UI stuff that I don't need.
   (fset 'yes-or-no-p 'y-or-n-p)
 #+end_src
 
-Maximize windows by default.
+*** Maximize windows by default.
 
 #+begin_src emacs-lisp
   (add-hook 'emacs-startup-hook 'toggle-frame-maximized)
@@ -157,6 +157,7 @@ Maximize windows by default.
   (setq user-full-name "Marco Dalla Stella"
         user-mail-address "marco@dallastella.name")
 #+end_src
+
 ** Access to shell PATH
 Ensure environment variables inside Emacs look the same as in the
 user’s shell.
@@ -340,7 +341,7 @@ I use 80 characters.
 #+begin_src emacs-lisp
   (setq-default indent-tabs-mode nil           ; Never use tabs
                 tab-always-indent 'complete    ; Indent or complete
-                tab-width 2)                   ; Show eventual tabs as 4 spaces
+                tab-width 4)                   ; Show eventual tabs as 4 spaces
 #+end_src
 
 ** Deal with whitespaces
@@ -452,13 +453,6 @@ delimiters: parentheses, braces, brackets, etc.
      "yx" 'yankpad-expand)
  #+END_SRC
 
-** Sudo save
-Edit files in sudo mode.
-
-#+begin_src emacs-lisp
-  ;; (use-package sudo-save)
-#+end_src
-
 
 * UI
 ** Frame title
@@ -474,7 +468,7 @@ Set my favourite font
 
 #+begin_src emacs-lisp
   (set-face-attribute 'default nil
-                      :family "Iosevka Term SS14"
+                      :family "Iosevka SS14"
                       :weight 'normal
                       :height 120)
 
@@ -501,6 +495,7 @@ Set my favourite font
 
 ** Modeline
 Modeline from [[https://github.com/seagle0128/doom-modeline][Doom]]
+
 #+begin_src emacs-lisp
   (use-package minions
     :config
@@ -520,6 +515,7 @@ Modeline from [[https://github.com/seagle0128/doom-modeline][Doom]]
 #+end_src
 
 ** Show matching parenthesis
+
 #+begin_src emacs-lisp
   (use-package paren
     :config
@@ -551,8 +547,8 @@ the built in completion metadata functions.
     (all-the-icons-completion-mode))
 #+end_src
 
-[[https://github.com/rainstormstudio/nerd-icons.el][nerd-icons.el]]: is a library for easily using Nerd Font icons inside Emacs, an alternative to all-the-icons.
-This is needed for ~doom-modeline~, sigh...
+[[https://github.com/rainstormstudio/nerd-icons.el][nerd-icons.el]]: is a library for easily using Nerd Font icons inside Emacs, an
+alternative to all-the-icons.  This is needed for ~doom-modeline~, sigh...
 
 #+begin_src emacs-lisp
   (use-package nerd-icons)
@@ -685,7 +681,9 @@ function completing-read.
       ("M-g k" . consult-global-mark)
       ("C-c h" . consult-history))
      :config
-     (recentf-mode t))
+     (recentf-mode t)
+     (consult-customize consult--source-buffer :hidden t :default nil)
+     (add-to-list 'consult-buffer-sources persp-consult-source))
 
       ;; Keybindings
    (my/leader-key
@@ -856,8 +854,8 @@ libvterm.
   (my/leader-key
     "p" '(:keymap project-prefix-map :package project :wk "Project"))
 #+end_src
-** Git
-*** Magit
+
+** Magit
 [[https://github.com/magit/magit][Magit]] - A Git porcelain inside Emacs.
 
 #+begin_src emacs-lisp
@@ -874,13 +872,6 @@ libvterm.
       "gl" 'magit-log)
     (setq magit-save-repository-buffers 'dontask
           magit-refs-show-commit-count 'all))
-#+end_src
-*** TODO magit-todo
-[[https://github.com/alphapapa/magit-todos][magit-todo]] - displays keyword entries from source code comments and Org files in
-the Magit status buffer.
-
-#+begin_src emacs-lisp
-  (use-package magit-todos)
 #+end_src
 
 ** eldoc
@@ -956,16 +947,19 @@ Clojure settings for Emacs
            cider-repl-history-file (locate-user-emacs-file "cider-repl-history")
            cider-repl-display-help-banner nil))
  #+end_src
+
 *** Clojure Flycheck
 Flycheck using clj-kondo
  #+begin_src emacs-lisp
   (use-package flycheck-clj-kondo)
  #+end_src
+
 *** Font-locking for Clojure mode
  #+begin_src emacs-lisp
   (use-package clojure-mode-extra-font-locking
     :after clojure-mode)
  #+end_src
+
 *** Kaocha test runner
 An emacs package for running Kaocha tests via CIDER.
 
@@ -984,6 +978,7 @@ An emacs package for running Kaocha tests via CIDER.
           kaocha-runner-ongoing-tests-win-min-height 20
           kaocha-runner-output-win-max-height 20))
  #+end_src
+
 *** Code formatting
 I like my code to be formatted following standard conventions.
 Thanks to [[https://manueluberti.eu/2022/10/27/cljformat.html][Manuel Uberti]].
@@ -1008,15 +1003,6 @@ Thanks to [[https://manueluberti.eu/2022/10/27/cljformat.html][Manuel Uberti]].
   (add-hook 'cider-mode-hook #'my/cider-format-buffer)
 #+end_src
 
-** Rust
-Use Rustic
-#+begin_src emacs-lisp
-  (use-package rustic
-    :config
-    (setq rustic-lsp-client 'eglot
-          rustic-format-on-save nil))
-#+end_src
-
 ** Javascript
 [[https://github.com/mooz/js2-mode][js2-mode]]: Improved JavaScript editing mode for GNU Emacs.
 
@@ -1029,7 +1015,7 @@ Use Rustic
     :config
     (setq js-chain-indent t
           ;; These have become standard in the JS community
-          js2-basic-offset 2
+          js2-basic-offset 4
           ;; Don't mishighlight shebang lines
           js2-skip-preprocessor-directives t
           ;; let flycheck handle this
@@ -1051,10 +1037,11 @@ Use Rustic
     ("\\.njk\\'" "\\.tpl\\.php\\'" "\\.[agj]sp\\'" "\\.as[cp]x\\'"
      "\\.erb\\'" "\\.mustache\\'" "\\.djhtml\\'" "\\.[t]?html?\\'")
     :config
-    (setq web-mode-markup-indent-offset 2
-          web-mode-css-indent-offset 2
-          web-mode-code-indent-offset 2))
+    (setq web-mode-markup-indent-offset 4
+          web-mode-css-indent-offset 4
+          web-mode-code-indent-offset 4))
 #+end_src
+
 ** YAML
 #+begin_src emacs-lisp
   (use-package yaml-mode
@@ -1188,8 +1175,6 @@ Easily selecting notes via consult
     (consult-notes-denote-mode t))
 #+end_src
 
-***
-
 *** custom functions
 Some useful Denote custom functions, from the official documentation
 **** Create a note with the region’s contents
@@ -1204,26 +1189,6 @@ Some useful Denote custom functions, from the official documentation
           (denote (denote-title-prompt) (denote-keywords-prompt))
           (insert text))
       (user-error "No region is available")))
-#+end_src
-**** Split an Org subtree into its own note
-#+begin_src emacs-lisp
-  (defun my/denote-org-extract-subtree ()
-    "Create new Denote note using current Org subtree.
-  Make the new note use the Org file type, regardless of the value
-  of `denote-file-type'.
-
-  Use the subtree title as the note's title.  If available, use the
-  tags of the heading are used as note keywords.
-
-  Delete the original subtree."
-    (interactive)
-    (if-let ((text (org-get-entry))
-             (heading (org-get-heading :no-tags :no-todo :no-priority :no-comment)))
-        (progn
-          (delete-region (org-entry-beginning-position) (org-entry-end-position))
-          (denote heading (org-get-tags) 'org)
-          (insert text))
-      (user-error "No subtree to extract; aborting")))
 #+end_src
 
 *** keybindings
@@ -1242,55 +1207,21 @@ Some useful Denote custom functions, from the official documentation
       "nR" '(my/denote-create-new-note-from-region :wk "New note from region"))
 #+end_src
 
-** git auto-commit
-Enable auto-commit for personal notes.
+*** notes on documents
 
+**** pdf-tools
 #+begin_src emacs-lisp
-  (use-package git-auto-commit-mode
+  (use-package pdf-tools
+    :magic ("%PDF" . pdf-view-mode)
     :config
-    (setq gac-ask-for-summary-p t))
+    (pdf-tools-install))
 #+end_src
-
-** wakatime
-
-[[https://wakatime.com/emacs][wakatime]] for [[https://wakapi.dev/][wakapi.dev]]
+**** epub - nov.el
 #+begin_src emacs-lisp
-  (use-package wakatime-mode
-    :config
-    (global-wakatime-mode))
+  (use-package nov
+    :mode ("\\.epub\\'" . nov-mode))
 #+end_src
-
-** wallabag
-[[https://github.com/chenyanming/wallabag.el][Emacs Wallabag client.]]
-#+begin_src emacs-lisp
-  ;; (unless (package-installed-p 'wallabag)
-  ;;   (package-vc-install chenyanming/wallabag))
-
-  (use-package wallabag
-    :defer t
-    :ensure nil
-    :vc (:fetcher github
-         :repo chenyanming/wallabag.el)
-    :config
-    (setq wallabag-host my/wallabag-host
-          wallabag-username my/wallabag-username
-          wallabag-password my/wallabag-password
-          wallabag-clientid my/wallabag-clientid
-          wallabag-secret my/wallabag-secret)
-     ;; optional, auto refresh token, token should refresh every hour
-    (run-with-timer 0 3540 'wallabag-request-token))
-#+end_src
-
-** markdown
-
-#+begin_src emacs-lisp
-  (use-package markdown-mode
-    :ensure t
-    :mode ("README\\.md\\'" . gfm-mode))
-#+end_src
-
 ** pandoc
-
 #+begin_src emacs-lisp
   (use-package pandoc-mode
     :hook (markdown-mode . pandoc-mode))
