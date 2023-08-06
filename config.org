@@ -629,6 +629,26 @@ ace-window
 
 
 * Tools
+** Perspective
+The [[https://github.com/nex3/perspective-el][Perspective]] package provides multiple named workspace (or
+"perspectives") in Emacs.
+
+#+begin_src emacs-lisp
+  (use-package perspective
+    :config
+    (my/leader-key
+      "x" '(:ignore t :wk "Workspaces")
+      "xx" '(persp-switch :wk "Switch workspace")
+      "xr" '(persp-rename :wk "Rename workspace")
+      "xk" '(persp-kill :wk "Kill workspace"))
+    (setq persp-suppress-no-prefix-key-warning t
+          persp-initial-frame-name "main"
+          persp-state-default-file (no-littering-expand-etc-file-name "perspective-default"))
+    (unless (equal persp-mode t)
+      (persp-mode)
+      (persp-state-load persp-state-default-file)))
+#+end_src
+
 ** direnv
 direnv is an extension for your shell. It augments existing shells
 with a new feature that can load and unload environment variables
@@ -748,18 +768,6 @@ to use on a target determined by the context.
 #+end_src
 
 ** Completion
-*** Company
-#+begin_src emacs-lisp
-  (use-package company
-    :disabled t
-    :config
-    (setq company-idle-delay 0.5
-          company-tooltip-align-annotations t
-          company-search-regexp-function #'company-search-flex-regexp
-          company-require-match 'never)
-    :hook
-    (after-init . global-company-mode))
-#+end_src
 *** corfu
 Corfu enhances completion at point with a small completion popup.
 #+begin_src emacs-lisp
@@ -776,25 +784,6 @@ Use hippie-expand instead of dabbrev-expand.
 #+begin_src emacs-lisp
   (use-package hippie-exp
     :bind* ("M-/" . hippie-expand))
-#+end_src
-** Perspective
-The [[https://github.com/nex3/perspective-el][Perspective]] package provides multiple named workspace (or
-"perspectives") in Emacs.
-
-#+begin_src emacs-lisp
-  (use-package perspective
-    :config
-    (my/leader-key
-      "x" '(:ignore t :wk "Workspaces")
-      "xx" '(persp-switch :wk "Switch workspace")
-      "xr" '(persp-rename :wk "Rename workspace")
-      "xk" '(persp-kill :wk "Kill workspace"))
-    (setq persp-suppress-no-prefix-key-warning t
-          persp-initial-frame-name "main"
-          persp-state-default-file (no-littering-expand-etc-file-name "perspective-default"))
-    (unless (equal persp-mode t)
-      (persp-mode)
-      (persp-state-load persp-state-default-file)))
 #+end_src
 
 ** Helpful
@@ -830,15 +819,16 @@ Use built-in dictionary-el.
           dictionary-use-single-buffer t))
 #+end_src
 
-** vterm
-vterm is fully-fledged terminal emulator inside GNU Emacs based on
-libvterm.
+** Exercism
+[[https://exercism.org/][Exercism]] is a great tool for learning new languages or diving deeper into
+familiar ones!
 
 #+begin_src emacs-lisp
-  (use-package vterm
+  (use-package exercism
     :config
+    (setq exercism-directory "~/code/personal/exercism/")
     (my/leader-key
-      "tv" '(vterm :wk "Open terminal")))
+      "ue" 'exercism))
 #+end_src
 
 
