@@ -64,6 +64,8 @@ Just good old [[https://github.com/jwiegley/use-package][use-package]] and [[htt
   (setq use-package-always-ensure t
         package-native-compile t)
 
+  (package-initialize)
+
   (unless (package-installed-p 'vc-use-package)
     (package-vc-install "https://github.com/slotThe/vc-use-package"))
 
@@ -75,6 +77,7 @@ Just good old [[https://github.com/jwiegley/use-package][use-package]] and [[htt
 ** Benchmark init
 #+begin_src emacs-lisp
   (use-package benchmark-init
+    :disabled
     :config
     (add-hook 'after-init-hook 'benchmark-init/deactivate))
 #+end_src
@@ -95,14 +98,11 @@ Use =no-littering= to keep our directory clean.
   ;; Keep .emacs.d clean
   (use-package no-littering
     :config
-    (require 'recentf)
-    (add-to-list 'recentf-exclude no-littering-var-directory)
-
     (setq create-lockfiles nil
-    delete-old-versions t
-    kept-new-versions 6
-    kept-old-versions 2
-    version-control t)
+      delete-old-versions t
+      kept-new-versions 6
+      kept-old-versions 2
+      version-control t)
 #+end_src
 
 Store backups and autosave files in ~/tmp~.
@@ -117,19 +117,12 @@ Store backups and autosave files in ~/tmp~.
 ** Garbage collector magic hack
 #+begin_src emacs-lisp
   (use-package gcmh
+    :ensure t
     :custom
     (gcmh-idle-delay 1000)
     (gcmh-high-cons-threshold (* 16 1024 1024)) ;; 16 MB
     :hook
     (after-init . gcmh-mode))
-#+end_src
-
-** Set custom file
-#+begin_src emacs-lisp
-  (message "Loading custom-file...")
-  (setq custom-file (no-littering-expand-etc-file-name "custom.el"))
-  (when (file-exists-p custom-file)
-    (load custom-file))
 #+end_src
 
 ** Early UI settings
@@ -253,16 +246,8 @@ Devil mode trades your comma key in exchange for a modifier-free editing experie
     (global-devil-mode))
 #+end_src
 
-** general.el
-For this purpose I use [[https://github.com/noctuid/general.el][general.el]].
-
+** Generic
 #+begin_src emacs-lisp
-  (use-package general
-    :commands general-create-definer)
-
-  (general-create-definer my/leader-key
-    :prefix "C-c")
-
   (defun my/open-config ()
       "Open the current Emacs configuration."
       (interactive)
@@ -272,33 +257,22 @@ For this purpose I use [[https://github.com/noctuid/general.el][general.el]].
     (interactive)
     (ibuffer t))
 
-  (my/leader-key
-    ;; Generic
-    "." 'set-mark-command
-    ;; Buffers (b)
-    "b" '(:ignore t :wk "Buffers")
-    "bw" '(save-buffer :wk "Write")
-    "bk" '(kill-this-buffer :wk "Kill this buffer")
-    "bK" '(kill-buffer :wk "Kill a buffer")
-    "bR" '(revert-buffer :wk "Revert this buffer")
-    "bl" '(my/ibuffer :wk "List buffers")
-    ;; Files (f)
-    "f" '(:ignore t :wk "Files")
-    "ff" '(find-file :wk "Find file")
-    "fd" '(dired :wk "Open Dired")
-    "fP" '(my/open-config :wk "Open emacs.org")
-    ;; Utility (u)
-    "u" '(:ignore t :wk "Utility")
-    "ub" 'browse-url-at-point
-    ;; Packages
-    "up" '(:ignore t :wk "Packages")
-    "upl" '(package-list-packages :wk "List packages")
-    "upu" '(package-update-all :wk "Update packages")
-    ;; Toggle (t)
-    "t" '(:ignore t :wk "Toggle")
-    "ts" '(flyspell-mode :wk "Flyspell")
-    ;; Quit
-    "qq" '(save-buffers-kill-emacs :wk "Save and quit"))
+  (use-package emacs
+    :bind
+    (;; Buffers
+     ("C-c b k" . kill-current-buffer)
+     ("C-c b k" . kill-buffer)
+     ("C-c b r" . revert-buffer)
+     ("C-c b l" . my/ibuffer)
+     ;; Files
+     ("C-c f f" . find-file)
+     ("C-c f d" . dired-jump)
+     ("C-c f P" . my/open-config)
+     ;; Utility
+     ("C-c u p l" . package-list-packages)
+     ("C-c u p i" . package-install)
+     ("C-c u p d" . package-delete)
+     ("C-c u p u" . package-update-all)))
 #+end_src
 
 ** which-key
@@ -356,15 +330,13 @@ I use 80 characters.
 [[https://github.com/magnars/multiple-cursors.el][Multiple cursors for Emacs]]
 
 #+begin_src emacs-lisp
-  (use-package multiple-cursors)
-
-  ;; Keybindings
-  (my/leader-key
-    ">" '(:ignore t :which-key "Multiple cursors")
-    ">n" 'mc/mark-next-like-this
-    ">p" 'mc/mark-previous-like-this
-    ">a" 'mc/mark-all-like-this
-    ">>" 'mc/edit-lines)
+  (use-package multiple-cursors
+    :defer t
+    :bind
+    (("C-c > n" . mc/mark-next-like-this)
+     ("C-c > p" . mc/mark-previous-like-this)
+     ("C-c > a" . mc/mark-all-like-this)
+     ("C-c > >" . mc/edit-lines)))
 #+end_src
 
 ** undo-fu
@@ -426,32 +398,6 @@ delimiters: parentheses, braces, brackets, etc.
     :init
     (puni-global-mode))
 #+end_src
-
-** yankpad
-[[https://github.com/Kungsgeten/yankpad][yankpad]] - Paste snippets from an org-mode file
- #+begin_src emacs-lisp
-   (use-package yasnippet
-     :ensure t
-     :config
-     (setq yas-verbosity 1)
-     (yas-global-mode))
-
-   (use-package yankpad
-     :ensure t
-     :after yasnippet
-     :config
-     (setq yankpad-file (expand-file-name "yankpad.org" user-emacs-directory)))
-
-   ;; Keybindings
-   (my/leader-key
-     "y" '(:ignore t :wk "Snippets")
-     "yc" 'yankpad-set-category
-     "ye" 'yankpad-edit
-     "yi" 'yankpad-insert
-     "ym" 'yankpad-map
-     "yr" 'yankpad-reload
-     "yx" 'yankpad-expand)
- #+END_SRC
 
 
 * UI
@@ -635,18 +581,14 @@ The [[https://github.com/nex3/perspective-el][Perspective]] package provides mul
 
 #+begin_src emacs-lisp
   (use-package perspective
+    :bind
+    (("C-c x x" . persp-switch)
+     ("C-c x r" . persp-rename)
+     ("C-c x k" . persp-kill))
     :config
-    (my/leader-key
-      "x" '(:ignore t :wk "Workspaces")
-      "xx" '(persp-switch :wk "Switch workspace")
-      "xr" '(persp-rename :wk "Rename workspace")
-      "xk" '(persp-kill :wk "Kill workspace"))
     (setq persp-suppress-no-prefix-key-warning t
-          persp-initial-frame-name "main"
-          persp-state-default-file (no-littering-expand-etc-file-name "perspective-default"))
-    (unless (equal persp-mode t)
-      (persp-mode)
-      (persp-state-load persp-state-default-file)))
+          persp-initial-frame-name "main")
+    (persp-mode))
 #+end_src
 
 ** direnv
@@ -656,12 +598,10 @@ depending on the current directory.
 
 #+begin_src emacs-lisp
   (use-package direnv
+    :bind
+    ("C-c u d" . direnv-allow)
     :config
     (direnv-mode))
-
-  (my/leader-key
-    "uda" '(:ignore true :wk "Direnv")
-    "uda" '(direnv-allow :wk "Allow"))
 #+end_src
 
 ** Vertico, Orderless, Consult, Marginalia & Embark
@@ -699,21 +639,18 @@ function completing-read.
       ("M-g o" . consult-outline)
       ("M-g m" . consult-mark)
       ("M-g k" . consult-global-mark)
-      ("C-c h" . consult-history))
+      ("C-c h" . consult-history)
+      ("C-c b b" . consult-buffer)
+      ("C-c c c" . consult-imenu)
+      ("C-c c f" . consult-flymake)
+      ("C-c c r" . consult-recent-file)
+      ("C-c c e" . consult-compile-error)
+      ("C-c c m" . consult-mode-command)
+      ("C-c f g" . consult-ripgrep))
      :config
      (recentf-mode t)
      (consult-customize consult--source-buffer :hidden t :default nil)
-     (add-to-list 'consult-buffer-sources persp-consult-source))
-
-      ;; Keybindings
-   (my/leader-key
-     "bb" 'consult-buffer
-     "cc" 'consult-imenu
-     "ce" 'consult-compile-error
-     "cf" 'consult-flymake
-     "cr" 'consult-recent-file
-     "cm" 'consult-mode-command
-     "fg" 'consult-ripgrep)
+     (add-to-list 'consult-buffer-sources 'persp-consult-source))
  #+end_src
 
 *** Marginalia
@@ -759,12 +696,11 @@ to use on a target determined by the context.
   (use-package jinx
     :hook
     (emacs-startup . global-jinx-mode)
+    :bind
+    ("C-c s s" . jinx-correct)
+    ("C-c s l" . jinx-languages)
     :config
-    (setq jinx-languages "en_US it_IT")
-    (my/leader-key
-         "s" '(:ignore t :wk "Spell")
-         "ss" '(jinx-correct :wk "Correct word")
-         "sl" '(jinx-languages :wk "Switch language")))
+    (setq jinx-languages "en_US it_IT"))
 #+end_src
 
 ** Completion
@@ -809,9 +745,10 @@ Use built-in dictionary-el.
 #+begin_src emacs-lisp
   (use-package dictionary
     :ensure nil
+    :defer t
+   :bind
+    ("C-c s d" . dictionary-search)
     :config
-    (my/leader-key
-      "sd" 'dictionary-search)
     (set-face-attribute 'dictionary-word-definition-face nil
                         :family "Iosevka Aile"
                         :weight 'light)
@@ -825,10 +762,11 @@ familiar ones!
 
 #+begin_src emacs-lisp
   (use-package exercism
+    :commands exercism
+    :bind
+    ("C-c u e" . exercism)
     :config
-    (setq exercism-directory "~/code/personal/exercism/")
-    (my/leader-key
-      "ue" 'exercism))
+    (setq exercism-directory "~/code/personal/exercism/"))
 #+end_src
 
 
@@ -839,10 +777,9 @@ familiar ones!
 #+begin_src emacs-lisp
   (use-package project
     :ensure nil
-    :commands project-roots)
-
-  (my/leader-key
-    "p" '(:keymap project-prefix-map :package project :wk "Project"))
+    :commands project-roots
+    :bind-keymap
+    ("C-c p" . project-prefix-map))
 #+end_src
 
 ** Magit
@@ -850,16 +787,11 @@ familiar ones!
 
 #+begin_src emacs-lisp
   (use-package magit
+    :bind
+    (("C-c g g" . magit-status)
+     ("C-c g l" . magit-log)
+     ("C-c g r" . vc-refresh-state))
     :config
-    (my/leader-key
-      "g" '(:ignore t :wk "Magit")
-      "gg" 'magit-status
-      "gf" 'magit-fetch
-      "gp" 'magit-pull
-      "gb" 'magit-branch
-      "gB" 'magit-blame
-      "gr" 'vc-refresh-state
-      "gl" 'magit-log)
     (setq magit-save-repository-buffers 'dontask
           magit-refs-show-commit-count 'all))
 #+end_src
@@ -875,31 +807,31 @@ familiar ones!
 ** Eglot
 #+begin_src emacs-lisp
   (use-package eglot
+    :hook
+    ((clojure-mode clojurescript-mode js2-mode rust-mode markdown-mode org-mode)
+     . eglot-ensure)
+    :bind
+    (("C-c l e" . eglot-rename)
+     ("C-c l a" . eglot-code-actions)
+     ("C-c l d" . xref-find-definitions)
+     ("C-c l e" . eldoc-doc-buffer))
     :config
     (setq eglot-send-changes-idle-time (* 60 60)
           read-process-output-max (* 1024 1024)
           eglot-extend-to-xref t
           eglot-connect-timeout 60)
-    (add-to-list 'eglot-server-programs '(org-mode . ("/usr/bin/ltex-ls")))
-    :hook
-    ((clojure-mode clojurescript-mode js2-mode rust-mode markdown-mode org-mode) . eglot-ensure))
+    (add-to-list 'eglot-server-programs '(org-mode . ("/usr/bin/ltex-ls"))))
 
   (use-package consult-eglot
     :after 'eglot
+    :bind
+    ("C-c l s" . consult-eglot-symbols)
     :config
     (setq consult-eglot-ignore-column t
           consult-eglot-show-kind-name t))
 
   (use-package jarchive
     :after 'eglot)
-
-  (my/leader-key
-    "l" '(:ignore t :wk "Eglot")
-    "lr" 'eglot-rename
-    "la" 'eglot-code-actions
-    "ld" 'xref-find-definitions
-    "le" 'eldoc-doc-buffer
-    "ls" 'consult-eglot-symbols)
 #+end_src
 
 ** Clojure/ClojureScript
@@ -1076,6 +1008,7 @@ Thanks to [[https://manueluberti.eu/2022/10/27/cljformat.html][Manuel Uberti]].
 #+begin_src emacs-lisp
   (use-package org
     :ensure nil
+    :defer t
     :config
     (setq org-directory "~/org"
           org-use-speed-commands t
@@ -1113,13 +1046,21 @@ Simple notes for Emacs with an efficient file-naming scheme.
 
 #+begin_src emacs-lisp
   (use-package denote
-      :config
-      (setq denote-directory (expand-file-name "~/cloud/Sputnik/notes")
-            denote-file-type 'markdown-yaml
-            denote-infer-keywords t
-            denote-sort-keywords t
-            denote-prompts '(title))
-      :hook (dired-mode . denote-dired-mode-in-directories))
+    :bind
+    (("C-c n n" . denote)
+     ("C-c n i" . denote-link-insert-link)
+     ("C-c n l" . denote-link-after-creating)
+     ("C-c n f" . denote-add-front-matter)
+     ("C-c n r" . denote-rename-file-using-front-matter)
+     ("C-c n t" . denote-keywords-add)
+     ("C-c n T" . denote-keywords-add))
+    :config
+    (setq denote-directory (expand-file-name "~/cloud/Sputnik/notes")
+          denote-file-type 'markdown-yaml
+          denote-infer-keywords t
+          denote-sort-keywords t
+          denote-prompts '(title))
+    :hook (dired-mode . denote-dired-mode-in-directories))
 #+end_src
 
 *** consult-notes
@@ -1128,42 +1069,16 @@ Easily selecting notes via consult
 #+begin_src emacs-lisp
   (use-package consult-notes
     :commands
-    (consult-notes
-     consult-notes-search-in-all-notes)
+    (consult-notes consult-notes-search-in-all-notes)
+    :bind
+    ("C-c n o" . consult-notes)
     :config
     (consult-notes-denote-mode t))
 #+end_src
 
-*** custom functions
-Some useful Denote custom functions, from the official documentation
-**** Create a note with the region’s contents
-#+begin_src emacs-lisp
-  (defun my/denote-create-new-note-from-region (beg end)
-    "Create note whose contents include the text between BEG and END.
-  Prompt for title and keywords of the new note."
-    (interactive "r")
-    (if-let (((region-active-p))
-             (text (buffer-substring-no-properties beg end)))
-        (progn
-          (denote (denote-title-prompt) (denote-keywords-prompt))
-          (insert text))
-      (user-error "No region is available")))
-#+end_src
-
 *** keybindings
 #+begin_src emacs-lisp
-  (my/leader-key
-      "n" '(:ignore t :wk "Notes")
-      "no" '(consult-notes :wk "Note list")
-      "nn" '(denote :wk "New note")
-      "ni" '(denote-link-insert-link :wk "Link to note")
-      "nl" '(denote-link-after-creating :wk "Create and link note")
-      "nf" '(denote-add-front-matter :wk "Front matter")
-      "nr" '(denote-rename-file-using-front-matter :wk "Rename")
-      "nt" '(denote-keywords-add :wk "Add tag")
-      "nT" '(denote-keywords-add :wk "Remove tag")
-      "nw" '(my/denote-org-extract-subtree :wk "Org subtree to note")
-      "nR" '(my/denote-create-new-note-from-region :wk "New note from region"))
+
 #+end_src
 
 *** notes on documents
@@ -1189,7 +1104,7 @@ Some useful Denote custom functions, from the official documentation
 ** mermaid
 #+begin_src emacs-lisp
   (use-package mermaid-mode
-    :after 'markdown-mode
+    :after markdown-mode
     :hook (markdown-mode . mermaid-mode))
 #+end_src
 
@@ -1197,6 +1112,7 @@ Some useful Denote custom functions, from the official documentation
 #+begin_src emacs-lisp
   (use-package mu4e
     :ensure nil
+    :defer t
     :config
     (setq mu4e-update-interval (* 10 60)
           mu4e-get-mail-command "mbsync -a"
@@ -1251,16 +1167,22 @@ Some useful Denote custom functions, from the official documentation
 ** Mastodon
 #+begin_src emacs-lisp
   (use-package mastodon
+    :commands mastodon
+    :bind
+    ("C-c u m" . mastodon)
     :config
     (setq mastodon-instance-url "https://functional.cafe"
           mastodon-active-user "mdallastella"))
 #+end_src
+
 ** elfeed
 [[https://github.com/skeeto/elfeed][Elfeed]] is an extensible web feed reader for Emacs.
 
 #+begin_src emacs-lisp
   (use-package elfeed
-    :commands (elfeed))
+    :commands (elfeed)
+    :bind
+    ("C-c u e" . elfeed))
 
   (use-package elfeed-org
     :after elfeed
