@@ -399,6 +399,27 @@ delimiters: parentheses, braces, brackets, etc.
     (puni-global-mode))
 #+end_src
 
+** yankpad
+[[https://github.com/Kungsgeten/yankpad][yankpad]] - Paste snippets from an org-mode file
+ #+begin_src emacs-lisp
+   (use-package yasnippet
+     :config
+     (setq yas-verbosity 1)
+     (yas-global-mode))
+
+   (use-package yankpad
+     :after yasnippet
+     :bind
+     (("C-c y c" . yankpad-set-category)
+      ("C-c y e" . yankpad-edit)
+      ("C-c y i" . yankpad-insert)
+      ("C-c y m" . yankpad-map)
+      ("C-c y r" . yankpad-reload)
+      ("C-c y x" . yankpad-expand))
+     :config
+     (setq yankpad-file (expand-file-name "yankpad.org" user-emacs-directory)))
+ #+END_SRC
+
 
 * UI
 ** Frame title
