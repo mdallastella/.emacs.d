@@ -20,7 +20,14 @@ See [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Early-Init-File.
   (setq inhibit-startup-screen t
         inhibit-startup-message t
         inhibit-startup-buffer-menu t
+        use-file-dialog nil
         visual-bell t)
+
+  (menu-bar-mode -1)
+  (tool-bar-mode -1)
+  (scroll-bar-mode -1)
+  (blink-cursor-mode -1)
+  (fset 'yes-or-no-p 'y-or-n-p)
 #+end_src
 
 
