@@ -88,15 +88,18 @@ Integration with ~use-package~:
 #+begin_src emacs-lisp
   (straight-use-package 'use-package)
   (use-package straight
-    :config
-    (straight-register-package 'org)
-    (straight-register-package 'org-contrib)
     :custom
     (straight-use-package-by-default t))
 #+end_src
 
 To clean up unused repositories use ~straight-remove-unused-repos~.
 
+** Benchmark init
+#+begin_src emacs-lisp
+  (use-package benchmark-init
+    :config
+    (add-hook 'after-init-hook 'benchmark-init/deactivate))
+#+end_src
 ** Keep .emacs.d nice and clean
 Use =no-littering= to keep our directory clean.
 
@@ -310,6 +313,9 @@ For this purpose I use [[https://github.com/noctuid/general.el][general.el]].
     ;; Utility (u)
     "u" '(:ignore t :wk "Utility")
     "ub" 'browse-url-at-point
+    ;; Packages
+    "up" '(:ignore t :wk "Packages")
+    "upp" '(straight-pull-all :wk "Update packages")
     ;; Toggle (t)
     "t" '(:ignore t :wk "Toggle")
     "ts" '(flyspell-mode :wk "Flyspell")
@@ -484,12 +490,12 @@ Set my favourite font
 
 #+begin_src emacs-lisp
   (set-face-attribute 'default nil
-                      :family "Iosevka SS01"
+                      :family "PragmataPro Mono Liga"
                       :weight 'light
                       :height 110)
 
   (set-face-attribute 'variable-pitch nil
-                      :family "Iosevka Aile"
+                      :family "Atkinson Hyperlegible"
                       :height 110)
 #+end_src
 
@@ -897,25 +903,12 @@ Use built-in dictionary-el.
       "ld" 'xref-find-definitions
       "le" 'eldoc-doc-buffer
       "ls" 'consult-eglot-symbols)
+    (setq eglot-send-changes-idle-time (* 60 60))
     :hook
-    ((clojure-mode clojurescript-mode js2-mode) . eglot-ensure))
+    ((elgot-manage-mode . (lambda () (eldoc-mode -1)))
+     ((clojure-mode clojurescript-mode js2-mode rust-mode) . eglot-ensure)))
 
   (use-package consult-eglot)
-#+end_src
-** Code formatting
-I like when my code is property formatted. Let's give a try to
-[[https://github.com/lassik/emacs-format-all-the-code][format-all-the-code]].
-
-#+begin_src emacs-lisp
-  (use-package format-all
-    :hook
-    (format-all-mode . format-all-ensure-formatter)
-    :config
-    (setq format-all-show-errors 'errors
-          format-all-formatters '(("Clojure" cljfmt))))
-
-  (my/leader-key
-    "bf" '(format-all-buffer :wk "Format the buffer"))
 #+end_src
 
 ** Clojure/ClojureScript
@@ -949,7 +942,6 @@ Clojure settings for Emacs
  #+end_src
 *** Clojure Flycheck
 Flycheck using clj-kondo
-
  #+begin_src emacs-lisp
   (use-package flycheck-clj-kondo)
  #+end_src
@@ -976,6 +968,39 @@ An emacs package for running Kaocha tests via CIDER.
           kaocha-runner-ongoing-tests-win-min-height 20
           kaocha-runner-output-win-max-height 20))
  #+end_src
+*** Code formatting
+I like my code to be formatted following standard conventions.
+Thanks to [[https://manueluberti.eu/2022/10/27/cljformat.html][Manuel Uberti]].
+
+#+begin_src emacs-lisp
+  (defun my/cljfmt-format-buffer ()
+    "Format current buffer with `cljfmt'."
+    (when (derived-mode-p 'clojure-mode)
+      (let* ((pr (project-root (project-current)))
+             (cfg-dir (locate-dominating-file pr "cljfmt.edn"))
+             (cfg-edn (expand-file-name "cljfmt.edn" cfg-dir))
+             (cmd (if (file-exists-p cfg-edn)
+                      (format "cljfmt -c %s %s" cfg-edn buffer-file-name)
+                    (format "cljfmt %s" buffer-file-name))))
+        (shell-command-to-string cmd))
+      (revert-buffer t t)))
+
+  (defun my/cider-format-buffer ()
+    "Automatically format current buffer after saving."
+    (add-hook 'after-save-hook #'my/cljfmt-format-buffer nil t))
+
+  (add-hook 'cider-mode-hook #'my/cider-format-buffer)
+#+end_src
+
+** Rust
+Use Rustic
+#+begin_src emacs-lisp
+  (use-package rustic
+    :config
+    (setq rustic-lsp-client 'eglot
+          rustic-format-on-save nil))
+#+end_src
+
 ** Javascript
 [[https://github.com/mooz/js2-mode][js2-mode]]: Improved JavaScript editing mode for GNU Emacs.
 
@@ -1039,73 +1064,6 @@ An emacs package for running Kaocha tests via CIDER.
 
 
 * Productivity
-** pdf-tools
-[[https://github.com/vedang/pdf-tools][PDF Tools]] is, among other things, a replacement of DocView for PDF
-files. See also the [[https://pdftools.wiki/][wiki]].
-
-#+begin_src emacs-lisp
-  (use-package pdf-tools
-    :config
-    (pdf-tools-install))
-#+end_src
-
-** org-mode
-*** org settings
- #+begin_src emacs-lisp
-   (use-package org
-     :straight (:type built-in)
-     :config
-     (my/leader-key
-       "o" '(:ignore t :wk "Org-mode")
-       "oo" '(org-capture :wk "Capture")
-       "oa" '(org-agenda :wk "Agenda")
-       "of" '(org-attach :we "Attach file"))
-     (setq org-directory "~/org"
-           org-agenda-files '("~/org/todo.org" "~/org/inbox.org")
-           org-use-speed-commands t
-           org-log-done t
-           org-archive-location "~/org/archive.org::datatree/"
-           org-hide-emphasis-markers t
-           org-agenda-skip-deadline-if-done t
-           org-agenda-skip-scheduled-if-done t
-           org-ellipsis " ↲"
-           org-fontify-quote-and-verse-blocks t
-           org-src-tab-acts-natively t))
- #+end_src
-
-*** org-capture templates
-#+begin_src emacs-lisp
-  (setq org-capture-templates
-     '(("t" "Todo" entry (file "todo.org")
-         "* TODO %?\n" :empty-lines 1)
-       ("T" "Todo and paste" entry (file "todo.org")
-        "* TODO %?\n\n%x" :empty-lines 1)
-       ("i" "Inbox" entry (file "inbox.org")
-        "* %?\n" :empty-lines 1)
-       ("I" "Inbox and paste" entry (file "inbox.org")
-         "* %?\n\n%x" :empty-lines 1)))
-#+end_src
-
-** denote
-#+begin_src emacs-lisp
-  (use-package denote
-    :straight (denote :host nil :type git :repo "https://git.sr.ht/~protesilaos/denote")
-    :hook
-    (dired-mode . denote-dired-mode)
-    :config
-    (add-hook 'find-file-hook #'denote-link-buttonize-buffer)
-    (setq denote-directory "~/cloud/Sputnik/denote"
-          denote-file-type 'markdown-yaml
-          denote-date-prompt-denote-date-prompt-use-org-read-date t
-          denote-prompts '(title)))
-
-  (my/leader-key
-    "nn" '(denote :wk "Create new note")
-    "nb" '(denote-link-backlinks :wk "Backlinks to note")
-    "nka" '(denote-keywords-add :wk "Add keyword")
-    "nkd" '(denote-keywords-remove :wk "Remove keyword"))
-#+end_src
-
 ** markdown
 #+begin_src emacs-lisp
   (use-package markdown-mode
@@ -1113,22 +1071,6 @@ files. See also the [[https://pdftools.wiki/][wiki]].
     (add-to-list 'eglot-server-programs '(markdown-mode . ("marksman")))
     (add-hook 'markdown-mode-hook #'eglot-ensure))
 #+end_src
-** consult-notes
-[[https://github.com/mclear-tools/consult-notes][consult-notes]] — easily selecting notes via consult.
-
-#+begin_src emacs-lisp
-  (use-package consult-notes
-    :commands (consult-notes
-               consult-notes-search-in-all-notes)
-    :config
-    (my/leader-key
-      "no" 'consult-notes
-      "nS" 'consult-notes-search-in-all-notes)
-    (setq consult-notes-sources '(("Org"   ?o "~/org")
-                                  ("Denote"  ?r "~/cloud/Sputnik/denote"))))
-#+end_src
-
-
 
 
 * Packages to look at
