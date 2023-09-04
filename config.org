@@ -37,6 +37,30 @@ See [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Early-Init-File.
   ;;; init.el --- Emacs configuration -*- lexical-binding: t -*-
 #+end_src
 
+** Garbage collector magic hack
+Temporarily increase the garbage collection threshold to speed up the startup
+time.
+
+#+begin_src emacs-lisp
+  (defvar tmp--gc-cons-threshold gc-cons-threshold)
+  (setq gc-cons-threshold most-positive-fixnum)
+#+end_src
+
+Same idea as above for ~file-name-handler-alist~
+
+#+begin_src emacs-lisp
+  (defvar tmp--file-name-handler-alist file-name-handler-alist)
+  (setq file-name-handler-alist nil)
+#+end_src
+
+Restore everything at the end
+#+begin_src emacs-lisp
+  (add-hook 'emacs-startup-hook
+            (lambda ()
+              (setq gc-cons-threshold tmp--gc-cons-threshold
+                    file-name-handler-alist tmp--file-name-handler-alist)))
+#+end_src
+
 ** Startup Performance
 Measure the startup time.
 
@@ -66,7 +90,13 @@ Just good old [[https://github.com/jwiegley/use-package][use-package]] and [[htt
 
   (setq package-archives '(("elpa" . "https://elpa.gnu.org/packages/")
                            ("melpa" . "https://melpa.org/packages/")
-                           ("nongnu" . "https://elpa.nongnu.org/nongnu/")))
+                           ("nongnu" . "https://elpa.nongnu.org/nongnu/")
+                           ("gnu-devel" . "https://elpa.gnu.org/devel/")))
+
+  (setq package-archive-priorities
+        '(("gnu-elpa" . 3)
+          ("melpa" . 2)
+          ("nongnu" . 1)))
 
   (setq use-package-always-ensure t
         package-native-compile t)
@@ -121,27 +151,17 @@ Store backups and autosave files in ~/tmp~.
       `((".*" ,(no-littering-expand-var-file-name "auto-save/") t))))
 #+end_src
 
-** Garbage collector magic hack
-#+begin_src emacs-lisp
-  (use-package gcmh
-    :ensure t
-    :custom
-    (gcmh-idle-delay 1000)
-    (gcmh-high-cons-threshold (* 16 1024 1024)) ;; 16 MB
-    :hook
-    (after-init . gcmh-mode))
-#+end_src
-
-** Early UI settings
-Disable those UI stuff that I don't need.
+Store ~custom.el~ in ~./etc/~
 
 #+begin_src emacs-lisp
-  (menu-bar-mode -1)
-  (tool-bar-mode -1)
-  (scroll-bar-mode -1)
-  (blink-cursor-mode -1)
-  (fset 'yes-or-no-p 'y-or-n-p)
+  (setq custom-file (no-littering-expand-etc-file-name "custom.el"))
+
+  (when (file-exists-p custom-file)
+    (message "Loading custom.el")
+    (load custom-file))
 #+end_src
+
+
 
 *** Maximize windows by default.
 
@@ -325,6 +345,14 @@ I use 80 characters.
                 tab-width 4)                   ; Show eventual tabs as 4 spaces
 #+end_src
 
+** Delete selected region
+When the region is active and you type text into the buffer, Emacs will delete
+the selected text first.
+
+#+begin_src emacs-lisp
+  (setq delete-selection-mode t)
+#+end_src
+
 ** Deal with whitespaces
 #+begin_src emacs-lisp
   (use-package whitespace
@@ -438,33 +466,30 @@ title bar.
 #+end_src
 
 ** Font setup
-Set my favourite font
+Set my favorite font
 
 #+begin_src emacs-lisp
-  (set-face-attribute 'default nil
-                      :family "Iosevka SS14"
-                      :weight 'normal
-                      :height 120)
-
-  (set-face-attribute 'variable-pitch nil
-                      :family "Iosevka Aile"
-                      :weight 'normal
-                      :height 120)
+  (use-package emacs
+    :hook ((elfeed-show-mode mu4e-view-mode notmuch-show-mode) . variable-pitch-mode)
+    :config
+    (set-face-attribute 'default nil
+                        :family "Iosevka SS14"
+                        :weight 'normal
+                        :height 120)
+    (set-face-attribute 'variable-pitch nil
+                        :family "Iosevka Aile"
+                        :weight 'normal
+                        :height 120))
 #+end_src
 
 ** Theme
-[[https://github.com/hlissner/emacs-doom-themes][Solarized theme by emacs-doom-themes]]
+[[https://protesilaos.com/emacs/ef-themes][ef-themes]]
 
 #+begin_src emacs-lisp
-  (use-package doom-themes
+  (use-package ef-themes
     :config
-    (load-theme 'doom-solarized-dark t)
-    (doom-themes-visual-bell-config)
-    (doom-themes-org-config)
-    :custom-face
-    (org-block ((t (:background nil))))
-    (org-block-begin-line ((t (:background nil))))
-    (org-block-end-line ((t (:background nil)))))
+    (setq ef-themes-region '(no-extend))
+    (load-theme 'ef-dark))
 #+end_src
 
 ** Modeline
@@ -835,9 +860,9 @@ familiar ones!
 ** Eglot
 #+begin_src emacs-lisp
   (use-package eglot
+    :pin gnu-devel
     :hook
-    ((clojure-mode clojurescript-mode js2-mode rust-mode markdown-mode org-mode)
-     . eglot-ensure)
+    ((clojure-mode clojurescript-mode js2-mode rust-mode) . eglot-ensure)
     :bind
     (("C-c l e" . eglot-rename)
      ("C-c l a" . eglot-code-actions)
@@ -847,8 +872,7 @@ familiar ones!
     (setq eglot-send-changes-idle-time (* 60 60)
           read-process-output-max (* 1024 1024)
           eglot-extend-to-xref t
-          eglot-connect-timeout 60)
-    (add-to-list 'eglot-server-programs '(org-mode . ("/usr/bin/ltex-ls"))))
+          eglot-connect-timeout 90))
 
   (use-package consult-eglot
     :after 'eglot
@@ -1027,10 +1051,9 @@ Thanks to [[https://manueluberti.eu/2022/10/27/cljformat.html][Manuel Uberti]].
 #+begin_src emacs-lisp
   (use-package markdown-mode
     :init
-    (setq markdown-hide-markup t
-          markdown-hide-urls t))
+    (setq markdown-hide-urls t)
+    :mode ("\\.md" . gfm-mode))
 #+end_src
-
 ** org-mode
 *** settings
 #+begin_src emacs-lisp
@@ -1132,8 +1155,7 @@ Easily selecting notes via consult
 ** mermaid
 #+begin_src emacs-lisp
   (use-package mermaid-mode
-    :after markdown-mode
-    :hook (markdown-mode . mermaid-mode))
+    :after markdown-mode)
 #+end_src
 
 ** mu4e
@@ -1164,7 +1186,7 @@ Easily selecting notes via consult
                     (mu4e-refile-folder  . "/7b/[Gmail]/All Mail")
                     (mu4e-trash-folder  . "/7b/[Gmail]/Personal")))
 
-           ;; Trash account
+           ;; Personal account
            (make-mu4e-context
             :name "mds"
             :match-func
@@ -1179,7 +1201,24 @@ Easily selecting notes via consult
                     (mu4e-drafts-folder  . "/mds/Drafts")
                     (mu4e-sent-folder  . "/mds/Sent")
                     (mu4e-refile-folder  . "/mds/Archive")
-                    (mu4e-trash-folder  . "/mds/Trash"))))))
+                    (mu4e-trash-folder  . "/mds/Trash")))
+
+           ;; Gaypa IT
+           (make-mu4e-context
+            :name "gaypa"
+            :match-func
+              (lambda (msg)
+                (when msg
+                  (string-prefix-p "/gaypa" (mu4e-message-field msg :maildir))))
+            :vars '((user-mail-address . "it.maintenance@gaypa.com")
+                    (user-full-name    . "Gaypa IT")
+                    (smtpmail-smtp-server . "mail1.gaypa.com")
+                    (smtpmail-smtp-service . 465)
+                    (smtpmail-stream-type . ssl)
+                    (mu4e-drafts-folder  . "/gaypa/Drafts")
+                    (mu4e-sent-folder  . "/gaypa/Sent")
+                    (mu4e-refile-folder  . "/gaypa/Archives")
+                    (mu4e-trash-folder  . "/gaypa/Trash"))))))
 #+end_src
 
 #+begin_src emacs-lisp
