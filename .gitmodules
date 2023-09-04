@@ -1,3 +1,0 @@
-[submodule "lisp/zk"]
-	path = lisp/zk
-	url = https://github.com/localauthor/zk.git
