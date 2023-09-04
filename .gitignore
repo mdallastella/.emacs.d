@@ -28,4 +28,9 @@ var/*
 /etc/transient/values.el
 default-persp
 /etc/
-/eln-cache/
+/eln-cache
+mastodon.plstore
+etc/
+var/
+elpa/
+straight/
