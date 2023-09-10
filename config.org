@@ -37,7 +37,7 @@ See [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Early-Init-File.
   ;;; init.el --- Emacs configuration -*- lexical-binding: t -*-
 #+end_src
 
-** Speed up start up
+** Speed up startup
 Temporarily increase the garbage collection threshold to speed up the startup
 time.
 
@@ -1071,6 +1071,7 @@ Uberti]].
     :config
     (setq org-directory "~/org/"
           org-todo-keywords '((sequence "TODO(t)" "WAITING(w)" "MAYBE(m)" "|" "DONE(d)" "CANCELLED(c)"))
+          org-log-repeat nil
           org-default-notes-file (concat org-directory "inbox.org")
           org-agenda-files (my/org-location-list '("todo.org" "projects.org"))
           org-archive-location "~/org/archive/archive.org::datatree/"
@@ -1278,6 +1279,24 @@ Easily selecting notes via consult
     :after elfeed
     :config
     (elfeed-goodies/setup))
+#+end_src
+
+
+* Initial buffer configuration
+The buffers / workspaces I want at start.
+
+#+begin_src emacs-lisp
+  (defun my/initial-setup ()
+    (interactive)
+    (persp-switch "notes" t)
+    (find-file org-default-notes-file)
+    (split-window-right)
+    (org-agenda nil "a")
+    (persp-switch "elfeed" t)
+    (elfeed)
+    (persp-switch persp-initial-frame-name t))
+
+  (add-hook 'emacs-startup-hook 'my/initial-setup)
 #+end_src
 
 
