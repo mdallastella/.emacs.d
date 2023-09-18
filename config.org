@@ -221,7 +221,8 @@ Automatically reload changes on a file if needed.
   (use-package autorevert
     :ensure nil
     :config
-    (setq global-auto-revert-non-file-buffers t)
+    (setq global-auto-revert-non-file-buffers t
+          auto-revert-use-notify nil)
     (global-auto-revert-mode t))
 #+end_src
 
@@ -431,27 +432,6 @@ braces, brackets, etc.
     :init
     (puni-global-mode))
 #+end_src
-
-** yankpad
-[[https://github.com/Kungsgeten/yankpad][yankpad]] - Paste snippets from an org-mode file
-#+begin_src emacs-lisp
-  (use-package yasnippet
-    :config
-    (setq yas-verbosity 1)
-    (yas-global-mode))
-
-  (use-package yankpad
-    :after yasnippet
-    :bind
-    (("C-c y c" . yankpad-set-category)
-     ("C-c y e" . yankpad-edit)
-     ("C-c y i" . yankpad-insert)
-     ("C-c y m" . yankpad-map)
-     ("C-c y r" . yankpad-reload)
-     ("C-c y x" . yankpad-expand))
-    :config
-    (setq yankpad-file (expand-file-name "yankpad.org" user-emacs-directory)))
-   #+END_SRC
 
 
 * UI
@@ -875,7 +855,9 @@ Let's use the built-in module to manage different projects.
 
   (use-package jarchive
     :after eglot
-    :defer t)
+    :defer t
+    :config
+    (jarchive-setup))
 #+end_src
 
 ** Clojure/ClojureScript
@@ -977,6 +959,17 @@ Uberti]].
   (add-hook 'cider-mode-hook #'my/cider-format-buffer)
 #+end_src
 
+*** TODO REPL buffer position
+I want the REPL always on the right side.
+
+#+begin_src emacs-lisp
+  (add-to-list 'display-buffer-alist
+               '((derived-mode . cider-repl-mode)
+                 (display-buffer-pop-up-window)
+                 (side . right)
+                 (window-width . 0.5)))
+#+end_src
+
 ** Javascript
 [[https://github.com/mooz/js2-mode][js2-mode]]: Improved JavaScript editing mode for GNU Emacs.
 
@@ -1067,7 +1060,8 @@ Uberti]].
      ("C-c o a" . org-agenda)
      (:map org-mode-map
            ("C-c m h" . consult-org-heading)
-           ("C-c m t" . org-tags-view)))
+           ("C-c m t" . org-tags-view)
+           ("C-c m c" . org-cycle-global)))
     :config
     (setq org-directory "~/org/"
           org-todo-keywords '((sequence "TODO(t)" "WAITING(w)" "MAYBE(m)" "|" "DONE(d)" "CANCELLED(c)"))
@@ -1100,12 +1094,19 @@ Org capture configuration
         '(("t" "Generic task" entry (file "todo.org")
            "* TODO %? %^g\nSCHEDULED: %^t")
           ("i" "Inbox item" entry (file "inbox.org")
-           "* %?\n%l")
-          ("P" "Projects")
-          ("Pt" "Project todo" entry (file "projects.org")
-           "* TODO %? %^g\nSCHEDULED: %^t")
-          ("Pan" "New Project" entry (file "projects.org")
+           "* %?\n%L")
+          ("P" "New Project" entry (file "projects.org")
            "* %? %^g\n" . (:level 1 :empty-lines-before 1))))
+#+end_src
+
+*** org-agenda
+Force org-agenda buffers to show on the right side.
+
+#+begin_src emacs-lisp
+  (add-to-list 'display-buffer-alist '((derived-mode . org-agenda-mode)
+                                       (display-buffer-in-side-window)
+                                       (side . right)
+                                       (window-width 0.5)))
 #+end_src
 
 *** org-protocol
@@ -1290,7 +1291,6 @@ The buffers / workspaces I want at start.
     (interactive)
     (persp-switch "notes" t)
     (find-file org-default-notes-file)
-    (split-window-right)
     (org-agenda nil "a")
     (persp-switch "elfeed" t)
     (elfeed)
