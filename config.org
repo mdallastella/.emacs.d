@@ -886,10 +886,10 @@ Clojure settings for Emacs
      (cider-repl-mode . cider-company-enable-fuzzy-completion))
     :bind
     (:map clojure-mode-map
-          ("C-c m l" . cider-load-all-project-ns)
           ("C-c m j" . cider-jack-in-clj)
           ("C-c m J" . cider-jack-in-cljs)
           ("C-c m d" . neil-find-clojure-package)
+          ("C-c m n" . cider-repl-set-ns)
           :map cider-repl-mode-map
           ("C-c m l" . cider-repl-clear-buffer)
           ("RET" . cider-repl-newline-and-indent)
@@ -908,6 +908,10 @@ Flycheck using clj-kondo.
 
 #+begin_src emacs-lisp
   (use-package flycheck-clj-kondo)
+
+  (use-package clojure-mode
+    :config
+    (require 'flycheck-clj-kondo))
 #+end_src
 
 *** Font-locking for Clojure mode
