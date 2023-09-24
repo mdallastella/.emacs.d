@@ -460,13 +460,17 @@ Set my favorite font.
 #+end_src
 
 ** Theme
-[[https://protesilaos.com/emacs/ef-themes][ef-themes]]
+[[https://github.com/doomemacs/themes][doomemacs/themes: A megapack of themes for GNU Emacs.]]
 
 #+begin_src emacs-lisp
-  (use-package ef-themes
+  (use-package doom-themes
     :config
-    (setq ef-themes-region '(no-extend))
-    (load-theme 'ef-dark))
+    (setq doom-themes-enable-bold t
+          doom-themes-enable-italic t
+          doom-themes-padded-modeline t)
+    (load-theme 'doom-solarized-dark-high-contrast t)
+    (doom-themes-visual-bell-config)
+    (doom-themes-org-config))
 #+end_src
 
 ** Modeline
@@ -1047,6 +1051,8 @@ I want the REPL always on the right side.
     :mode ("\\.md" . gfm-mode))
 #+end_src
 ** org-mode
+Org mode settings for an integration with [[https://logseq.com/][Logseq]]
+
 *** settings
 #+begin_src emacs-lisp
   (defun my/org-location (f)
@@ -1068,39 +1074,63 @@ I want the REPL always on the right side.
            ("C-c m c" . org-cycle-global)))
     :config
     (setq org-directory "~/org/"
-          org-todo-keywords '((sequence "TODO(t)" "WAITING(w)" "MAYBE(m)" "|" "DONE(d)" "CANCELLED(c)"))
           org-log-repeat nil
-          org-default-notes-file (concat org-directory "inbox.org")
-          org-agenda-files (my/org-location-list '("todo.org" "projects.org"))
-          org-archive-location "~/org/archive/archive.org::datatree/"
-          org-refile-targets `((,(my/org-location "todo.org") . (:maxlevel . 2))
-                               (,(my/org-location "projects.org") . (:maxlevel . 2))
-                               (,(directory-files (my/org-location "aree") t "\\.org$") . (:maxlevel . 3))
-                               (,(directory-files (my/org-location "risorse") t "\\.org$") . (:maxlevel . 3)))
+          org-todo-keywords '((sequence "TODO(t)" "WAITING(w)" "DOING(g)" "|" "DONE(d)" "CANCELLED(c)"))
+          org-default-notes-file (my/org-location "pages/inbox.org")
+          org-agenda-files (list (my/org-location "journals/") (my/org-location "pages/"))
+          org-refile-targets `((,(directory-files (my/org-location "journals") t "\\.org$") . (:maxlevel . 3))
+                               (,(directory-files (my/org-location "pages") t "\\.org$") . (:maxlevel . 3)))
           org-refile-use-cache nil
           org-refile-use-outline-path 'file
           org-refile-allow-creating-parent-nodes t
           org-outline-path-complete-in-steps nil
           org-use-speed-commands t
           org-return-follows-link t
-          org-hide-emphasis-markers t
-          org-ellipsis "…"
-          org-fontify-quote-and-verse-blocks t
           org-src-tab-acts-natively t
           org-adapt-indentation t))
 #+end_src
+*** org-modern
+[[https://github.com/minad/org-modern][GitHub - minad/org-modern: :unicorn: Modern Org Style]]
 
+#+begin_src emacs-lisp
+  (use-package org-modern
+    :config
+    (setq org-auto-align-tags nil
+          org-tags-column 0
+          org-fold-catch-invisible-edits 'show-and-error
+          org-special-ctrl-a/e t
+          org-insert-heading-respect-content t
+          org-hide-emphasis-markers t
+          org-pretty-entities t
+          org-ellipsis "…"
+          ;; Agenda styling
+          org-agenda-tags-column 0
+          org-agenda-block-separator ?─
+          org-agenda-time-grid
+          '((daily today require-timed)
+            (800 1000 1200 1400 1600 1800 2000)
+            " ┄┄┄┄┄ " "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")
+          org-agenda-current-time-string
+          "⭠ now ─────────────────────────────────────────────────")
+    (global-org-modern-mode))
+#+end_src
 *** org-capture
 Org capture configuration
 
 #+begin_src emacs-lisp
+  (defun my/today-file ()
+    (let* ((file (concat org-directory "journals/" (format-time-string "%Y_%m_%d") ".org")))
+      (find-file file)))
+
   (setq org-capture-templates
-        '(("t" "Generic task" entry (file "todo.org")
-           "* TODO %? %^g\nSCHEDULED: %^t")
-          ("i" "Inbox item" entry (file "inbox.org")
-           "* %?\n%L")
-          ("P" "New Project" entry (file "projects.org")
-           "* %? %^g\n" . (:level 1 :empty-lines-before 1))))
+        '(("t" "Todo" entry (function my/today-file)
+           "* TODO %? %^G\nSCHEDULED: %^t")
+          ("i" "Inbox" entry (file "pages/inbox.org")
+           "* [[%<%Y-%m-%d>]]: - %?")
+          ("P" "Project" entry (file "pages/progetti.org")
+           "* %? %^G\n" . (:level 1 :empty-lines-before 1))
+          ("p" "Project todo" entry (file+function "pages/progetti.org" consult-org-heading)
+           "* TODO %?\n" . (:level 1 :empty-lines-before 1))))
 #+end_src
 
 *** org-agenda
@@ -1148,7 +1178,7 @@ link with a title of a page found by the URL into the current buffer.
     :hook (org-mode . org-download-enable))
 #+end_src
 
-*** consult-notes
+*** TODO consult-notes
 Easily selecting notes via consult
 
 #+begin_src emacs-lisp
@@ -1160,10 +1190,8 @@ Easily selecting notes via consult
     ("C-c n o" . consult-notes)
     :config
     (setq consult-notes-use-rg t
-          consult-notes-org-headings-files '("~/org/todo.org" "~/org/projects.org")
-          consult-notes-file-dir-sources `(("Aree" ?a ,(my/org-location "aree/"))
-                                           ("Risorse" ?a ,(my/org-location "risorse/"))))
-    (consult-notes-org-headings-mode))
+          consult-notes-file-dir-sources `(("Pages" ?p ,(my/org-location "pages"))
+                                           ("Journals" ?j ,(my/org-location "journals")))))
 #+end_src
 
 *** notes on documents
@@ -1197,7 +1225,15 @@ Easily selecting notes via consult
     :config
     (setq mu4e-update-interval (* 10 60)
           mu4e-get-mail-command "mbsync -a"
-          mu4e-maildir-list '("~/.mail"))
+          mu4e-maildir-list '("~/.mail")
+          mu4e-context-policy 'pick-first
+          mu4e-compose-context-policy 'ask
+          ;; Send email
+          message-kill-buffer-on-exit t
+          send-mail-function 'sendmail-send-it
+          message-send-mail-function 'sendmail-send-it
+          sendmail-program (executable-find "msmtp")
+          message-sendmail-envelope-from 'header)
     (setq mu4e-contexts
           (list
            ;; Work account
@@ -1277,7 +1313,7 @@ Easily selecting notes via consult
   (use-package elfeed-org
     :after elfeed
     :config
-    (setq rmh-elfeed-org-files (list "~/org/feeds.org"))
+    (setq rmh-elfeed-org-files (list "~/.emacs.d/feeds.org"))
     (elfeed-org))
 
   (use-package elfeed-goodies
@@ -1295,7 +1331,6 @@ The buffers / workspaces I want at start.
     (interactive)
     (persp-switch "notes" t)
     (find-file org-default-notes-file)
-    (org-agenda nil "a")
     (persp-switch "elfeed" t)
     (elfeed)
     (persp-switch persp-initial-frame-name t))

@@ -1,0 +1,20 @@
+#+title: Feed
+
+* Imported Feeds :elfeed:
+*** [[https://kill-the-newsletter.com/feeds/3cqg5qpqnprns111.xml][Data is plural]] :newsletter:
+*** [[https://maxdemarzi.com/feed/][Max De Marzi]] :blog:
+*** [[https://wb.dallastella.name/feed/mdallastella/oHfdH3NlQCNPpP7/all][wallabag — all feed]] :personal:
+*** [[https://planet.emacslife.com/atom.xml][Planet Emacslife]] :emacs:
+*** [[https://ianthehenry.com/feed.xml][Ian Henry]] :blog:
+*** [[https://manueluberti.eu/feed.xml][Manuel Uberti]] :blog:
+*** [[https://www.tbray.org/ongoing/ongoing.atom][ongoing by Tim Bray]] :blog:
+*** [[https://clojure.org/feed.xml][Clojure News]] :programming:
+*** [[https://kill-the-newsletter.com/feeds/z1ufl2mjk2gs0ooi.xml][JavaScript Weekly]] :programming:
+*** [[https://planet.clojure.in/atom.xml][Planet Clojure]] :programming:
+*** [[http://blog.fogus.me/feed/][Send More Paramedics]]
+*** [[https://kill-the-newsletter.com/feeds/ml4p6xnrd5b7ks4l.xml][twir@rust-lang.org]] :programming:
+*** [[https://ld.dallastella.name/feeds/6e5c80dad64bc1b9f0792e51f4e7efd00e5ffe87/all][My linkding]] :personal:bookmark:
+*** [[https://techcrunch.com/region/europe/feed/][TechCrunch Europe]] :techcrunch:
+*** [[https://jank-lang.org/blog/feed.xml][jank blog]]                                                     :programming:
+*** [[https://blog.jakubholy.net/feed.xml][Jakub Holý]]                                          :programming:clojure:
+*** [[https://blog.janetacarr.com/rss/][Janet Carr]]                                                    :clojure:
