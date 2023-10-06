@@ -1072,8 +1072,9 @@ requests.
     :defer t
     :hook (org-mode . org-indent-mode)
     :bind
-    (("C-c o o" . org-capture)
-     ("C-c o a" . org-agenda)
+    (("C-c n c" . org-capture)
+     ("C-c n a" . org-agenda-list)
+     ("C-c n t" . org-todo-list)
      (:map org-mode-map
            ("C-c m h" . consult-org-heading)
            ("C-c m t" . org-tags-view)
@@ -1081,6 +1082,7 @@ requests.
     :config
     (setq org-directory "~/cloud/Sputnik/braindump/"
           org-todo-keywords '((sequence "TODO(t)" "WAITING(w)" "DOING(g)" "|" "DONE(d)" "CANCELLED(c)"))
+          org-tag-alist '(("progetti" . ?p) ("aree" . ?a) ("risorse" . ?r))
           org-log-repeat nil
           org-default-notes-file (concat org-directory "pages/inbox.org")
           org-agenda-files (list (my/org-location "journals/") (my/org-location "pages/"))
@@ -1105,14 +1107,6 @@ requests.
 Org capture configuration
 
 #+begin_src emacs-lisp
-  ;; (setq org-capture-templates
-  ;;       '(("t" "Generic task" entry (file "todo.org")
-  ;;          "* TODO %? %^g\nSCHEDULED: %^t")
-  ;;         ("i" "Inbox item" entry (file "inbox.org")
-  ;;          "* %?\n%L")
-  ;;         ("P" "New Project" entry (file "projects.org")
-  ;;          "* %? %^g\n" . (:level 1 :empty-lines-before 1))))
-
   (defun my/today-file ()
     (let* ((file (concat org-directory "journals/" (format-time-string "%Y_%m_%d") ".org")))
       (find-file file)))
@@ -1126,9 +1120,11 @@ Org capture configuration
            "* TODO %? %^G\nSCHEDULED: %^t")
           ("i" "Inbox" entry (file "pages/inbox.org")
            "* [[%<%Y-%m-%d>]]: - %?")
-          ("p" "Project todo" entry (function (lambda () (my/org-headings "progetti")))
-           "* TODO %?\n")
-          ("a" "Area note" entry (function (lambda () (my/org-headings "aree")))
+          ("p" "Project note" entry (function (lambda () (my/org-headings "level=1+progetti")))
+           "* %?\n")
+          ("a" "Area note" entry (function (lambda () (my/org-headings "level=1+aree")))
+           "* %?\n")
+          ("r" "Resource note" entry (function (lambda () (my/org-headings "level=1+risorse")))
            "* %?\n")))
 #+end_src
 
