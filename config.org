@@ -858,9 +858,7 @@ Let's use the built-in module to manage different projects.
           consult-eglot-show-kind-name t))
 
   (use-package jarchive
-    :after eglot
-    :defer t
-    :config
+    :init
     (jarchive-setup))
 #+end_src
 
