@@ -1079,16 +1079,15 @@ requests.
            ("C-c m t" . org-tags-view)
            ("C-c m c" . org-cycle-global)))
     :config
-    (setq org-directory "~/org/"
-          org-todo-keywords '((sequence "TODO(t)" "WAITING(w)" "MAYBE(m)" "|" "DONE(d)" "CANCELLED(c)"))
+    (setq org-directory "~/cloud/Sputnik/braindump/"
+          org-todo-keywords '((sequence "TODO(t)" "WAITING(w)" "DOING(g)" "|" "DONE(d)" "CANCELLED(c)"))
           org-log-repeat nil
-          org-default-notes-file (concat org-directory "inbox.org")
-          org-agenda-files (my/org-location-list '("todo.org" "projects.org"))
-          org-archive-location "~/org/archive/archive.org::datatree/"
-          org-refile-targets `((,(my/org-location "todo.org") . (:maxlevel . 2))
-                               (,(my/org-location "projects.org") . (:maxlevel . 2))
-                               (,(directory-files (my/org-location "aree") t "\\.org$") . (:maxlevel . 3))
-                               (,(directory-files (my/org-location "risorse") t "\\.org$") . (:maxlevel . 3)))
+          org-default-notes-file (concat org-directory "pages/inbox.org")
+          org-agenda-files (list (my/org-location "journals/") (my/org-location "pages/"))
+          org-archive-location (concat org-directory "pages/archive.org::datatree/")
+          org-refile-targets `((,(directory-files (my/org-location "journals") t "\\.org$") . (:maxlevel . 3))
+                               (,(directory-files (my/org-location "pages") t "\\.org$") . (:maxlevel . 3)))
+          org-use-tag-inheritance t
           org-refile-use-cache nil
           org-refile-use-outline-path 'file
           org-refile-allow-creating-parent-nodes t
@@ -1106,16 +1105,60 @@ requests.
 Org capture configuration
 
 #+begin_src emacs-lisp
+  ;; (setq org-capture-templates
+  ;;       '(("t" "Generic task" entry (file "todo.org")
+  ;;          "* TODO %? %^g\nSCHEDULED: %^t")
+  ;;         ("i" "Inbox item" entry (file "inbox.org")
+  ;;          "* %?\n%L")
+  ;;         ("P" "New Project" entry (file "projects.org")
+  ;;          "* %? %^g\n" . (:level 1 :empty-lines-before 1))))
+
+  (defun my/today-file ()
+    (let* ((file (concat org-directory "journals/" (format-time-string "%Y_%m_%d") ".org")))
+      (find-file file)))
+
+  (defun my/org-headings (match)
+    (interactive)
+    (consult-org-heading match 'agenda))
+
   (setq org-capture-templates
-        '(("t" "Generic task" entry (file "todo.org")
-           "* TODO %? %^g\nSCHEDULED: %^t")
-          ("i" "Inbox item" entry (file "inbox.org")
-           "* %?\n%L")
-          ("P" "New Project" entry (file "projects.org")
-           "* %? %^g\n" . (:level 1 :empty-lines-before 1))))
+        '(("t" "Todo" entry (function my/today-file)
+           "* TODO %? %^G\nSCHEDULED: %^t")
+          ("i" "Inbox" entry (file "pages/inbox.org")
+           "* [[%<%Y-%m-%d>]]: - %?")
+          ("p" "Project todo" entry (function (lambda () (my/org-headings "progetti")))
+           "* TODO %?\n")
+          ("a" "Area note" entry (function (lambda () (my/org-headings "aree")))
+           "* %?\n")))
 #+end_src
 
-*** org-agenda
+*** org-modern
+[[https://github.com/minad/org-modern][GitHub - minad/org-modern: :unicorn: Modern Org Style]]
+
+#+begin_src emacs-lisp
+  (use-package org-modern
+    :config
+    (setq org-auto-align-tags nil
+          org-tags-column 0
+          org-fold-catch-invisible-edits 'show-and-error
+          org-special-ctrl-a/e t
+          org-insert-heading-respect-content t
+          org-hide-emphasis-markers t
+          org-pretty-entities t
+          org-ellipsis "…"
+          ;; Agenda styling
+          org-agenda-tags-column 0
+          org-agenda-block-separator ?─
+          org-agenda-time-grid
+          '((daily today require-timed)
+            (800 1000 1200 1400 1600 1800 2000)
+            " ┄┄┄┄┄ " "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")
+          org-agenda-current-time-string
+          "⭠ now ─────────────────────────────────────────────────")
+    (global-org-modern-mode))
+#+end_src
+
+*** TODO org-agenda
 Force org-agenda buffers to show on the right side.
 
 #+begin_src emacs-lisp
@@ -1123,20 +1166,6 @@ Force org-agenda buffers to show on the right side.
                                        (display-buffer-in-side-window)
                                        (side . right)
                                        (window-width 0.5)))
-#+end_src
-
-*** org-protocol
-#+begin_src emacs-lisp
-  (use-package org-protocol
-    :ensure nil
-    :after org
-    :config
-    (add-to-list 'org-capture-templates
-                 '("p" "Protocol" entry (file "inbox.org")
-                   "* TODO %?[[%:link][%:description]] %U\n%i\n"))
-    (add-to-list 'org-capture-templates
-                 '("L" "Protocol Link" entry (file "inbox.org")
-                   "* TODO %?[[%:link][%:description]] %U\n")))
 #+end_src
 
 *** org-cliplink
@@ -1173,8 +1202,8 @@ Easily selecting notes via consult
     :config
     (setq consult-notes-use-rg t
           consult-notes-org-headings-files '("~/org/todo.org" "~/org/projects.org")
-          consult-notes-file-dir-sources `(("Aree" ?a ,(my/org-location "aree/"))
-                                           ("Risorse" ?a ,(my/org-location "risorse/"))))
+          consult-notes-file-dir-sources `(("Pages" ?p ,(my/org-location "pages"))
+                                           ("Journals" ?j ,(my/org-location "journals"))))
     (consult-notes-org-headings-mode))
 #+end_src
 
@@ -1194,12 +1223,6 @@ Easily selecting notes via consult
     :defer t
     :mode ("\\.epub\\'" . nov-mode))
   #+end_src
-** pandoc
-#+begin_src emacs-lisp
-  (use-package pandoc-mode
-    :defer t
-    :hook (markdown-mode . pandoc-mode))
-#+end_src
 
 ** mu4e
 #+begin_src emacs-lisp
@@ -1307,7 +1330,6 @@ The buffers / workspaces I want at start.
     (interactive)
     (persp-switch "notes" t)
     (find-file org-default-notes-file)
-    (org-agenda nil "a")
     (persp-switch "elfeed" t)
     (elfeed)
     (persp-switch persp-initial-frame-name t))
