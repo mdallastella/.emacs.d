@@ -1037,6 +1037,16 @@ I want the REPL always on the right side.
   (use-package docker :defer t)
   (use-package dockerfile-mode :defer t)
 #+end_src
+** REST
+Verb - Verb is a package for Emacs which allows you to organize and send HTTP
+requests.
+
+#+begin_src emacs-lisp
+  (use-package verb
+    :after org
+    :config
+    (define-key org-mode-map (kbd "C-c C-r") verb-command-map))
+#+end_src
 
 
 * Productivity
