@@ -859,10 +859,10 @@ Let's use the built-in module to manage different projects.
 
   (use-package jarchive
     :init
-    (jarchive-setup))
+    (jarchive-mode))
 #+end_src
 
-** Clojure/ClojureScript
+** Clojure
 Clojure settings for Emacs
 *** Neil
 [[https://github.com/babashka/neil][Neil]] - A CLI to add common aliases and features to deps.edn-based projects.
