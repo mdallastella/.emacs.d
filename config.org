@@ -1047,6 +1047,7 @@ requests.
     :config
     (define-key org-mode-map (kbd "C-c C-r") verb-command-map))
 #+end_src
+** Python
 
 
 * Productivity
@@ -1058,73 +1059,103 @@ requests.
     (setq markdown-hide-urls t)
     :mode ("\\.md" . gfm-mode))
 #+end_src
+** notes
+*** denote
+[[https://protesilaos.com/emacs/denote][Denote]] - Simple notes for Emacs with an efficient file-naming scheme.
+
+#+begin_src emacs-lisp
+  (use-package denote
+    :custom
+    (denote-directory "~/org/funes/")
+    :config
+    (setq denote-prompts '(subdirectory title keywords)
+          denote-date-prompt-use-org-read-date t
+          denote-infer-keywords t
+          denote-known-keywords '("progetto" "area" "risorsa")
+          denote-date-prompt-use-org-read-date t))
+#+end_src
+*** consult-notes
+Easily selecting notes via consult
+
+#+begin_src emacs-lisp
+  (use-package consult-notes
+    :after org
+    :commands
+    (consult-notes consult-notes-search-in-all-notes)
+    :bind
+    ("C-c n o" . consult-notes)
+    :config
+    (setq consult-notes-use-rg t
+          consult-notes-denote-display-id nil
+          consult-notes-file-dir-sources `(("Backlog" ?p ,(my/org-location "/"))
+                                           ("Notes" ?j ,(my/org-location "/funes"))))
+    (consult-notes-denote-mode))
+#+end_src
 ** org-mode
 *** settings
 #+begin_src emacs-lisp
-  (defun my/org-location (f)
-    (concat org-directory f))
+    (defun my/org-location (f)
+      (concat org-directory f))
 
-  (defun my/org-location-list (list)
-    (mapc #'my/org-location list))
+    (defun my/org-location-list (list)
+      (mapc #'my/org-location list))
 
-  (use-package org
-    :ensure nil
-    :defer t
-    :hook (org-mode . org-indent-mode)
-    :bind
-    (("C-c n c" . org-capture)
-     ("C-c n a" . org-agenda-list)
-     ("C-c n t" . org-todo-list)
-     (:map org-mode-map
-           ("C-c m h" . consult-org-heading)
-           ("C-c m t" . org-tags-view)
-           ("C-c m c" . org-cycle-global)))
-    :config
-    (setq org-directory "~/cloud/Sputnik/braindump/"
-          org-todo-keywords '((sequence "TODO(t)" "WAITING(w)" "DOING(g)" "|" "DONE(d)" "CANCELLED(c)"))
-          org-tag-alist '(("progetti" . ?p) ("aree" . ?a) ("risorse" . ?r))
-          org-log-repeat nil
-          org-default-notes-file (concat org-directory "pages/inbox.org")
-          org-agenda-files (list (my/org-location "journals/") (my/org-location "pages/"))
-          org-archive-location (concat org-directory "pages/archive.org::datatree/")
-          org-refile-targets `((,(directory-files (my/org-location "journals") t "\\.org$") . (:maxlevel . 3))
-                               (,(directory-files (my/org-location "pages") t "\\.org$") . (:maxlevel . 3)))
-          org-use-tag-inheritance t
-          org-refile-use-cache nil
-          org-refile-use-outline-path 'file
-          org-refile-allow-creating-parent-nodes t
-          org-outline-path-complete-in-steps nil
-          org-use-speed-commands t
-          org-return-follows-link t
-          org-hide-emphasis-markers t
-          org-ellipsis "…"
-          org-fontify-quote-and-verse-blocks t
-          org-src-tab-acts-natively t
-          org-adapt-indentation t))
+    (use-package org
+      :ensure nil
+      :defer t
+      :hook (org-mode . org-indent-mode)
+      :bind
+      (("C-c n c" . org-capture)
+       ("C-c n a" . org-agenda-list)
+       ("C-c n t" . org-todo-list)
+       (:map org-mode-map
+             ("C-c m h" . consult-org-heading)
+             ("C-c m t" . org-tags-view)
+             ("C-c m c" . org-cycle-global)))
+      :config
+      (setq org-directory "~/org"
+            org-todo-keywords '((sequence "TODO(t)" "WAITING(w)" "DOING(g)" "|" "DONE(d)" "CANCELLED(c)"))
+            org-tag-alist '(("progetto" . ?p) ("area" . ?a) ("risorsa" . ?r))
+            org-log-repeat nil
+            org-default-notes-file (concat org-directory "/inbox.org")
+            org-agenda-files (cons (my/org-location "/todo.org") (denote-all-files))
+            org-archive-location (concat org-directory "archive.org::datatree/")
+            org-refile-targets `((,(directory-files (my/org-location "/") t "\\.org$") . (:maxlevel . 2))
+                                 (,(denote-all-files) . (:maxlevel . 2)))
+            org-use-tag-inheritance t
+            org-refile-use-cache nil
+            org-refile-use-outline-path 'file
+            org-refile-allow-creating-parent-nodes t
+            org-outline-path-complete-in-steps nil
+            org-use-speed-commands t
+            org-return-follows-link t
+            org-hide-emphasis-markers t
+            org-ellipsis "…"
+            org-fontify-quote-and-verse-blocks t
+            org-src-tab-acts-natively t
+            org-adapt-indentation t))
 #+end_src
 
 *** org-capture
 Org capture configuration
 
 #+begin_src emacs-lisp
-  (defun my/today-file ()
-    (let* ((file (concat org-directory "journals/" (format-time-string "%Y_%m_%d") ".org")))
-      (find-file file)))
-
   (defun my/org-headings (match)
     (interactive)
     (consult-org-heading match 'agenda))
 
   (setq org-capture-templates
-        '(("t" "Todo" entry (function my/today-file)
+        '(("t" "Todo" entry (file "todo.org")
            "* TODO %? %^G\nSCHEDULED: %^t")
-          ("i" "Inbox" entry (file "pages/inbox.org")
-           "* [[%<%Y-%m-%d>]]: - %?")
-          ("p" "Project note" entry (function (lambda () (my/org-headings "level=1+progetti")))
+          ("i" "Inbox" entry (file "inbox.org")
+           "* %? %^G")
+          ("n" "Note" plain (file denote-last-path)
+           (function (lambda () (denote-org-capture-with-prompts :title :keywords :subdirectory))))
+          ("p" "Project note" entry (function (lambda () (my/org-headings "level=1+progetto")))
            "* %?\n")
-          ("a" "Area note" entry (function (lambda () (my/org-headings "level=1+aree")))
+          ("a" "Area note" entry (function (lambda () (my/org-headings "level=1+area")))
            "* %?\n")
-          ("r" "Resource note" entry (function (lambda () (my/org-headings "level=1+risorse")))
+          ("r" "Resource note" entry (function (lambda () (my/org-headings "level=1+risorsa")))
            "* %?\n")))
 #+end_src
 
@@ -1184,25 +1215,6 @@ link with a title of a page found by the URL into the current buffer.
     :defer t
     :hook (org-mode . org-download-enable))
 #+end_src
-
-*** consult-notes
-Easily selecting notes via consult
-
-#+begin_src emacs-lisp
-  (use-package consult-notes
-    :after org
-    :commands
-    (consult-notes consult-notes-search-in-all-notes)
-    :bind
-    ("C-c n o" . consult-notes)
-    :config
-    (setq consult-notes-use-rg t
-          consult-notes-org-headings-files '("~/org/todo.org" "~/org/projects.org")
-          consult-notes-file-dir-sources `(("Pages" ?p ,(my/org-location "pages"))
-                                           ("Journals" ?j ,(my/org-location "journals"))))
-    (consult-notes-org-headings-mode))
-#+end_src
-
 *** notes on documents
 **** pdf-tools
 #+begin_src emacs-lisp
