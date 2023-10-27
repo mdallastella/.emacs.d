@@ -823,6 +823,13 @@ Let's use the built-in module to manage different projects.
           magit-refs-show-commit-count 'all))
 #+end_src
 
+[[https://magit.vc/manual/forge/][Forge]] -
+
+#+begin_src emacs-lisp
+  (use-package forge
+    :after magit)
+#+end_src
+
 ** eldoc
 #+begin_src emacs-lisp
   (use-package eldoc
