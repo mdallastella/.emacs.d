@@ -1094,46 +1094,48 @@ Easily selecting notes via consult
 ** org-mode
 *** settings
 #+begin_src emacs-lisp
-    (defun my/org-location (f)
-      (concat org-directory f))
+  (defun my/org-location (f)
+    (concat org-directory f))
 
-    (defun my/org-location-list (list)
-      (mapc #'my/org-location list))
+  (defun my/org-location-list (list)
+    (mapc #'my/org-location list))
 
-    (use-package org
-      :ensure nil
-      :defer t
-      :hook (org-mode . org-indent-mode)
-      :bind
-      (("C-c n c" . org-capture)
-       ("C-c n a" . org-agenda-list)
-       ("C-c n t" . org-todo-list)
-       (:map org-mode-map
-             ("C-c m h" . consult-org-heading)
-             ("C-c m t" . org-tags-view)
-             ("C-c m c" . org-cycle-global)))
-      :config
-      (setq org-directory "~/org"
-            org-todo-keywords '((sequence "TODO(t)" "WAITING(w)" "DOING(g)" "|" "DONE(d)" "CANCELLED(c)"))
-            org-tag-alist '(("progetto" . ?p) ("area" . ?a) ("risorsa" . ?r))
-            org-log-repeat nil
-            org-default-notes-file (concat org-directory "/inbox.org")
-            org-agenda-files (cons (my/org-location "/todo.org") (denote-all-files))
-            org-archive-location (concat org-directory "archive.org::datatree/")
-            org-refile-targets `((,(directory-files (my/org-location "/") t "\\.org$") . (:maxlevel . 2))
-                                 (,(denote-all-files) . (:maxlevel . 2)))
-            org-use-tag-inheritance t
-            org-refile-use-cache nil
-            org-refile-use-outline-path 'file
-            org-refile-allow-creating-parent-nodes t
-            org-outline-path-complete-in-steps nil
-            org-use-speed-commands t
-            org-return-follows-link t
-            org-hide-emphasis-markers t
-            org-ellipsis "…"
-            org-fontify-quote-and-verse-blocks t
-            org-src-tab-acts-natively t
-            org-adapt-indentation t))
+  (use-package org
+    :ensure nil
+    :defer t
+    :hook (org-mode . org-indent-mode)
+    :bind
+    (("C-c n c" . org-capture)
+     ("C-c n a" . org-agenda-list)
+     ("C-c n t" . org-todo-list)
+     (:map org-mode-map
+           ("C-c m h" . consult-org-heading)
+           ("C-c m t" . org-tags-view)
+           ("C-c m c" . org-cycle-global)))
+    :config
+    (setq org-directory "~/org"
+          org-todo-keywords '((sequence "TODO(t)" "WAITING(w)" "DOING(g)" "|" "DONE(d)" "CANCELLED(c)"))
+          org-tag-alist '(("progetto" . ?p) ("area" . ?a) ("risorsa" . ?r))
+          org-log-repeat nil
+          org-default-notes-file (concat org-directory "/inbox.org")
+          org-agenda-files (cons (my/org-location "/todo.org") (denote-all-files))
+          org-agenda-restore-windows-after-quit t
+          org-archive-location (concat org-directory "/archive/archive.org::datatree/")
+          org-archive-mark-done t
+          org-refile-targets `((,(directory-files (my/org-location "/") t "\\.org$") . (:maxlevel . 2))
+                               (,(denote-all-files) . (:maxlevel . 2)))
+          org-use-tag-inheritance t
+          org-refile-use-cache nil
+          org-refile-use-outline-path 'file
+          org-refile-allow-creating-parent-nodes t
+          org-outline-path-complete-in-steps nil
+          org-use-speed-commands t
+          org-return-follows-link t
+          org-hide-emphasis-markers t
+          org-ellipsis "…"
+          org-fontify-quote-and-verse-blocks t
+          org-src-tab-acts-natively t
+          org-adapt-indentation t))
 #+end_src
 
 *** org-capture
@@ -1184,15 +1186,16 @@ Org capture configuration
           "⭠ now ─────────────────────────────────────────────────")
     (global-org-modern-mode))
 #+end_src
-
-*** TODO org-agenda
-Force org-agenda buffers to show on the right side.
+*** agenda
+[[https://github.com/alphapapa/org-super-agenda][org-super-agenda]] - This package lets you “supercharge” your Org daily/weekly agenda. The idea is to
+group items into sections, rather than having them all in one big list.
 
 #+begin_src emacs-lisp
-  (add-to-list 'display-buffer-alist '((derived-mode . org-agenda-mode)
-                                       (display-buffer-in-side-window)
-                                       (side . right)
-                                       (window-width 0.5)))
+  (use-package org-super-agenda
+    :defer t
+    :config
+    (setq org-super-agenda-groups '((:name "Today" :time-grid t :todo "TODAY")))
+    (org-super-agenda-mode))
 #+end_src
 
 *** org-cliplink
