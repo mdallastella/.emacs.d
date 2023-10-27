@@ -1019,7 +1019,8 @@ I want the REPL always on the right side.
 
 ** YAML
 #+begin_src emacs-lisp
-  (use-package yaml-mode :defer t)
+  (use-package yaml-ts-mode
+    :defer t)
 #+end_src
 ** JSON
 #+begin_src emacs-lisp
