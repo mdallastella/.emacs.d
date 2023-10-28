@@ -844,7 +844,7 @@ Let's use the built-in module to manage different projects.
   (use-package eglot
     :pin gnu-devel
     :hook
-    ((clojure-mode clojurescript-mode js2-mode rust-mode) . eglot-ensure)
+    ((clojure-mode clojurescript-mode js2-mode rjsx-mode python-ts-mode) . eglot-ensure)
     :bind
     (("C-c l e" . eglot-rename)
      ("C-c l a" . eglot-code-actions)
@@ -1027,6 +1027,7 @@ I want the REPL always on the right side.
 ** YAML
 #+begin_src emacs-lisp
   (use-package yaml-ts-mode
+    :ensure nil
     :defer t)
 #+end_src
 ** JSON
@@ -1053,10 +1054,15 @@ requests.
   (use-package verb
     :after org
     :config
+    (setq verb-auto-kill-response-buffers t)
     (define-key org-mode-map (kbd "C-c C-r") verb-command-map))
 #+end_src
 ** Python
-
+#+begin_src emacs-lisp
+  (use-package python-ts-mode
+    :ensure nil
+    :defer t)
+#+end_src
 
 * Productivity
 ** markdown
