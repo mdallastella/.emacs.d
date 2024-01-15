@@ -794,6 +794,14 @@ Let's use the built-in module to manage different projects.
     ("C-c p" . project-prefix-map))
 #+end_src
 
+** Logview
+[[https://github.com/doublep/logview][Logview]] major mode for Emacs provides syntax highlighting, filtering and other
+features for various log files.
+
+#+begin_src emacs-lisp
+  (use-package logview)
+#+end_src
+
 ** Magit
 [[https://github.com/magit/magit][Magit]] - A Git porcelain inside Emacs.
 
@@ -867,7 +875,7 @@ Clojure settings for Emacs
           neil-inject-dep-to-project-p t))
 #+end_src
 
-*** Clojure development environment
+*** Cider
 #+begin_src emacs-lisp
   (use-package cider
     :defer t
