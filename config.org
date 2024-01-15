@@ -1057,6 +1057,16 @@ requests.
     :ensure nil
     :defer t)
 #+end_src
+*** Python virtual environment
+#+begin_src emacs-lisp
+  (use-package pyvenv
+  :defer t)
+
+(use-package pyvenv-auto
+  :defer t
+  :hook (python-ts-mode . pyvenv-auto-run))
+#+end_src
+
 
 * Productivity
 ** markdown
