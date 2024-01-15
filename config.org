@@ -1296,14 +1296,14 @@ Automatically tangle ~config.org~ file when saving.
     (when (string-equal (buffer-file-name) (expand-file-name "~/.emacs.d/config.org"))
       (message "** Tangle config.org file...")
       (let ((org-config-babel-evaluate nil))
-        (org-babel-tangle)
-        (message "** Compile early-init and init files...")
-        (byte-compile-file early-init-file)
-        (byte-compile-file user-init-file))))
+    (org-babel-tangle)
+    (message "** Compile early-init and init files...")
+    (byte-compile-file early-init-file)
+    (byte-compile-file user-init-file))))
 
   (add-hook 'org-mode-hook
       (lambda ()
-        (add-hook 'after-save-hook #'my/org-babel-tangle-config)))
+    (add-hook 'after-save-hook #'my/org-babel-tangle-config)))
 #+end_src
 
 
@@ -1317,10 +1317,8 @@ Cape provides Completion At Point Extensions which can be used in combination
 with the Corfu completion UI or the default completion
 UI. https://github.com/minad/cape
 
-** TODO Tempel
-Tempel is a tiny template package for Emacs, which uses the syntax of the Emacs
-Tempo library.  https://github.com/minad/tempel
-
 ** TODO Doct
 doct is a function that provides an alternative, declarative syntax for
 describing Org capture templates. https://github.com/progfolio/doct
+** TODO Tabspace
+https://github.com/mclear-tools/tabspaces
