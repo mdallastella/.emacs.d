@@ -1235,67 +1235,6 @@ link with a title of a page found by the URL into the current buffer.
     :mode ("\\.epub\\'" . nov-mode))
   #+end_src
 
-** mu4e
-#+begin_src emacs-lisp
-  (use-package mu4e
-    :ensure nil
-    :defer t
-    :config
-    (setq mu4e-update-interval (* 10 60)
-          mu4e-get-mail-command "mbsync -a"
-          mu4e-maildir-list '("~/.mail"))
-    (setq mu4e-contexts
-          (list
-           ;; Work account
-           (make-mu4e-context
-            :name "7b"
-            :match-func
-            (lambda (msg)
-              (when msg
-                (string-prefix-p "/7b" (mu4e-message-field msg :maildir))))
-            :vars '((user-mail-address . "marco@7bridges.eu")
-                    (user-full-name    . "Marco Dalla Stella")
-                    (mu4e-drafts-folder  . "/7b/[Gmail]/Drafts")
-                    (mu4e-sent-folder  . "/7b/[Gmail]/Sent Mail")
-                    (mu4e-refile-folder  . "/7b/[Gmail]/All Mail")
-                    (mu4e-trash-folder  . "/7b/[Gmail]/Personal")))
-
-           ;; Personal account
-           (make-mu4e-context
-            :name "mds"
-            :match-func
-            (lambda (msg)
-              (when msg
-                (string-prefix-p "/mds" (mu4e-message-field msg :maildir))))
-            :vars '((user-mail-address . "marco@dallastella.name")
-                    (user-full-name    . "Marco Dalla Stella")
-                    (mu4e-drafts-folder  . "/mds/Drafts")
-                    (mu4e-sent-folder  . "/mds/Sent")
-                    (mu4e-refile-folder  . "/mds/Archive")
-                    (mu4e-trash-folder  . "/mds/Trash")))
-
-           ;; Gaypa IT
-           (make-mu4e-context
-            :name "gaypa"
-            :match-func
-            (lambda (msg)
-              (when msg
-                (string-prefix-p "/gaypa" (mu4e-message-field msg :maildir))))
-            :vars '((user-mail-address . "it.maintenance@gaypa.com")
-                    (user-full-name    . "Gaypa IT")
-                    (mu4e-drafts-folder  . "/gaypa/Drafts")
-                    (mu4e-sent-folder  . "/gaypa/Sent")
-                    (mu4e-refile-folder  . "/gaypa/Archives")
-                    (mu4e-trash-folder  . "/gaypa/Trash"))))))
-#+end_src
-
-#+begin_src emacs-lisp
-  (use-package mu4e-alert
-    :hook (after-init . mu4e-alert-enable-notifications)
-    :config
-    (setq mu4e-alert-style 'libnotify))
-#+end_src
-
 
 
 * Social
