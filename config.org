@@ -781,20 +781,6 @@ Use built-in dictionary-el.
           dictionary-use-single-buffer t))
 #+end_src
 
-** Exercism
-[[https://exercism.org/][Exercism]] is a great tool for learning new languages or diving deeper into
-familiar ones!
-
-#+begin_src emacs-lisp
-  (use-package exercism
-    :defer t
-    :commands exercism
-    :bind
-    ("C-c u e" . exercism)
-    :config
-    (setq exercism-directory "~/code/personal/exercism/"))
-#+end_src
-
 
 * Programming
 ** Project
