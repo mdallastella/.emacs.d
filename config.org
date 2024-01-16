@@ -628,6 +628,15 @@ directory.
     (direnv-mode))
 #+end_src
 
+** mise
+[[https://mise.jdx.dev/][mise-en-place]]: The front-end to your dev env.
+#+begin_src emacs-lisp
+  (use-package mise
+    :vc (:fetcher github :repo vitallium/mise.el)
+    :config
+    (add-hook 'prog-mode-hook 'mise-setup-env))
+#+end_src
+
 ** Vertico, Orderless, Consult, Marginalia & Embark
 *** Orderless
 [[https://github.com/oantolin/orderless][Orderless]] provides an ~orderless~ completion style that divides the pattern into
