@@ -1235,42 +1235,6 @@ link with a title of a page found by the URL into the current buffer.
   #+end_src
 
 
-
-* Social
-** Mastodon
-#+begin_src emacs-lisp
-  (use-package mastodon
-    :commands mastodon
-    :bind
-    ("C-c u m" . mastodon)
-    :config
-    (setq mastodon-instance-url "https://functional.cafe"
-          mastodon-active-user "mdallastella"))
-#+end_src
-
-** elfeed
-[[https://github.com/skeeto/elfeed][Elfeed]] is an extensible web feed reader for Emacs.
-
-#+begin_src emacs-lisp
-  (use-package elfeed
-    :defer t
-    :commands (elfeed)
-    :bind
-    ("C-c u e" . elfeed))
-
-  (use-package elfeed-org
-    :after elfeed
-    :config
-    (setq rmh-elfeed-org-files (list "~/org/feeds.org"))
-    (elfeed-org))
-
-  (use-package elfeed-goodies
-    :after elfeed
-    :config
-    (elfeed-goodies/setup))
-#+end_src
-
-
 * Initial buffer configuration
 The buffers / workspaces I want at start.
 
