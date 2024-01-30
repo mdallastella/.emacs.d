@@ -1093,10 +1093,6 @@ requests.
 ** org-mode
 *** settings
 #+begin_src emacs-lisp
-  (defun my/all-org-files ()
-    (-concat (directory-files "~/org" t "\\.org$")
-             (directory-files-recursively "~/org/funes" "\\.org$" nil nil t)))
-
   (use-package org
     :ensure nil
     :defer t
@@ -1112,19 +1108,17 @@ requests.
     :config
     (setq org-directory "~/org"
           org-todo-keywords '((sequence "TODO(t)" "WAITING(w)" "DOING(g)" "|" "DONE(d)" "CANCELLED(c)"))
-          org-tag-alist '(("progetto" . ?p) ("area" . ?a) ("risorsa" . ?r))
           org-log-repeat nil
           org-default-notes-file "~/org/inbox.org"
-          org-agenda-files (my/all-org-files)
+          org-agenda-files `(,(directory-files "~/org" t "\\.org$") . (:maxlevel . 2))
           org-agenda-restore-windows-after-quit t
           org-archive-location (concat org-directory "/archive/archive.org::datatree/")
           org-archive-mark-done t
-          org-refile-targets `((,(directory-files "~/org" t "\\.org$") . (:maxlevel . 2))
-                               (,(directory-files-recursively "~/org/funes" "\\.org$" nil nil t) . (:maxlevel . 2)))
+          org-refile-targets `((,(directory-files "~/org" t "\\.org$") . (:maxlevel . 2)))
           org-use-tag-inheritance t
           org-refile-use-cache nil
           org-refile-use-outline-path 'file
-          org-refile-allow-creating-parent-nodes t
+          org-refile-allow-creating-parent-nodes 'confirm
           org-outline-path-complete-in-steps nil
           org-use-speed-commands t
           org-return-follows-link t
@@ -1139,20 +1133,16 @@ requests.
 Org capture configuration
 
 #+begin_src emacs-lisp
-  (defun my/org-headings (match)
-    (interactive)
-    (consult-org-heading match 'agenda))
-
   (setq org-capture-templates
         '(("t" "Todo" entry (file "todo.org")
            "* TODO %? %^G\nSCHEDULED: %^t")
           ("i" "Inbox" entry (file "inbox.org")
            "* %? %^G")
-          ("p" "Project note" entry (function (lambda () (my/org-headings "level=1+progetto")))
+          ("p" "Project note" entry (file "projects.org")
            "* %?\n")
-          ("a" "Area note" entry (function (lambda () (my/org-headings "level=1+area")))
+          ("a" "Area note" entry (file "areas.org")
            "* %?\n")
-          ("r" "Resource note" entry (function (lambda () (my/org-headings "level=1+risorsa")))
+          ("r" "Resource note" entry (file "resources.org")
            "* %?\n")))
 #+end_src
 
@@ -1205,10 +1195,7 @@ Easily selecting notes via consult
     ("C-c n o" . consult-notes)
     :config
     (setq consult-notes-use-rg t
-          consult-notes-file-dir-sources '(("Backlog" ?b "~/org/")
-                                           ("Projects" ?p "~/org/funes/progetti/")
-                                           ("Areas" ?a "~/org/funes/aree/")
-                                           ("Resources" ?r "~/org/funes/risorse/"))))
+          consult-notes-file-dir-sources '(("Notes" ?b "~/org/"))))
 #+end_src
 
 *** org-cliplink
@@ -1248,6 +1235,19 @@ link with a title of a page found by the URL into the current buffer.
     :mode ("\\.epub\\'" . nov-mode))
   #+end_src
 
+** slides
+[[https://gitlab.com/oer/org-re-reveal][org-re-reveal]] - provides an export back-end for HTML presentations with
+reveal.js from Org mode source files.
+
+#+begin_src emacs-lisp
+  (use-package org-re-reveal
+    :after ox
+    :config
+    (setq org-re-reveal-root "https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/"
+          org-re-reveal-revealjs-4-file "reveal.js"
+          org-re-reveal-revealjs-version "4"))
+#+end_src
+
 
 * Initial buffer configuration
 The buffers / workspaces I want at start.
@@ -1255,10 +1255,8 @@ The buffers / workspaces I want at start.
 #+begin_src emacs-lisp
   (defun my/initial-setup ()
     (interactive)
-    (persp-switch "notes" t)
-    (find-file org-default-notes-file)
-    (persp-switch "elfeed" t)
-    (elfeed)
+    (persp-switch "todo" t)
+    (find-file "~/org/todo.org")
     (persp-switch persp-initial-frame-name t))
 
   (add-hook 'emacs-startup-hook 'my/initial-setup)
