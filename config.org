@@ -1111,7 +1111,7 @@ requests.
           org-todo-keywords '((sequence "TODO(t)" "WAITING(w)" "DOING(g)" "|" "DONE(d)" "CANCELLED(c)"))
           org-log-repeat nil
           org-default-notes-file "~/org/inbox.org"
-          org-agenda-files `(,(directory-files "~/org" t "\\.org$") . (:maxlevel . 2))
+          org-agenda-files (list org-directory)
           org-agenda-restore-windows-after-quit t
           org-archive-location (concat org-directory "/archive/archive.org::datatree/")
           org-archive-mark-done t
