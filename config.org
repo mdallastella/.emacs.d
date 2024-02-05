@@ -1243,9 +1243,10 @@ reveal.js from Org mode source files.
   (use-package org-re-reveal
     :after ox
     :config
-    (setq org-re-reveal-root "https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/"
-          org-re-reveal-revealjs-4-file "reveal.js"
-          org-re-reveal-revealjs-version "4"))
+    (setq org-re-reveal-root "../reveal"
+          org-re-reveal-theme "black"
+          org-re-reveal-title-slide nil
+          org-re-reveal-embed-local-resources t))
 #+end_src
 
 
