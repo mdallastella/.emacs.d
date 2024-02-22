@@ -605,17 +605,11 @@ Emacs.
     (persp-mode))
 #+end_src
 
-** direnv
-direnv is an extension for your shell. It augments existing shells with a new
-feature that can load and unload environment variables depending on the current
-directory.
-
+** envrc
 #+begin_src emacs-lisp
-  (use-package direnv
-    :bind
-    ("C-c u d" . direnv-allow)
+  (use-package envrc
     :config
-    (direnv-mode))
+    (envrc-global-mode))
 #+end_src
 
 ** mise
