@@ -808,7 +808,9 @@ features for various log files.
      ("C-c g r" . vc-refresh-state))
     :config
     (setq magit-save-repository-buffers 'dontask
-          magit-refs-show-commit-count 'all))
+          magit-refs-show-commit-count 'all
+          magit-display-buffer-function #'magit-display-buffer-fullframe-status-v1
+          magit-bury-buffer-function #'magit-restore-window-configuration))
 #+end_src
 
 [[https://magit.vc/manual/forge/][Forge]] -
