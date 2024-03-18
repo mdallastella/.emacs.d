@@ -1110,6 +1110,12 @@ requests.
   :hook (python-ts-mode . pyvenv-auto-run))
 #+end_src
 
+** Java
+#+begin_src emacs-lisp
+  (use-package eglot-java
+    :after eglot)
+#+end_src
+
 
 * Productivity
 ** markdown
