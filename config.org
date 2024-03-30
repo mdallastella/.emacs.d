@@ -777,6 +777,16 @@ Use built-in dictionary-el.
 
 
 * Programming
+** Tree-Sitter
+Remap some major mode with their tree-sitter implementation.
+#+begin_src emacs-lisp
+  (use-package clojure-ts-mode)
+
+  (setq major-mode-remap-alist
+        '((clojure-mode . clojure-ts-mode)
+          (python-mode . python-ts-mode)
+          (java-mode . java-ts-mode)))
+#+end_src
 ** Project
 Let's use the built-in module to manage different projects.
 
@@ -1113,7 +1123,16 @@ requests.
 ** Java
 #+begin_src emacs-lisp
   (use-package eglot-java
-    :after eglot)
+    :after eglot
+    :config
+    (setq eglot-java-eclipse-jdt-args (list "-noverify"
+                                            "-Xms1G"
+                                            "-Xmx2G"
+                                            "-XX:+UnlockExperimentalVMOptions"
+                                            "-XX:+UseZGC"
+                                            "-XX:+UseStringDeduplication"
+                                            "-XX:AdaptiveSizePolicyWeight=90"
+                                            "-Dsun.zip.disableMemoryMapping=true")))
 #+end_src
 
 
