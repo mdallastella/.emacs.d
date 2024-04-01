@@ -776,6 +776,7 @@ Use built-in dictionary-el.
 #+end_src
 
 
+
 * Programming
 ** Tree-Sitter
 Remap some major mode with their tree-sitter implementation.
@@ -1132,7 +1133,8 @@ requests.
                                             "-XX:+UseZGC"
                                             "-XX:+UseStringDeduplication"
                                             "-XX:AdaptiveSizePolicyWeight=90"
-                                            "-Dsun.zip.disableMemoryMapping=true")))
+                                            "-Dsun.zip.disableMemoryMapping=true"
+                                            "-javaagent:/usr/lib/lombok-common/lombok.jar")))
 #+end_src
 
 
