@@ -791,12 +791,13 @@ Let's use the built-in module to manage different projects.
           eldoc-echo-area-use-multiline-p nil))
 #+end_src
 
-** Eglot
+** LSP
+[[https://joaotavora.github.io/eglot/][Eglot: The Emacs Client for the Language Server Protocol]]
+
 #+begin_src emacs-lisp
+  (setq package-pinned-packages '((eglot . "gnu-devel")))
+
   (use-package eglot
-    :pin gnu-devel
-    :hook
-    ((clojure-mode clojurescript-mode js2-mode rjsx-mode python-ts-mode) . eglot-ensure)
     :bind
     (("C-c l e" . eglot-rename)
      ("C-c l a" . eglot-code-actions)
@@ -1062,18 +1063,20 @@ requests.
 
 ** Java
 #+begin_src emacs-lisp
-  (use-package eglot-java
-    :after eglot
-    :config
-    (setq eglot-java-eclipse-jdt-args (list "-noverify"
-                                            "-Xms1G"
-                                            "-Xmx2G"
-                                            "-XX:+UnlockExperimentalVMOptions"
-                                            "-XX:+UseZGC"
-                                            "-XX:+UseStringDeduplication"
-                                            "-XX:AdaptiveSizePolicyWeight=90"
-                                            "-Dsun.zip.disableMemoryMapping=true"
-                                            "-javaagent:/usr/lib/lombok-common/lombok.jar")))
+  (use-package jarchive
+    :init
+    (jarchive-mode))
+
+  (defun my/jdtls-setup (_interactive project)
+    (list "jdtls"
+          "-configuration" (file-name-concat (xdg-cache-home) "jdtls")
+          "-data" (expand-file-name (md5 (project-root project))
+                                    (locate-user-emacs-file "jdtls-cache"))
+          "--jvm-arg=-javaagent:/usr/lib/lombok-common/lombok.jar"))
+
+  (with-eval-after-load 'eglot
+    (push '((java-mode java-ts-mode) . my/jdtls-setup)
+          eglot-server-programs))
 #+end_src
 
 
