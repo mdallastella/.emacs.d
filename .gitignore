@@ -42,3 +42,5 @@ straight/
 /early-init.elc
 /init.elc
 /*.el~
+/tree-sitter/
+/jdtls-cache/
