@@ -612,15 +612,6 @@ Emacs.
     (envrc-global-mode))
 #+end_src
 
-** mise
-[[https://mise.jdx.dev/][mise-en-place]]: The front-end to your dev env.
-#+begin_src emacs-lisp
-  (use-package mise
-    :vc (:fetcher github :repo vitallium/mise.el)
-    :config
-    (add-hook 'prog-mode-hook 'mise-setup-env))
-#+end_src
-
 ** Vertico, Orderless, Consult, Marginalia & Embark
 *** Orderless
 [[https://github.com/oantolin/orderless][Orderless]] provides an ~orderless~ completion style that divides the pattern into
@@ -680,31 +671,6 @@ minibuffer for your completion candidates.
   (use-package marginalia
     :config
     (marginalia-mode))
-#+end_src
-
-*** Embark
-[[https://github.com/oantolin/embark/][Embark]]: provides a sort of right-click contextual menu for Emacs, accessed
-through the embark-act command, offering you relevant actions to use on a target
-determined by the context.
-
-#+begin_src emacs-lisp
-  (use-package embark
-    :bind
-    (("C-." . embark-act)         ;; pick some comfortable binding
-     ("M-." . embark-dwim)        ;; good alternative: M-.
-     ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
-    :config
-    ;; Hide the mode line of the Embark live/completions buffers
-    (add-to-list 'display-buffer-alist
-                 '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
-                   nil
-                   (window-parameters (mode-line-format . none))))
-    (setq prefix-help-command #'embark-prefix-help-command))
-
-  (use-package embark-consult
-    :after (embark consult)
-    :hook
-    (embark-collect-mode . consult-preview-at-point-mode))
 #+end_src
 
 ** Spell checking
@@ -799,14 +765,6 @@ Let's use the built-in module to manage different projects.
     ("C-c p" . project-prefix-map))
 #+end_src
 
-** Logview
-[[https://github.com/doublep/logview][Logview]] major mode for Emacs provides syntax highlighting, filtering and other
-features for various log files.
-
-#+begin_src emacs-lisp
-  (use-package logview)
-#+end_src
-
 ** Magit
 [[https://github.com/magit/magit][Magit]] - A Git porcelain inside Emacs.
 
@@ -822,13 +780,6 @@ features for various log files.
           magit-refs-show-commit-count 'all
           magit-display-buffer-function #'magit-display-buffer-fullframe-status-v1
           magit-bury-buffer-function #'magit-restore-window-configuration))
-#+end_src
-
-[[https://magit.vc/manual/forge/][Forge]] -
-
-#+begin_src emacs-lisp
-  (use-package forge
-    :after magit)
 #+end_src
 
 ** eldoc
@@ -856,18 +807,6 @@ features for various log files.
           read-process-output-max (* 1024 1024)
           eglot-extend-to-xref t
           eglot-connect-timeout 90))
-
-  (use-package consult-eglot
-    :after eglot
-    :bind
-    ("C-c l s" . consult-eglot-symbols)
-    :config
-    (setq consult-eglot-ignore-column t
-          consult-eglot-show-kind-name t))
-
-  (use-package jarchive
-    :init
-    (jarchive-mode))
 #+end_src
 
 ** Dape
