@@ -437,7 +437,6 @@ Set my favorite font.
 
 #+begin_src emacs-lisp
   (use-package emacs
-    :hook ((elfeed-show-mode mu4e-view-mode notmuch-show-mode) . variable-pitch-mode)
     :config
     (set-face-attribute 'default nil
                         :family "Iosevka SS14"
@@ -545,11 +544,6 @@ I like to have some space on the left and right edge of the window.
                 right-margin-width 3)
 #+end_src
 
-** Highlight the current line
-#+begin_src emacs-lisp
-  (global-hl-line-mode)
-#+end_src
-
 ** Highlight uncommitted changes
 Use the diff-hl package to highlight changed-and-uncommitted lines when
 programming.
@@ -560,20 +554,8 @@ programming.
            (magit-post-refresh . diff-hl-magit-post-refresh))
     :config
     (global-diff-hl-mode))
-   #+end_src
-
-** Emoj
-[[https://github.com/iqbalansari/emacs-emojify][Emojify]]: an Emacs extension to display emojis. It can display Github style
-emojis like :smile: or plain ascii ones like :).
-
-#+begin_src emacs-lisp
-  (use-package emojify
-    :hook
-    (after-init . global-emojify-mode)
-    :config
-    (setq emojify-emoji-styles '(unicode github)
-          emojify-inhibit-major-modes '()))
 #+end_src
+
 
 ** ace-window
 ace-window
@@ -612,7 +594,7 @@ Emacs.
     (envrc-global-mode))
 #+end_src
 
-** Vertico, Orderless, Consult, Marginalia & Embark
+** Vertico, Orderless, Consult, Marginalia
 *** Orderless
 [[https://github.com/oantolin/orderless][Orderless]] provides an ~orderless~ completion style that divides the pattern into
 space-separated components, and matches all the components in any order.
@@ -798,6 +780,7 @@ Let's use the built-in module to manage different projects.
   (setq package-pinned-packages '((eglot . "gnu-devel")))
 
   (use-package eglot
+    :defer t
     :bind
     (("C-c l e" . eglot-rename)
      ("C-c l a" . eglot-code-actions)
@@ -815,18 +798,9 @@ Let's use the built-in module to manage different projects.
 
 #+begin_src emacs-lisp
   (use-package dape
-    ;; To use window configuration like gud (gdb-mi)
-    ;; :init
-    ;; (setq dape-buffer-window-arrangement 'gud)
-
+    :defer t
     :config
     (setq dape-buffer-window-arrangement 'right)
-
-    ;; To not display info and/or buffers on startup
-    ;; (remove-hook 'dape-on-start-hooks 'dape-info)
-    ;; (remove-hook 'dape-on-start-hooks 'dape-repl)
-
-    ;; To display info and/or repl buffers on stopped
     (add-hook 'dape-on-stopped-hooks 'dape-info)
     (add-hook 'dape-on-stopped-hooks 'dape-repl)
 
@@ -834,10 +808,7 @@ Let's use the built-in module to manage different projects.
     ;; If you do not want to use any prefix, set it to nil.
     ;; (setq dape-key-prefix "\C-x\C-a")
 
-    ;; Kill compile buffer on build success
     (add-hook 'dape-compile-compile-hooks 'kill-buffer)
-
-    ;; Save buffers on startup, useful for interpreted languages
     (add-hook 'dape-on-start-hooks
                (defun dape--save-on-start ()
                  (save-some-buffers t t))))
@@ -850,6 +821,7 @@ Clojure settings for Emacs
 
 #+begin_src emacs-lisp
   (use-package neil
+    :defer t
     :config
     (setq neil-prompt-for-version-p nil
           neil-inject-dep-to-project-p t))
@@ -893,6 +865,7 @@ Flycheck using clj-kondo.
   (use-package flycheck-clj-kondo)
 
   (use-package clojure-mode
+    :defer t
     :config
     (require 'flycheck-clj-kondo))
 #+end_src
@@ -901,25 +874,6 @@ Flycheck using clj-kondo.
 #+begin_src emacs-lisp
   (use-package clojure-mode-extra-font-locking
     :after clojure-mode)
-#+end_src
-
-*** Kaocha test runner
-An emacs package for running Kaocha tests via CIDER.
-
-#+begin_src emacs-lisp
-  (use-package kaocha-runner
-    :after cider
-    :bind
-    (:map clojure-mode-map
-          ("C-c k a" . kaocha-runner-run-all-tests)
-          ("C-c k h" . kaocha-runner-hide-windows)
-          ("C-c k r" . kaocha-runner-run-tests)
-          ("C-c k t" . kaocha-runner-run-test-at-point)
-          ("C-c k w" . kaocha-runner-show-warnings))
-    :config
-    (setq kaocha-runner-failure-win-min-height 20
-          kaocha-runner-ongoing-tests-win-min-height 20
-          kaocha-runner-output-win-max-height 20))
 #+end_src
 
 *** Code formatting
@@ -1174,32 +1128,6 @@ Org capture configuration
           org-agenda-current-time-string
           "⭠ now ─────────────────────────────────────────────────")
     (global-org-modern-mode))
-#+end_src
-*** agenda
-[[https://github.com/alphapapa/org-super-agenda][org-super-agenda]] - This package lets you “supercharge” your Org daily/weekly agenda. The idea is to
-group items into sections, rather than having them all in one big list.
-
-#+begin_src emacs-lisp
-  (use-package org-super-agenda
-    :defer t
-    :config
-    (setq org-super-agenda-groups '((:name "Today" :time-grid t :todo "TODAY")))
-    (org-super-agenda-mode))
-#+end_src
-
-*** consult-notes
-Easily selecting notes via consult
-
-#+begin_src emacs-lisp
-  (use-package consult-notes
-    :after org
-    :commands
-    (consult-notes consult-notes-search-in-all-notes)
-    :bind
-    ("C-c n o" . consult-notes)
-    :config
-    (setq consult-notes-use-rg t
-          consult-notes-file-dir-sources '(("Notes" ?b "~/org/"))))
 #+end_src
 
 *** org-cliplink
