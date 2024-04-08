@@ -1174,6 +1174,7 @@ reveal.js from Org mode source files.
 #+begin_src emacs-lisp
   (use-package org-re-reveal
     :after ox
+    :defer t
     :config
     (setq org-re-reveal-root "../reveal"
           org-re-reveal-theme "black"
@@ -1188,8 +1189,8 @@ The buffers / workspaces I want at start.
 #+begin_src emacs-lisp
   (defun my/initial-setup ()
     (interactive)
-    (persp-switch "todo" t)
-    (find-file "~/org/todo.org")
+    (persp-switch "notes" t)
+    (find-file "~/org/inbox.org")
     (persp-switch persp-initial-frame-name t))
 
   (add-hook 'emacs-startup-hook 'my/initial-setup)
