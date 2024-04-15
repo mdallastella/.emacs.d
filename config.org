@@ -790,7 +790,8 @@ Let's use the built-in module to manage different projects.
     (setq eglot-send-changes-idle-time (* 60 60)
           read-process-output-max (* 1024 1024)
           eglot-extend-to-xref t
-          eglot-connect-timeout 90))
+          eglot-connect-timeout 90
+          eglot-inlay-hints-mode nil))
 #+end_src
 
 ** Dape
@@ -1166,6 +1167,7 @@ link with a title of a page found by the URL into the current buffer.
     :defer t
     :mode ("\\.epub\\'" . nov-mode))
   #+end_src
+
 
 ** slides
 [[https://gitlab.com/oer/org-re-reveal][org-re-reveal]] - provides an export back-end for HTML presentations with
