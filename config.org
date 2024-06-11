@@ -423,6 +423,20 @@ braces, brackets, etc.
     (puni-global-mode))
 #+end_src
 
+** Jump around
+[[https://github.com/abo-abo/avy][avy]] is a GNU Emacs package for jumping to visible text using a char-based
+decision tree.
+
+[[https://github.com/kickingvegas/casual-avy][Casual Avy]] is an opinionated Transient-based menu for Avy, a GNU Emacs package
+for jumping to visible text using a char-based decision tree.
+
+#+begin_src emacs-lisp
+  (use-package avy)
+
+  (use-package casual-avy
+    :bind ("C-x j" . casual-avy-tmenu))
+#+end_src
+
 
 * UI
 ** Frame title
