@@ -1016,9 +1016,21 @@ Derive vue-mode from web-mode and add lsp support.
     (add-to-list 'eglot-server-programs
                  '(vue-mode . ("vls" "--stdio"))))
 #+end_src
+** Astro
+Derive astro-mode from web-mode and add lsp support.
+#+begin_src emacs-lisp
+  (define-derived-mode astro-mode web-mode "Astro mode")
+  (add-to-list 'auto-mode-alist '("\\.astro\\'" . astro-mode))
+
+  (with-eval-after-load 'eglot
+    (add-to-list 'eglot-server-programs
+                 '(astro-mode . ("astro-ls" "--stdio"
+                                 :initializationOptions
+                                 (:typescript (:tsdk "./node_modules/typescript/lib"))))))
+#+end_src
 ** YAML
 #+begin_src emacs-lisp
-  (use-package yaml-ts-mode
+  (use-package yaml-mode
     :ensure nil
     :defer t)
 #+end_src
