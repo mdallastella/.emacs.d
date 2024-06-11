@@ -771,15 +771,19 @@ Use built-in dictionary-el.
 
 
 * Programming
+** Indenting
+#+begin_src emacs-lisp
+  (setq-default c-basic-offset 4
+                tab-width 4
+                intent-tabs-mode nil)
+#+end_src
 ** Tree-Sitter
 Remap some major mode with their tree-sitter implementation.
 #+begin_src emacs-lisp
-  (use-package clojure-ts-mode)
+  (use-package tree-sitter
+    :config (global-tree-sitter-mode))
 
-  (setq major-mode-remap-alist
-        '((clojure-mode . clojure-ts-mode)
-          (python-mode . python-ts-mode)
-          (java-mode . java-ts-mode)))
+  (use-package tree-sitter-langs)
 #+end_src
 ** Project
 Let's use the built-in module to manage different projects.
