@@ -614,7 +614,7 @@ Emacs.
     (envrc-global-mode))
 #+end_src
 
-** Vertico, Orderless, Consult, Marginalia
+** Vertico, Orderless, Consult, Marginalia, Embark
 *** Orderless
 [[https://github.com/oantolin/orderless][Orderless]] provides an ~orderless~ completion style that divides the pattern into
 space-separated components, and matches all the components in any order.
@@ -791,7 +791,7 @@ Let's use the built-in module to manage different projects.
 #+begin_src emacs-lisp
   (use-package project
     :ensure nil
-    :commands project-roots
+    :commands project-root
     :bind-keymap
     ("C-c p" . project-prefix-map))
 #+end_src
@@ -837,10 +837,10 @@ Let's use the built-in module to manage different projects.
      ("C-c l e" . eldoc-doc-buffer))
     :config
     (setq eglot-send-changes-idle-time (* 60 60)
-          read-process-output-max (* 1024 1024)
-          eglot-extend-to-xref t
-          eglot-connect-timeout 90
-          eglot-inlay-hints-mode nil))
+      read-process-output-max (* 1024 1024)
+      eglot-extend-to-xref t
+      eglot-connect-timeout 180
+      eglot-inlay-hints-mode nil))
 #+end_src
 
 ** Dape
@@ -887,8 +887,8 @@ Clojure settings for Emacs
      (clojure-mode . subword-mode)
      (cider-repl-mode . eldoc-mode)
      (cider-repl-mode . subword-mode)
-     (cider-mode . cider-company-enable-fuzzy-completion)
-     (cider-repl-mode . cider-company-enable-fuzzy-completion))
+     (cider-mode . cider-enable-flex-completion)
+     (cider-repl-mode . cider-enable-flex-completion))
     :bind
     (:map clojure-mode-map
           ("C-c m j" . cider-jack-in-clj)
@@ -1091,7 +1091,7 @@ requests.
           "--jvm-arg=-javaagent:/usr/lib/lombok-common/lombok.jar"))
 
   (with-eval-after-load 'eglot
-    (push '((java-mode java-ts-mode) . my/jdtls-setup)
+    (push '(java-mode . my/jdtls-setup)
           eglot-server-programs))
 #+end_src
 
@@ -1229,7 +1229,6 @@ link with a title of a page found by the URL into the current buffer.
     :mode ("\\.epub\\'" . nov-mode))
   #+end_src
 
-
 ** slides
 [[https://gitlab.com/oer/org-re-reveal][org-re-reveal]] - provides an export back-end for HTML presentations with
 reveal.js from Org mode source files.
@@ -1244,6 +1243,7 @@ reveal.js from Org mode source files.
           org-re-reveal-title-slide nil
           org-re-reveal-embed-local-resources t))
 #+end_src
+
 
 
 * Initial buffer configuration
