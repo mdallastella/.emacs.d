@@ -153,6 +153,7 @@ Use =no-littering= to keep our directory clean.
 #+begin_src emacs-lisp
   ;; Keep .emacs.d clean
   (use-package no-littering
+    :ensure t
     :config
     (setq create-lockfiles nil
           delete-old-versions t
