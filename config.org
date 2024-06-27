@@ -1114,6 +1114,13 @@ requests.
           eglot-server-programs))
 #+end_src
 
+** PHP
+I have to deal with this s**t sometimes... :(
+
+#+begin_src emacs-lisp
+  (use-package php-mode
+    :defer t)
+#+end_src
 
 * Productivity
 ** markdown
