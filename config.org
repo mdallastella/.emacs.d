@@ -322,24 +322,6 @@ major-modes and so on.
     (which-key-mode t))
 #+end_src
 
-** Devil mode
-Devil mode intercepts our keystrokes and translates them to Emacs key sequences
-according to a configurable set of translation rules. For example, with the
-default translation rules, when we type ~, x , f~, Devil translates it to ~C-x C-f~.
-
-#+begin_src emacs-lisp
-  (use-package devil
-    :config
-    (define-key devil-mode-map (kbd ".") #'devil)
-    (add-to-list 'devil-special-keys `(". ." . ,(devil-key-executor ".")))
-    (setq devil-translations '((", z" . "C-")
-                               (". z" . "M-")
-                               (", ," . ",")
-                               (". ." . ".")
-                               ("," . "C-")
-                               ("." . "M-")))
-    (global-devil-mode))
-#+end_src
 
 
 * Editing
