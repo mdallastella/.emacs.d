@@ -840,6 +840,10 @@ Let's use the built-in module to manage different projects.
 #+end_src
 
 ** LSP
+#+begin_src emacs-lisp
+  (use-package jsonrpc :ensure t)
+#+end_src
+
 [[https://joaotavora.github.io/eglot/][Eglot: The Emacs Client for the Language Server Protocol]]
 
 #+begin_src emacs-lisp
@@ -858,6 +862,18 @@ Let's use the built-in module to manage different projects.
       eglot-extend-to-xref t
       eglot-connect-timeout 180
       eglot-inlay-hints-mode nil))
+#+end_src
+
+The [[https://github.com/jdtsmith/eglot-booster][emacs-lsp-booster]] project provides a rust-based wrapper program which
+substantially speeds up emacs' interactions with lsp servers. This small package
+enables eglot to use it.
+
+#+begin_src emacs-lisp
+  (use-package eglot-booster
+    :vc (:fetcher github :repo jdtsmith/eglot-booster)
+    :after eglot
+    :init
+    (eglot-booster-mode))
 #+end_src
 
 ** Dape
@@ -1119,6 +1135,7 @@ I have to deal with this s**t sometimes... :(
   (use-package php-mode
     :defer t)
 #+end_src
+
 
 * Productivity
 ** markdown
