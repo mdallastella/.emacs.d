@@ -260,6 +260,13 @@ Move deleted files to trash, you never know...
   (setq delete-by-moving-to-trash t)
 #+end_src
 
+** Recursive minibuffer
+Enable the use of minibuffer in the minibuffer
+#+begin_src emacs-lisp
+  (setq enable-recursive-minibuffers t)
+  (minibuffer-depth-indicate-mode)
+#+end_src
+
 
 * Keybindings
 The most frequent keybindings are structured in a mnemonic way for me. ~C-c~ is
