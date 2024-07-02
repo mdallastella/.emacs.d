@@ -622,6 +622,13 @@ Emacs.
     (envrc-global-mode))
 #+end_src
 
+** mise
+I use [[https://mise.jdx.dev/][mise-en-place]] to manage my dev environments.
+#+begin_src emacs-lisp
+  (use-package mise
+    :hook (after-init . global-mise-mode))
+#+end_src
+
 ** Vertico, Orderless, Consult, Marginalia, Embark
 *** Orderless
 [[https://github.com/oantolin/orderless][Orderless]] provides an ~orderless~ completion style that divides the pattern into
