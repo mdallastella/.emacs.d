@@ -795,10 +795,12 @@ Use built-in dictionary-el.
 ** Tree-Sitter
 Remap some major mode with their tree-sitter implementation.
 #+begin_src emacs-lisp
-  (use-package tree-sitter
-    :config (global-tree-sitter-mode))
-
-  (use-package tree-sitter-langs)
+  (use-package treesit-auto
+    :custom
+    (treesit-auto-install 'prompt)
+    :config
+    (treesit-auto-add-to-auto-mode-alist 'all)
+    (global-treesit-auto-mode))
 #+end_src
 ** Project
 Let's use the built-in module to manage different projects.
