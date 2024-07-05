@@ -991,7 +991,7 @@ I want the REPL always on the right side.
                  (window-width . 0.5)))
 #+end_src
 
-** Javascript
+** JavaScript
 [[https://github.com/mooz/js2-mode][js2-mode]]: Improved JavaScript editing mode for GNU Emacs.
 
 #+begin_src emacs-lisp
