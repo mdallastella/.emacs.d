@@ -1060,8 +1060,7 @@ Derive astro-mode from web-mode and add lsp support.
 #+end_src
 ** YAML
 #+begin_src emacs-lisp
-  (use-package yaml-mode
-    :ensure nil
+  (use-package yaml-ts-mode
     :defer t)
 #+end_src
 ** JSON
@@ -1133,6 +1132,15 @@ I have to deal with this s**t sometimes... :(
     :defer t)
 #+end_src
 
+
+** Structrizr DSL
+An emacs mode for syntax highlighting structurizr dsl files.
+
+#+begin_src emacs-lisp
+  (use-package structurizr
+    :vc (:fetcher github :repo gilesp/structurizr-mode)
+    :defer t)
+#+end_src
 
 * Productivity
 ** markdown
