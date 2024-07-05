@@ -118,6 +118,9 @@ Just good old [[https://github.com/jwiegley/use-package][use-package]] and [[htt
 
   (package-initialize)
 
+  (unless package-archive-contents
+    (package-refresh-contents))
+
   (unless (package-installed-p 'vc-use-package)
     (package-vc-install "https://github.com/slotThe/vc-use-package"))
 
