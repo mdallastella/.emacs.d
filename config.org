@@ -501,23 +501,23 @@ Mdeline from [[https://github.com/seagle0128/doom-modeline][Doom]]
     :config
     (minions-mode))
 
-  ;; (use-package doom-modeline
-  ;;   :hook
-  ;;   (after-init . doom-modeline-mode)
-  ;;   :config
-  ;;   (setq doom-modeline-buffer-file-name-style 'buffer-name
-  ;;         doom-modeline-minor-modes nil
-  ;;         doom-modeline-icon t
-  ;;         doom-modeline-project-detection 'project
-  ;;         doom-modeline-major-mode-color-icon t
-  ;;         doom-modeline-height 15))
-
-  (use-package moody
+  (use-package doom-modeline
+    :hook
+    (after-init . doom-modeline-mode)
     :config
-    (setq moody-mode-line-height 16)
-    (moody-replace-mode-line-front-space)
-    (moody-replace-mode-line-buffer-identification)
-    (moody-replace-vc-mode))
+    (setq doom-modeline-buffer-file-name-style 'buffer-name
+          doom-modeline-minor-modes nil
+          doom-modeline-icon t
+          doom-modeline-project-detection 'project
+          doom-modeline-major-mode-color-icon t
+          doom-modeline-height 15))
+
+  ;; (use-package moody
+  ;;   :config
+  ;;   (setq moody-mode-line-height 16)
+  ;;   (moody-replace-mode-line-front-space)
+  ;;   (moody-replace-mode-line-buffer-identification)
+  ;;   (moody-replace-vc-mode))
 #+end_src
 
 ** Show matching parenthesis
