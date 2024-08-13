@@ -442,6 +442,18 @@ decision tree.
   (use-package avy)
 #+end_src
 
+** Symbol overlay
+Highlight symbols with overlays while providing a keymap for various operations
+about highlighted symbols.
+
+#+begin_src emacs-lisp
+  (use-package symbol-overlay
+    :bind-keymap
+    ("C-c o" . symbol-overlay-map)
+    :hook
+    ((text-mode prog-mode) . symbol-overlay-mode))
+#+end_src
+
 
 * UI
 ** Frame title
