@@ -1302,6 +1302,38 @@ reveal.js from Org mode source files.
           org-re-reveal-embed-local-resources t))
 #+end_src
 
+*** consult-notes
+This is a package for easily selecting notes via consult.
+#+begin_src emacs-lisp
+  (use-package consult-notes
+    :defer t
+    :commands
+    (consult-notes consult-notes-search-in-all-notes)
+    :config
+    (setq consult-notes-file-dir-sources '(("Notes" ?n "/home/mds/org/"))
+          consult-notes-org-headings-files (directory-files "/home/mds/org/" t "\\.org\\'"))
+    (consult-notes-org-headings-mode))
+#+end_src
+
+
+** elfeed
+Elfeed is an extensible web feed reader for Emacs, supporting both Atom and RSS.
+
+#+begin_src emacs-lisp
+  (use-package elfeed-org
+    :config
+    (setq rmh-elfeed-org-files '("~/org/feeds.org"))
+    (elfeed-org))
+
+  (use-package elfeed-goodies)
+
+  (use-package elfeed
+    :defer t
+    :bind
+    (("C-c e e" . elfeed)
+     ("C-c e u" . elfeed-update)))
+#+end_src
+
 
 
 * Initial buffer configuration
