@@ -270,6 +270,13 @@ Enable the use of minibuffer in the minibuffer
   (minibuffer-depth-indicate-mode)
 #+end_src
 
+** Dired settings
+Some Dired settings I find useful.
+#+begin_src emacs-lisp
+  (setq dired-auto-revert-buffer t
+        dired-kill-when-opening-new-dired-buffer t)
+#+end_src
+
 
 * Keybindings
 The most frequent keybindings are structured in a mnemonic way for me. ~C-c~ is
