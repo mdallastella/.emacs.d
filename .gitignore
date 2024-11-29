@@ -44,3 +44,4 @@ straight/
 /*.el~
 /tree-sitter/
 /jdtls-cache/
+/ellama-sessions/
