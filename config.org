@@ -488,14 +488,12 @@ Set my favorite font.
 [[https://github.com/doomemacs/themes][GitHub - doomemacs/themes: A megapack of themes for GNU Emacs.]]
 
 #+begin_src emacs-lisp
-  (use-package doom-themes
+  (use-package modus-themes
     :config
-    (setq doom-themes-enable-bold t
-          doom-themes-enable-italic t
-          doom-themes-padded-modeline t)
-    (load-theme 'doom-solarized-dark-high-contrast t)
-    (doom-themes-visual-bell-config)
-    (doom-themes-org-config))
+    (setq modus-themes-mixed-fonts nil
+          modus-themes-italic-constructs t
+          modus-themes-bold-constructs t)
+    (load-theme 'modus-vivendi-tinted))
 #+end_src
 
 ** Modeline
