@@ -611,23 +611,6 @@ ace-window
 
 
 * Tools
-** Perspective
-The [[https://github.com/nex3/perspective-el][Perspective]] package provides multiple named workspace (or "perspectives") in
-Emacs.
-
-#+begin_src emacs-lisp
-  (use-package perspective
-    :disabled t
-    :bind
-    (("C-c x x" . persp-switch)
-     ("C-c x r" . persp-rename)
-     ("C-c x k" . persp-kill))
-    :config
-    (setq persp-suppress-no-prefix-key-warning t
-          persp-initial-frame-name "main")
-    (persp-mode))
-#+end_src
-
 ** Tabspace
 Tabspaces leverages tab-bar.el and project.el for workspaces.
 #+begin_src emacs-lisp
