@@ -634,7 +634,6 @@ Tabspaces leverages tab-bar.el and project.el for workspaces.
     :config
     (envrc-global-mode))
 #+end_src
-
 ** mise
 I use [[https://mise.jdx.dev/][mise-en-place]] to manage my dev environments.
 #+begin_src emacs-lisp
@@ -663,9 +662,8 @@ space-separated components, and matches all the components in any order.
 #+begin_src emacs-lisp
   (use-package orderless
     :config
-    (setq completion-styles '(orderless partial-completion)
-          completion-category-defaults nil
-          completion-category-overrides nil))
+    (setq completion-styles '(orderless basic)
+          completion-category-overrides '((file (styles basic partial-completion)))))
 #+end_src
 
 *** Vertico
@@ -675,6 +673,7 @@ the default completion system.
 #+begin_src emacs-lisp
   (use-package vertico
     :config
+    (setq vertico-sort-function 'vertico-sort-history-alpha)
     (vertico-mode))
 #+end_src
 
@@ -766,6 +765,15 @@ Corfu enhances completion at point with a small completion popup.
     (global-corfu-mode))
 #+end_src
 
+*** TODO Cape
+Cape provides Completion At Point Extensions which can be used in combination
+with the Corfu completion UI or the default completion
+UI. https://github.com/minad/cape
+
+#+begin_src emacs-lisp
+  (use-package cape)
+#+end_src
+
 *** hippie-expand
 Use hippie-expand instead of dabbrev-expand.
 
@@ -802,9 +810,6 @@ Use built-in dictionary-el.
     :bind
     ("C-c s d" . dictionary-search)
     :config
-    (set-face-attribute 'dictionary-word-definition-face nil
-                        :family "Iosevka Aile"
-                        :weight 'light)
     (setq dictionary-server "dict.org"
           dictionary-use-single-buffer t))
 #+end_src
@@ -880,7 +885,8 @@ Let's use the built-in module to manage different projects.
   (use-package eglot
     :defer t
     :bind
-    (("C-c l e" . eglot-rename)
+    (("C-c l l" . eglot)
+     ("C-c l e" . eglot-rename)
      ("C-c l a" . eglot-code-actions)
      ("C-c l d" . xref-find-definitions)
      ("C-c l e" . eldoc-doc-buffer))
@@ -1110,7 +1116,7 @@ Derive astro-mode from web-mode and add lsp support.
 #+begin_src emacs-lisp
   (use-package json-mode
     :defer t
-    :mode "\\.json\\'"
+    :mode ("\\.json\\'" "\\.jsonc\\'")
     :bind
     (:map json-mode-map
           ("C-c C-j" . jq-interactively)))
@@ -1200,7 +1206,8 @@ Tree Sitter support for Typst.
   (use-package markdown-mode
     :defer t
     :init
-    (setq markdown-hide-urls t)
+    (setq markdown-hide-urls t
+          markdown-asymmetric-header t)
     :mode ("\\.md" . gfm-mode))
 #+end_src
 ** org-mode
@@ -1453,18 +1460,3 @@ Automatically tangle ~config.org~ file when saving.
       (lambda ()
     (add-hook 'after-save-hook #'my/org-babel-tangle-config)))
 #+end_src
-
-
-* Packages to look at
-** TODO Popper
-Popper is a minor-mode to tame the flood of ephemeral windows Emacs produces,
-while still keeping them within arm’s reach. https://github.com/karthink/popper
-
-** TODO Cape
-Cape provides Completion At Point Extensions which can be used in combination
-with the Corfu completion UI or the default completion
-UI. https://github.com/minad/cape
-
-** TODO Doct
-doct is a function that provides an alternative, declarative syntax for
-describing Org capture templates. https://github.com/progfolio/doct
