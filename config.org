@@ -642,6 +642,19 @@ I use [[https://mise.jdx.dev/][mise-en-place]] to manage my dev environments.
     :hook (after-init . global-mise-mode))
 #+end_src
 
+** vterm
+Emacs-libvterm (vterm) is fully-fledged terminal emulator inside GNU Emacs based
+on libvterm, a C library. As a result of using compiled code (instead of elisp),
+emacs-libvterm is fully capable, fast, and it can seamlessly handle large
+outputs.
+
+#+begin_src emacs-lisp
+  (use-package vterm
+    :bind ("C-c u t" . vterm-other-window)
+    :config
+    (setq vterm-kill-buffer-on-exit t))
+#+end_src
+
 ** Vertico, Orderless, Consult, Marginalia, Embark
 *** Orderless
 [[https://github.com/oantolin/orderless][Orderless]] provides an ~orderless~ completion style that divides the pattern into
