@@ -65,6 +65,14 @@ See [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Early-Init-File.
   ;;; init.el --- Emacs configuration -*- lexical-binding: t -*-
 #+end_src
 
+** My personal information
+#+begin_src emacs-lisp
+  (require 'epa-file)
+  (epa-file-enable)
+  (load-file (locate-user-emacs-file "personal.el.gpg"))
+  (require 'personal)
+#+end_src
+
 ** custom.el
 Store ~custom.el~ in a separate file
 
@@ -164,7 +172,7 @@ Store backups and autosave files in ~/tmp~.
         `((".*" ,(no-littering-expand-var-file-name "auto-save/") t)))
 #+end_src
 
-**  Hide byte compiler warnings
+** Hide byte compiler warnings
 #+begin_src emacs-lisp
   (add-to-list 'display-buffer-alist
                '("\\`\\*\\(Warnings\\|Compile-Log\\)\\*\\'"
@@ -174,12 +182,6 @@ Store backups and autosave files in ~/tmp~.
 
 
 * General settings
-** My personal information
-#+begin_src emacs-lisp
-  (setq user-full-name "Marco Dalla Stella"
-        user-mail-address "marco@dallastella.name")
-#+end_src
-
 ** Access to shell PATH
 Ensure environment variables inside Emacs look the same as in the user’s shell.
 
@@ -1421,14 +1423,15 @@ Elfeed is an extensible web feed reader for Emacs, supporting both Atom and RSS.
     :bind
     ("C-c a" . ellama-transient-main-menu)
     :init
-    (require 'llm-ollama)
-    (setq ellama-provider
-          (make-llm-ollama
-           :chat-model "mistral"
-           :embedding-model "mistral")))
+    (require 'llm-gemini)
+    (condition-case err
+        (setq ellama-provider
+              (make-llm-gemini :key my/gemini-api-key))
+      (error (message "Failed to connect to Gemini: %s. Using default provider." err)
+             (setq ellama-provider 'ellama-provider-dummy))))
 #+end_src
 
-**  Calendars
+** Calendars
 khalel: Interacting through Emacs with locally-stored calendars via the console
 application khal and syncing with remote CalDAV calendars using vdirsyncer.
 
