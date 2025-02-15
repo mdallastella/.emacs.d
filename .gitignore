@@ -45,3 +45,4 @@ straight/
 /tree-sitter/
 /jdtls-cache/
 /ellama-sessions/
+.aider*

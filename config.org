@@ -195,14 +195,87 @@ Ensure environment variables inside Emacs look the same as in the user’s shell
 #+begin_src emacs-lisp
   (use-package savehist
     :ensure nil
+    :init
+    (savehist-mode t)
     :config
     (setq history-length 10000
           history-delete-duplicates t
           savehist-save-minibuffer-history t
           savehist-additional-variables '(kill-ring
                                           search-ring
-                                          regexp-search-ring))
-    (savehist-mode t))
+                                          regexp-search-ring)))
+#+end_src
+````
+
+config.org
+````python
+<<<<<<< SEARCH
+  (defun my/open-config ()
+    "Open the current Emacs configuration."
+    (interactive)
+    (find-file (expand-file-name "config.org" user-emacs-directory)))
+
+  (defun my/ibuffer ()
+    (interactive)
+    (ibuffer t))
+
+  (defun get-string-from-file (file-path)
+    "Return file content as string."
+    (with-temp-buffer
+      (insert-file-contents file-path)
+      (buffer-string)))
+
+  (use-package emacs
+    :bind
+    (;; Buffers
+     ("C-c b k" . kill-this-buffer)
+     ("C-c b r" . revert-buffer)
+     ("C-c b l" . my/ibuffer)
+     ;; Files
+     ("C-c f f" . find-file)
+     ("C-c f d" . dired-jump)
+     ("C-c f P" . my/open-config)
+     ;; Utility
+     ("C-c u p l" . package-list-packages)
+     ("C-c u p i" . package-install)
+     ("C-c u p d" . package-delete)
+     ("C-c u p u" . package-update-all)))
+#+end_src
+```
+
+config.org
+```python
+<<<<<<< SEARCH
+  (defun my/open-config ()
+    "Open the current Emacs configuration."
+    (interactive)
+    (find-file (expand-file-name "config.org" user-emacs-directory)))
+
+  (defun my/ibuffer ()
+    (interactive)
+    (ibuffer t))
+
+  (defun get-string-from-file (file-path)
+    "Return file content as string."
+    (with-temp-buffer
+      (insert-file-contents file-path)
+      (buffer-string)))
+
+  (use-package emacs
+    :bind
+    (;; Buffers
+     ("C-c b k" . kill-this-buffer)
+     ("C-c b r" . revert-buffer)
+     ("C-c b l" . my/ibuffer)
+     ;; Files
+     ("C-c f f" . find-file)
+     ("C-c f d" . dired-jump)
+     ("C-c f P" . my/open-config)
+     ;; Utility
+     ("C-c u p l" . package-list-packages)
+     ("C-c u p i" . package-install)
+     ("C-c u p d" . package-delete)
+     ("C-c u p u" . package-update-all)))
 #+end_src
 
 ** Auto Revert
@@ -283,10 +356,6 @@ major-modes and so on.
     (interactive)
     (find-file (expand-file-name "config.org" user-emacs-directory)))
 
-  (defun my/ibuffer ()
-    (interactive)
-    (ibuffer t))
-
   (defun get-string-from-file (file-path)
     "Return file content as string."
     (with-temp-buffer
@@ -298,7 +367,7 @@ major-modes and so on.
     (;; Buffers
      ("C-c b k" . kill-this-buffer)
      ("C-c b r" . revert-buffer)
-     ("C-c b l" . my/ibuffer)
+     ("C-c b l" . ibuffer)
      ;; Files
      ("C-c f f" . find-file)
      ("C-c f d" . dired-jump)
@@ -791,15 +860,30 @@ contextual information.
 
 #+begin_src emacs-lisp
   (use-package helpful
-    :custom
-    (counsel-describe-function-function #'helpful-callable)
-    (counsel-describe-variable-function #'helpful-variable)
+    :ensure t
     :bind
     ([remap describe-function] . helpful-function)
     ([remap describe-symbol] . helpful-symbol)
     ([remap describe-variable] . helpful-variable)
     ([remap describe-command] . helpful-command)
-    ([remap describe-key] . helpful-key))
+    ([remap describe-key] . helpful-key)
+    :custom
+    (counsel-describe-function-function #'helpful-callable)
+    (counsel-describe-variable-function #'helpful-variable))
+#+end_src
+```
+
+config.org
+```python
+<<<<<<< SEARCH
+  (use-package dictionary
+    :ensure nil
+    :defer t
+    :bind
+    ("C-c s d" . dictionary-search)
+    :config
+    (setq dictionary-server "dict.org"
+          dictionary-use-single-buffer t))
 #+end_src
 
 ** Dictionary
@@ -891,7 +975,8 @@ Let's use the built-in module to manage different projects.
      ("C-c l e" . eglot-rename)
      ("C-c l a" . eglot-code-actions)
      ("C-c l d" . xref-find-definitions)
-     ("C-c l e" . eldoc-doc-buffer))
+     ("C-c l e" . eldoc-doc-buffer)
+     ("C-c l q" . eglot-shutdown))
     :config
     (setq eglot-send-changes-idle-time (* 60 60)
           read-process-output-max (* 1024 1024)
@@ -901,16 +986,14 @@ Let's use the built-in module to manage different projects.
           eglot-ignored-server-capabilities '(:inlayHintProvider)))
 #+end_src
 
-The [[https://github.com/jdtsmith/eglot-booster][emacs-lsp-booster]] project provides a rust-based wrapper program which
-substantially speeds up emacs' interactions with lsp servers. This small package
-enables eglot to use it.
+[[https://github.com/flycheck/flycheck-eglot][flycheck-eglot]]: A simple “glue” minor mode that allows Flycheck and Eglot to work together.
 
 #+begin_src emacs-lisp
-  (use-package eglot-booster
-    :vc (:fetcher github :repo jdtsmith/eglot-booster)
-    :after eglot
-    :init
-    (eglot-booster-mode))
+  (use-package flycheck-eglot
+    :ensure t
+    :after (flycheck eglot)
+    :config
+    (global-flycheck-eglot-mode 1))
 #+end_src
 
 ** Dape
@@ -1090,12 +1173,31 @@ I want the REPL always on the right side.
 ** VUE
 Derive vue-mode from web-mode and add lsp support.
 #+begin_src emacs-lisp
+  (defun my/vue-eglot-setup ()
+    (let* ((cmd "npm list --global --parseable typescript | head -n1")
+           (tsdk-path (expand-file-name
+                       "lib" (string-trim-right (shell-command-to-string cmd)))))
+      `(:typescript
+        (:tsdk ,tsdk-path
+               :languageFeatures
+               ( :completion ( :defaultTagNameCase "both"
+                               :defaultAttrNameCase "kebabCase"
+                               :getDocumentNameCasesRequest nil
+                               :getDocumentSelectionRequest nil)
+                 :diagnostics (:getDocumentVersionRequest nil))
+               :documentFeatures
+               (:documentFormatting (:defaultPrintWidth 100
+                                     :getDocumentPrintWidthRequest nil)
+                                    :documentSymbol t
+                                    :documentColor t)))))
+
   (define-derived-mode vue-mode web-mode "Vue mode")
   (add-to-list 'auto-mode-alist '("\\.vue\\'" . vue-mode))
 
   (with-eval-after-load 'eglot
-    (add-to-list 'eglot-server-programs
-                 '(vue-mode . ("vls" "--stdio"))))
+    (push `(vue-mode . ("vue-language-server" "--stdio"
+                        :initializationOptions ,(my/vue-eglot-setup)))
+          eglot-server-programs))
 #+end_src
 ** Astro
 Derive astro-mode from web-mode and add lsp support.
@@ -1145,12 +1247,16 @@ requests.
 ** Python
 *** Python virtual environment
 #+begin_src emacs-lisp
-  (use-package pyvenv
-  :defer t)
+  (setq major-mode-remap-alist
+        '((python-mode . python-ts-mode)))
 
-(use-package pyvenv-auto
-  :defer t
-  :hook (python-mode . pyvenv-auto-run))
+  (use-package pyvenv
+    :after python-ts-mode
+    :defer t)
+
+  (use-package pyvenv-auto
+    :defer t
+    :hook ((python-mode python-ts-mode) . pyvenv-auto-run))
 #+end_src
 
 ** Java
@@ -1169,6 +1275,10 @@ requests.
   (with-eval-after-load 'eglot
     (push '((java-mode java-ts-mode) . my/jdtls-setup)
           eglot-server-programs))
+
+  (use-package java-ts-mode
+    :config
+    (setq java-ts-mode-indent-offset 2))
 #+end_src
 
 ** PHP
@@ -1229,7 +1339,7 @@ Tree Sitter support for Typst.
            ("C-c m c" . org-cycle-global)))
     :config
     (setq org-directory "~/org"
-          my/org-latex  (concat org-directory "/templates")
+          ;; my/org-latex  (concat org-directory "/templates")
           org-todo-keywords '((sequence "TODO(t)" "WAITING(w)" "DOING(g)" "|" "DONE(d)" "CANCELLED(c)"))
           org-log-repeat nil
           org-default-notes-file "~/org/inbox.org"
@@ -1249,20 +1359,21 @@ Tree Sitter support for Typst.
           org-ellipsis "…"
           org-fontify-quote-and-verse-blocks t
           org-src-tab-acts-natively t
-          org-adapt-indentation t))
+          org-adapt-indentation t
+          org-use-sub-superscripts nil))
 #+end_src
 *** Latex templates for org-mode
 #+begin_src emacs-lisp
-  (with-eval-after-load 'ox-latex
-    (add-to-list 'org-latex-classes
-                 '("7bint"
-                   "\\documentclass[11pt]{article}
-                    [NO-DEFAULT-PACKAGES]
-                    [EXTRA]
-                    \\input{/home/mds/org/templates/7bint.tex}"
-                   ("\\section{%s}" . "\\section*{%s}")
-                   ("\\subsection{%s}" . "\\subsection*{%s}")
-                   ("\\subsubsection{%s}" . "\\subsubsection*{%s}"))))
+  ;; (with-eval-after-load 'ox-latex
+  ;;   (add-to-list 'org-latex-classes
+  ;;                '("7bint"
+  ;;                  "\\documentclass[11pt]{article}
+  ;;                   [NO-DEFAULT-PACKAGES]
+  ;;                   [EXTRA]
+  ;;                   \\input{/home/mds/org/templates/7bint.tex}"
+  ;;                  ("\\section{%s}" . "\\section*{%s}")
+  ;;                  ("\\subsection{%s}" . "\\subsection*{%s}")
+  ;;                  ("\\subsubsection{%s}" . "\\subsubsection*{%s}"))))
 #+end_src
 *** org-capture
 Org capture configuration
@@ -1415,22 +1526,6 @@ Elfeed is an extensible web feed reader for Emacs, supporting both Atom and RSS.
     (setq pocket-reader-url-priorities '(resolved_url given_url)))
 #+end_src
 
-** ellama
-[[https://github.com/s-kostyaev/ellama][Ellama]] is a tool for interacting with large language models from Emacs.
-
-#+begin_src emacs-lisp
-  (use-package ellama
-    :bind
-    ("C-c a" . ellama-transient-main-menu)
-    :init
-    (require 'llm-gemini)
-    (condition-case err
-        (setq ellama-provider
-              (make-llm-gemini :key my/gemini-api-key))
-      (error (message "Failed to connect to Gemini: %s. Using default provider." err)
-             (setq ellama-provider 'ellama-provider-dummy))))
-#+end_src
-
 ** Calendars
 khalel: Interacting through Emacs with locally-stored calendars via the console
 application khal and syncing with remote CalDAV calendars using vdirsyncer.
@@ -1442,7 +1537,25 @@ application khal and syncing with remote CalDAV calendars using vdirsyncer.
     (("C-c u k" . khalel-import-events))
     :config
     (setq khalel-import-org-file "~/org/calendars.org"
+          khalel-import-org-file-confirm-overwrite nil
           khalel-capture-key "k"))
+#+end_src
+
+**
+
+** Aider
+[[https://github.com/MatthewZMD/aidermacs][Aidermacs: AI Pair Programming in Emacs]]
+#+begin_src emacs-lisp
+  (use-package aidermacs
+    :defer t
+    :vc
+    (aidermacs :url "https://github.com/MatthewZMD/aidermacs/")
+    :bind
+    (("C-c a" . aidermacs-transient-menu))
+    :config
+    (setenv "GEMINI_API_KEY" my/gemini-api-key)
+    (setq aidermacs-default-model "gemini/gemini-2.0-flash"
+          aidermacs-backend 'vterm))
 #+end_src
 
 
