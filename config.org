@@ -684,7 +684,7 @@ ace-window
 
 
 * Tools
-** Tabspace
+** Tabspaces
 Tabspaces leverages tab-bar.el and project.el for workspaces.
 #+begin_src emacs-lisp
   (use-package tabspaces
@@ -694,10 +694,12 @@ Tabspaces leverages tab-bar.el and project.el for workspaces.
     :config
     (setq tabspaces-use-filtered-buffers-as-default t
           tabspaces-default-tab "main"
+          tabspaces-session-project-session-store (no-littering-expand-var-file-name "tabspaces-sessions/")
+
           tabspaces-remove-to-default t
           tabspaces-include-buffers '("*scratch*")
           tabspaces-initialize-project-with-todo nil
-          tabspaces-session nil
+          tabspaces-session t
           tab-bar-new-tab-choice "*scratch*"))
 #+end_src
 
