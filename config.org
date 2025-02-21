@@ -902,8 +902,14 @@ Use built-in dictionary-el.
           dictionary-use-single-buffer t))
 #+end_src
 
-
-
+**  Try
+[[https://github.com/larstvei/try][Try]] is a package that allows you to try out Emacs packages without installing
+them.
+#+begin_src emacs-lisp
+  (use-package try
+    :bind
+    (("C-c u p t" . try)))
+#+end_src
 
 * Programming
 ** Indenting
