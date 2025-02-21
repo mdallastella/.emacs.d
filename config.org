@@ -1555,8 +1555,8 @@ application khal and syncing with remote CalDAV calendars using vdirsyncer.
     :bind
     (("C-c a" . aidermacs-transient-menu))
     :config
-    (setenv "GEMINI_API_KEY" my/gemini-api-key)
-    (setq aidermacs-default-model "gemini/gemini-2.0-flash"
+    (setenv "ANTHROPIC_API_KEY" my/anthropic-api-key)
+    (setq aidermacs-default-model "anthropic/claude-3-5-sonnet-20241022"
           aidermacs-backend 'vterm))
 #+end_src
 
