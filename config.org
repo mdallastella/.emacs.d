@@ -376,7 +376,9 @@ major-modes and so on.
      ("C-c u p l" . package-list-packages)
      ("C-c u p i" . package-install)
      ("C-c u p d" . package-delete)
-     ("C-c u p u" . package-update-all)))
+     ("C-c u p u" . package-update-all)
+     ;; Personal binds
+     ("M-#" . mark-end-of-sentence)))
 #+end_src
 
 ** which-key
