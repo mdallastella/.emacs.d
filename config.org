@@ -205,78 +205,6 @@ Ensure environment variables inside Emacs look the same as in the user’s shell
                                           search-ring
                                           regexp-search-ring)))
 #+end_src
-````
-
-config.org
-````python
-<<<<<<< SEARCH
-  (defun my/open-config ()
-    "Open the current Emacs configuration."
-    (interactive)
-    (find-file (expand-file-name "config.org" user-emacs-directory)))
-
-  (defun my/ibuffer ()
-    (interactive)
-    (ibuffer t))
-
-  (defun get-string-from-file (file-path)
-    "Return file content as string."
-    (with-temp-buffer
-      (insert-file-contents file-path)
-      (buffer-string)))
-
-  (use-package emacs
-    :bind
-    (;; Buffers
-     ("C-c b k" . kill-this-buffer)
-     ("C-c b r" . revert-buffer)
-     ("C-c b l" . my/ibuffer)
-     ;; Files
-     ("C-c f f" . find-file)
-     ("C-c f d" . dired-jump)
-     ("C-c f P" . my/open-config)
-     ;; Utility
-     ("C-c u p l" . package-list-packages)
-     ("C-c u p i" . package-install)
-     ("C-c u p d" . package-delete)
-     ("C-c u p u" . package-update-all)))
-#+end_src
-```
-
-config.org
-```python
-<<<<<<< SEARCH
-  (defun my/open-config ()
-    "Open the current Emacs configuration."
-    (interactive)
-    (find-file (expand-file-name "config.org" user-emacs-directory)))
-
-  (defun my/ibuffer ()
-    (interactive)
-    (ibuffer t))
-
-  (defun get-string-from-file (file-path)
-    "Return file content as string."
-    (with-temp-buffer
-      (insert-file-contents file-path)
-      (buffer-string)))
-
-  (use-package emacs
-    :bind
-    (;; Buffers
-     ("C-c b k" . kill-this-buffer)
-     ("C-c b r" . revert-buffer)
-     ("C-c b l" . my/ibuffer)
-     ;; Files
-     ("C-c f f" . find-file)
-     ("C-c f d" . dired-jump)
-     ("C-c f P" . my/open-config)
-     ;; Utility
-     ("C-c u p l" . package-list-packages)
-     ("C-c u p i" . package-install)
-     ("C-c u p d" . package-delete)
-     ("C-c u p u" . package-update-all)))
-#+end_src
 
 ** Auto Revert
 Automatically reload changes on a file if needed.
@@ -344,11 +272,6 @@ the "leader", then a letter that identify the scope: ~c~ for generic functions, 
 for buffers, ~d~ for directories, ~f~ for files, ~p~ for projects, ~m~ for the active
 major-modes and so on.
 
-** ESC cancel all
-#+begin_src emacs-lisp
-  (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
-#+end_src
-
 ** Generic
 #+begin_src emacs-lisp
   (defun my/open-config ()
@@ -356,16 +279,10 @@ major-modes and so on.
     (interactive)
     (find-file (expand-file-name "config.org" user-emacs-directory)))
 
-  (defun get-string-from-file (file-path)
-    "Return file content as string."
-    (with-temp-buffer
-      (insert-file-contents file-path)
-      (buffer-string)))
-
   (use-package emacs
     :bind
     (;; Buffers
-     ("C-c b k" . kill-this-buffer)
+     ("C-c b k" . kill-current-buffer)
      ("C-c b r" . revert-buffer)
      ("C-c b l" . ibuffer)
      ;; Files
@@ -377,6 +294,7 @@ major-modes and so on.
      ("C-c u p i" . package-install)
      ("C-c u p d" . package-delete)
      ("C-c u p u" . package-update-all)
+     ("C-c u p v" . package-vc-upgrade-all)
      ;; Personal binds
      ("M-#" . mark-end-of-sentence)))
 #+end_src
@@ -441,7 +359,7 @@ the selected text first.
     (before-save . whitespace-cleanup))
 #+end_src
 
-**  Delete / replace selected text
+** Delete / replace selected text
 #+begin_src emacs-lisp
   (use-package delsel
     :ensure nil
@@ -864,7 +782,6 @@ contextual information.
 
 #+begin_src emacs-lisp
   (use-package helpful
-    :ensure t
     :bind
     ([remap describe-function] . helpful-function)
     ([remap describe-symbol] . helpful-symbol)
@@ -874,20 +791,6 @@ contextual information.
     :custom
     (counsel-describe-function-function #'helpful-callable)
     (counsel-describe-variable-function #'helpful-variable))
-#+end_src
-```
-
-config.org
-```python
-<<<<<<< SEARCH
-  (use-package dictionary
-    :ensure nil
-    :defer t
-    :bind
-    ("C-c s d" . dictionary-search)
-    :config
-    (setq dictionary-server "dict.org"
-          dictionary-use-single-buffer t))
 #+end_src
 
 ** Dictionary
@@ -902,15 +805,6 @@ Use built-in dictionary-el.
     :config
     (setq dictionary-server "dict.org"
           dictionary-use-single-buffer t))
-#+end_src
-
-**  Try
-[[https://github.com/larstvei/try][Try]] is a package that allows you to try out Emacs packages without installing
-them.
-#+begin_src emacs-lisp
-  (use-package try
-    :bind
-    (("C-c u p t" . try)))
 #+end_src
 
 
@@ -971,7 +865,6 @@ Magit todos
 ** eldoc
 #+begin_src emacs-lisp
   (use-package eldoc
-    :defer t
     :config
     (setq eldoc-echo-area-display-truncation-message nil
           eldoc-echo-area-use-multiline-p nil))
@@ -1381,19 +1274,6 @@ Tree Sitter support for Typst.
           org-adapt-indentation t
           org-use-sub-superscripts nil))
 #+end_src
-*** Latex templates for org-mode
-#+begin_src emacs-lisp
-  ;; (with-eval-after-load 'ox-latex
-  ;;   (add-to-list 'org-latex-classes
-  ;;                '("7bint"
-  ;;                  "\\documentclass[11pt]{article}
-  ;;                   [NO-DEFAULT-PACKAGES]
-  ;;                   [EXTRA]
-  ;;                   \\input{/home/mds/org/templates/7bint.tex}"
-  ;;                  ("\\section{%s}" . "\\section*{%s}")
-  ;;                  ("\\subsection{%s}" . "\\subsection*{%s}")
-  ;;                  ("\\subsubsection{%s}" . "\\subsubsection*{%s}"))))
-#+end_src
 *** org-capture
 Org capture configuration
 
@@ -1481,63 +1361,6 @@ link with a title of a page found by the URL into the current buffer.
     :mode ("\\.epub\\'" . nov-mode))
   #+end_src
 
-*** slides
-[[https://gitlab.com/oer/org-re-reveal][org-re-reveal]] - provides an export back-end for HTML presentations with
-reveal.js from Org mode source files.
-
-#+begin_src emacs-lisp
-  (use-package org-re-reveal
-    :after ox
-    :defer t
-    :config
-    (setq org-re-reveal-root "../reveal"
-          org-re-reveal-theme "black"
-          org-re-reveal-title-slide nil
-          org-re-reveal-embed-local-resources t))
-#+end_src
-
-*** consult-notes
-This is a package for easily selecting notes via consult.
-#+begin_src emacs-lisp
-  (use-package consult-notes
-    :defer t
-    :commands
-    (consult-notes consult-notes-search-in-all-notes)
-    :config
-    (setq consult-notes-file-dir-sources '(("Notes" ?n "/home/mds/org/"))
-          consult-notes-org-headings-files (directory-files "/home/mds/org/" t "\\.org\\'"))
-    (consult-notes-org-headings-mode)
-    (consult-notes-denote-mode))
-#+end_src
-
-** denote
-#+begin_src emacs-lisp
-  (use-package denote
-    :hook
-    (dired-mode . denote-dired-mode)
-    :config
-    (setq denote-directory "/home/mds/Sputnik/braindump"
-          denote-known-keywords '("area" "project" "resource")))
-#+end_src
-
-** elfeed
-Elfeed is an extensible web feed reader for Emacs, supporting both Atom and RSS.
-
-#+begin_src emacs-lisp
-  (use-package elfeed-org
-    :config
-    (setq rmh-elfeed-org-files '("~/org/feeds.org"))
-    (elfeed-org))
-
-  (use-package elfeed-goodies)
-
-  (use-package elfeed
-    :defer t
-    :bind
-    (("C-c e e" . elfeed)
-     ("C-c e u" . elfeed-update)))
-#+end_src
-
 ** Pocket
 #+begin_src emacs-lisp
   (use-package pocket-reader
@@ -1575,20 +1398,6 @@ application khal and syncing with remote CalDAV calendars using vdirsyncer.
     (setenv "ANTHROPIC_API_KEY" my/anthropic-api-key)
     (setq aidermacs-default-model "anthropic/claude-3-5-sonnet-20241022"
           aidermacs-backend 'vterm))
-#+end_src
-
-
-* Initial buffer configuration
-The buffers / workspaces I want at start.
-
-#+begin_src emacs-lisp
-  ;; (defun my/initial-setup ()
-  ;;   (interactive)
-  ;;   (persp-switch "notes" t)
-  ;;   (find-file "~/org/inbox.org")
-  ;;   (persp-switch persp-initial-frame-name t))
-
-  ;; (add-hook 'emacs-startup-hook 'my/initial-setup)
 #+end_src
 
 
