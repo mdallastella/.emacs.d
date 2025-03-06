@@ -42,6 +42,8 @@ See [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Early-Init-File.
 
   (setq file-name-handler-alist nil)
 
+  (setq package-enable-at-startup t)
+
   ;; Restore everything at the end
   (add-hook 'emacs-startup-hook
             (lambda ()
@@ -49,8 +51,6 @@ See [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Early-Init-File.
                     file-name-handler-alist tmp--file-name-handler-alist)))
 
   ;; Measure the startup time.
-
-  ;; Profile emacs startup
   (add-hook 'emacs-startup-hook
             (lambda ()
               (message "*** Emacs loaded in %s seconds with %d garbage collections."
@@ -101,30 +101,26 @@ Just good old [[https://github.com/jwiegley/use-package][use-package]] and [[htt
 #+begin_src emacs-lisp
   (require 'package)
 
-  (setq package-archives '(("elpa" . "https://elpa.gnu.org/packages/")
-                           ("melpa" . "https://melpa.org/packages/")
-                           ("nongnu" . "https://elpa.nongnu.org/nongnu/")
-                           ("gnu-devel" . "https://elpa.gnu.org/devel/")))
+  (setq package-vc-register-as-project nil) ; Emacs 30
+
+  (add-hook 'package-menu-mode-hook #'hl-line-mode)
+
+  (setq package-archives
+        '(("gnu-elpa" . "https://elpa.gnu.org/packages/")
+          ("gnu-elpa-devel" . "https://elpa.gnu.org/devel/")
+          ("nongnu" . "https://elpa.nongnu.org/nongnu/")
+          ("melpa" . "https://melpa.org/packages/")))
 
   (setq package-archive-priorities
         '(("gnu-elpa" . 3)
           ("melpa" . 2)
           ("nongnu" . 1)))
 
-  (setq use-package-always-ensure t
+  (setq package-install-upgrade-built-in nil
+        use-package-always-ensure t
         package-native-compile t)
 
-  (package-initialize)
-
-  (unless package-archive-contents
-    (package-refresh-contents))
-
-  (unless (package-installed-p 'vc-use-package)
-    (package-vc-install "https://github.com/slotThe/vc-use-package"))
-
-  (require 'vc-use-package)
-
-  (use-package use-package-ensure-system-package)
+  ""(use-package use-package-ensure-system-package)
 #+end_src
 
 ** Start server
@@ -262,7 +258,8 @@ Enable the use of minibuffer in the minibuffer
 Some Dired settings I find useful.
 #+begin_src emacs-lisp
   (setq dired-auto-revert-buffer t
-        dired-kill-when-opening-new-dired-buffer t)
+        dired-kill-when-opening-new-dired-buffer t
+        dired-listing-switches "-alh")
 #+end_src
 
 
@@ -304,6 +301,7 @@ major-modes and so on.
 
 #+begin_src emacs-lisp
   (use-package which-key
+    :ensure nil
     :diminish
     :config
     (setq which-key-sort-order 'which-key-key-order-alpha
@@ -758,15 +756,6 @@ Corfu enhances completion at point with a small completion popup.
     (global-corfu-mode))
 #+end_src
 
-*** TODO Cape
-Cape provides Completion At Point Extensions which can be used in combination
-with the Corfu completion UI or the default completion
-UI. https://github.com/minad/cape
-
-#+begin_src emacs-lisp
-  (use-package cape)
-#+end_src
-
 *** hippie-expand
 Use hippie-expand instead of dabbrev-expand.
 
@@ -854,14 +843,6 @@ Let's use the built-in module to manage different projects.
           magit-bury-buffer-function #'magit-restore-window-configuration))
 #+end_src
 
-Magit todos
-#+begin_src emacs-lisp
-  (use-package magit-todos
-    :after magit
-    :hook
-    (magit-status-mode . magit-todos-mode))
-#+end_src
-
 ** eldoc
 #+begin_src emacs-lisp
   (use-package eldoc
@@ -896,6 +877,17 @@ Magit todos
           eglot-connect-timeout 180
           eglot-inlay-hints-mode nil
           eglot-ignored-server-capabilities '(:inlayHintProvider)))
+#+end_src
+
+#+begin_src emacs-lisp
+  (use-package eglot-booster
+    :vc (eglot-booster
+         :url "https://github.com/jdtsmith/eglot-booster"
+         :branch "main"
+         :rev :newest)
+    :after eglot
+    :config (eglot-booster-mode))
+
 #+end_src
 
 [[https://github.com/flycheck/flycheck-eglot][flycheck-eglot]]: A simple “glue” minor mode that allows Flycheck and Eglot to work together.
@@ -1237,21 +1229,23 @@ Tree Sitter support for Typst.
 ** org-mode
 *** settings
 #+begin_src emacs-lisp
+  (defun my/open-inbox ()
+    (interactive)
+    (find-file (concat org-directory "/inbox.org")))
+
   (use-package org
-    :ensure nil
-    :defer t
     :hook (org-mode . org-indent-mode)
     :bind
     (("C-c n c" . org-capture)
      ("C-c n a" . org-agenda-list)
      ("C-c n t" . org-todo-list)
+     ("C-c n i" . my/open-inbox)
      (:map org-mode-map
            ("C-c m h" . consult-org-heading)
            ("C-c m t" . org-tags-view)
            ("C-c m c" . org-cycle-global)))
     :config
     (setq org-directory "~/org"
-          ;; my/org-latex  (concat org-directory "/templates")
           org-todo-keywords '((sequence "TODO(t)" "WAITING(w)" "DOING(g)" "|" "DONE(d)" "CANCELLED(c)"))
           org-log-repeat nil
           org-default-notes-file "~/org/inbox.org"
@@ -1283,16 +1277,9 @@ Org capture configuration
            "* TODO %? %^G\nSCHEDULED: %^t")
           ("i" "Inbox" entry (file "inbox.org")
            "* %? %^G")
-          ("d" "Done" entry (file+datetree "done.org")
-           "* %? %^G")
-          ("p" "Project note" entry (file "projects.org")
-           "* %?\n")
-          ("a" "Area note" entry (file "areas.org")
-           "* %?\n")
-          ("r" "Resource note" entry (file "resources.org")
-           "* %?\n")))
+          ("d" "Done" entry (file+olp+datetree "done.org")
+           "* %? %^G")))
 #+end_src
-
 *** save org buffers after refile
 #+begin_src emacs-lisp
   (advice-add 'org-refile :after 'org-save-all-org-buffers)
@@ -1391,7 +1378,7 @@ application khal and syncing with remote CalDAV calendars using vdirsyncer.
   (use-package aidermacs
     :defer t
     :vc
-    (aidermacs :url "https://github.com/MatthewZMD/aidermacs/")
+    (:url "https://github.com/MatthewZMD/aidermacs/" :rev :newest)
     :bind
     (("C-c a" . aidermacs-transient-menu))
     :config
