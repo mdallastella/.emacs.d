@@ -1373,32 +1373,19 @@ application khal and syncing with remote CalDAV calendars using vdirsyncer.
 
 **
 
-** Aider
-[[https://github.com/MatthewZMD/aidermacs][Aidermacs: AI Pair Programming in Emacs]]
-#+begin_src emacs-lisp
-  (use-package aidermacs
-    :defer t
-    :disabled t
-    :vc
-    (:url "https://github.com/MatthewZMD/aidermacs/" :rev :newest)
-    :bind
-    (("C-c a" . aidermacs-transient-menu))
-    :config
-    (setenv "ANTHROPIC_API_KEY" my/anthropic-api-key)
-    (setq aidermacs-default-model "anthropic/claude-3-5-sonnet-20241022"
-          aidermacs-backend 'vterm))
-#+end_src
-
 ** gptel
 [[https://github.com/karthink/gptel][gptel]]: a simple Large Language Model chat client for Emacs
 #+begin_src emacs-lisp
   (use-package gptel
+    :bind
+    (("C-c a" . gptel-menu))
     :config
     (setq gptel-model 'claude-3-sonnect-20240229
           gptel-backend (gptel-make-anthropic "Claude"
                           :key my/anthropic-api-key
                           :stream t)))
 #+end_src
+
 
 * Tangle and compite configuration on save
 Automatically tangle ~config.org~ file when saving.
