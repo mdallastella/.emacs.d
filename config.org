@@ -1387,6 +1387,15 @@ application khal and syncing with remote CalDAV calendars using vdirsyncer.
                           :stream t)))
 #+end_src
 
+** Wakatime
+#+begin_src emacs-lisp
+  (use-package wakatime-mode
+    :config
+    (setq wakatime-api-key my/wakatime-api-key
+          wakatime-cli-path "/home/mds/.wakatime/wakatime-cli")
+    (global-wakatime-mode))
+#+end_src
+
 
 * Tangle and compite configuration on save
 Automatically tangle ~config.org~ file when saving.
