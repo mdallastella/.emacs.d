@@ -1027,7 +1027,8 @@ I want the REPL always on the right side.
     (:map clojure-mode-map
           ("C-c m c s" . clay-start)
           ("C-c m c m" . clay-make-ns-html)
-          ("C-c m c k" . clay-make-last-sexp)))
+          ("C-c m c k" . clay-make-last-sexp)
+          ("C-c m c q" . clay-make-ns-quarto-html)))
 #+end_src
 
 ** JavaScript
