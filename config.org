@@ -482,7 +482,7 @@ Set my favorite font.
     (setq modus-themes-mixed-fonts nil
           modus-themes-italic-constructs t
           modus-themes-bold-constructs t)
-    (load-theme 'modus-vivendi-tinted))
+    (load-theme 'modus-vivendi-tinted t))
 #+end_src
 
 ** Modeline
