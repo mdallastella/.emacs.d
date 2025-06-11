@@ -1186,6 +1186,7 @@ An emacs mode for syntax highlighting structurizr dsl files.
 Tree Sitter support for Typst.
 #+begin_src emacs-lisp
   (use-package typst-ts-mode
+    :defer t
     :vc
     (typst-ts-mode :url "https://codeberg.org/meow_king/typst-ts-mode/")
     :custom
@@ -1328,14 +1329,27 @@ link with a title of a page found by the URL into the current buffer.
     :defer t
     :mode ("\\.epub\\'" . nov-mode))
   #+end_src
-
-** Pocket
+*** org-babel
+Configuration for literate programming (mainly clojure).
 #+begin_src emacs-lisp
-  (use-package pocket-reader
+  (use-package ob-clojure
+    :ensure nil
     :config
-    (setq pocket-reader-url-priorities '(resolved_url given_url)))
+    (setq org-babel-clojure-backend 'cider)
+    (require 'cider))
 #+end_src
 
+** Wallabag
+[[https://github.com/chenyanming/wallabag.el][wallabag.el]] - Emacs Wallabag client.
+
+#+begin_src emacs-lisp
+  (use-package wallabag
+    :defer t
+    :config
+    (setq wallabag-host "https://wb.dallastella.name"
+          wallabag-search-print-items '("title" "domain" "tag" "reading-time" "date")
+          wallabag-search-page-max-rows 32))
+#+end_src
 ** Calendars
 khalel: Interacting through Emacs with locally-stored calendars via the console
 application khal and syncing with remote CalDAV calendars using vdirsyncer.
