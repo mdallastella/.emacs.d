@@ -120,7 +120,7 @@ Just good old [[https://github.com/jwiegley/use-package][use-package]] and [[htt
         use-package-always-ensure t
         package-native-compile t)
 
-  ""(use-package use-package-ensure-system-package)
+  (use-package use-package-ensure-system-package)
 #+end_src
 
 ** Start server
