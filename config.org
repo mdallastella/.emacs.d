@@ -1376,8 +1376,6 @@ application khal and syncing with remote CalDAV calendars using vdirsyncer.
           khalel-capture-key "k"))
 #+end_src
 
-**
-
 ** gptel
 [[https://github.com/karthink/gptel][gptel]]: a simple Large Language Model chat client for Emacs
 #+begin_src emacs-lisp
@@ -1401,7 +1399,7 @@ application khal and syncing with remote CalDAV calendars using vdirsyncer.
 #+end_src
 
 
-* Tangle and compite configuration on save
+* Tangle and compile configuration on save
 Automatically tangle ~config.org~ file when saving.
 
 #+begin_src emacs-lisp
@@ -1409,12 +1407,12 @@ Automatically tangle ~config.org~ file when saving.
     (when (string-equal (buffer-file-name) (expand-file-name "~/.emacs.d/config.org"))
       (message "** Tangle config.org file...")
       (let ((org-config-babel-evaluate nil))
-    (org-babel-tangle)
-    (message "** Compile early-init and init files...")
-    (byte-compile-file early-init-file)
-    (byte-compile-file user-init-file))))
+        (org-babel-tangle)
+        (message "** Compile early-init and init files...")
+        (byte-compile-file early-init-file)
+        (byte-compile-file user-init-file))))
 
   (add-hook 'org-mode-hook
-      (lambda ()
-    (add-hook 'after-save-hook #'my/org-babel-tangle-config)))
+            (lambda ()
+              (add-hook 'after-save-hook #'my/org-babel-tangle-config)))
 #+end_src
