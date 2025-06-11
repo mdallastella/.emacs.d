@@ -1293,6 +1293,15 @@ Org capture configuration
     (global-org-modern-mode))
 #+end_src
 
+*** org-alert
+[[https://github.com/spegoraro/org-alert][org-alert]]: Provides notifications for scheduled or deadlined agenda entries.
+#+begin_src emacs-lisp
+  (use-package org-alert
+    :config
+    (setq alert-default-style 'libnotify)
+    (org-alert-enable))
+#+end_src
+
 *** org-cliplink
 A simple command that takes a URL from the clipboard and inserts an org-mode
 link with a title of a page found by the URL into the current buffer.
