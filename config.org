@@ -850,22 +850,22 @@ Let's use the built-in module to manage different projects.
      ("C-c l e" . eldoc-doc-buffer)
      ("C-c l q" . eglot-shutdown))
     :config
-    (setq eglot-send-changes-idle-time (* 60 60)
+    (setq eglot-send-changes-idle-time 0.2
+          eglot-autoshutdown t
           read-process-output-max (* 1024 1024)
           eglot-extend-to-xref t
-          eglot-connect-timeout 180
+          eglot-connect-timeout 1200
           eglot-inlay-hints-mode nil
-          eglot-ignored-server-capabilities '(:inlayHintProvider)))
+          eglot-ignored-server-capabilities '(:inlayHintProvider
+                                              :documentOnTypeFormattingProvider
+                                              :documentHighlightProvider)))
 #+end_src
 
 #+begin_src emacs-lisp
   (use-package eglot-booster
-    :vc (eglot-booster
-         :url "https://github.com/jdtsmith/eglot-booster"
-         :branch "main"
-         :rev :newest)
     :after eglot
-    :config (eglot-booster-mode))
+    :config
+    (eglot-booster-mode))
 
 #+end_src
 
