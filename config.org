@@ -1108,7 +1108,9 @@ Derive astro-mode from web-mode and add lsp support.
     :mode ("\\.json\\'" "\\.jsonc\\'")
     :bind
     (:map json-mode-map
-          ("C-c C-j" . jq-interactively)))
+          ("C-c C-j" . jq-interactively))
+    :config
+    (setq js-indent-level 2))
 
   (use-package jq-mode :after json-mode)
 #+end_src
