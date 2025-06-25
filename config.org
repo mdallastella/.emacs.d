@@ -1,13 +1,14 @@
 #+title: Emacs configuration
 #+author: Marco Dalla Stella
 #+created: <2022-10-14 Fri>
-#+property: header-args:emacs-lisp :result silent :tangle ./init.el
+#+date: <2025-06-11 mer>
+#+property: header-args:emacs-lisp :result silent :tangle ./init.el :exports code :eval never-export
 #+startup: fold
 
 * Early init file
 See [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Early-Init-File.html][Early Init File]] on Emacs manual.
 
-#+begin_src emacs-lisp :tangle ./early-init.el
+#+begin_src emacs-lisp :tangle ./early-init.el :results silent :exports code :eval never-export
    ;;; early-init.el --- Early Init File -*- lexical-binding: t -*-
 
   ;; Do not resize the frame at this early stage.
@@ -1084,18 +1085,6 @@ Derive vue-mode from web-mode and add lsp support.
                         :initializationOptions ,(my/vue-eglot-setup)))
           eglot-server-programs))
 #+end_src
-** Astro
-Derive astro-mode from web-mode and add lsp support.
-#+begin_src emacs-lisp
-  (define-derived-mode astro-mode web-mode "Astro mode")
-  (add-to-list 'auto-mode-alist '("\\.astro\\'" . astro-mode))
-
-  (with-eval-after-load 'eglot
-    (add-to-list 'eglot-server-programs
-                 '(astro-mode . ("astro-ls" "--stdio"
-                                 :initializationOptions
-                                 (:typescript (:tsdk "./node_modules/typescript/lib"))))))
-#+end_src
 ** YAML
 #+begin_src emacs-lisp
   (use-package yaml-ts-mode
@@ -1118,18 +1107,6 @@ Derive astro-mode from web-mode and add lsp support.
 #+begin_src emacs-lisp
   (use-package docker :defer t)
   (use-package dockerfile-mode :defer t)
-#+end_src
-** REST
-Verb - Verb is a package for Emacs which allows you to organize and send HTTP
-requests.
-
-#+begin_src emacs-lisp
-  (use-package verb
-    :after org
-    :defer t
-    :config
-    (setq verb-auto-kill-response-buffers t)
-    (define-key org-mode-map (kbd "C-c C-r") verb-command-map))
 #+end_src
 ** Python
 *** Python virtual environment
@@ -1174,14 +1151,6 @@ I have to deal with this s**t sometimes... :(
 #+begin_src emacs-lisp
   (use-package php-mode
     :defer t)
-#+end_src
-
-** Structrizr DSL
-An emacs mode for syntax highlighting structurizr dsl files.
-
-#+begin_src emacs-lisp
-  (use-package structurizr-mode
-    :vc (structurizr-mode :url "https://github.com/gilesp/structurizr-mode"))
 #+end_src
 
 ** Typst
@@ -1349,6 +1318,13 @@ Configuration for literate programming (mainly clojure).
     (setq org-babel-clojure-backend 'cider)
     (require 'cider))
 #+end_src
+*** ox-typst
+org-mode to typst configuration.
+
+#+begin_src emacs-lisp
+  (use-package ox-typst
+    :after org)
+#+end_src
 
 ** Wallabag
 [[https://github.com/chenyanming/wallabag.el][wallabag.el]] - Emacs Wallabag client.
@@ -1361,21 +1337,6 @@ Configuration for literate programming (mainly clojure).
           wallabag-search-print-items '("title" "domain" "tag" "reading-time" "date")
           wallabag-search-page-max-rows 32))
 #+end_src
-** Calendars
-khalel: Interacting through Emacs with locally-stored calendars via the console
-application khal and syncing with remote CalDAV calendars using vdirsyncer.
-
-#+begin_src emacs-lisp
-  (use-package khalel
-    :after org
-    :bind
-    (("C-c u k" . khalel-import-events))
-    :config
-    (setq khalel-import-org-file "~/org/calendars.org"
-          khalel-import-org-file-confirm-overwrite nil
-          khalel-capture-key "k"))
-#+end_src
-
 ** gptel
 [[https://github.com/karthink/gptel][gptel]]: a simple Large Language Model chat client for Emacs
 #+begin_src emacs-lisp
@@ -1387,15 +1348,6 @@ application khal and syncing with remote CalDAV calendars using vdirsyncer.
           gptel-backend (gptel-make-anthropic "Claude"
                           :key my/anthropic-api-key
                           :stream t)))
-#+end_src
-
-** Wakatime
-#+begin_src emacs-lisp
-  (use-package wakatime-mode
-    :config
-    (setq wakatime-api-key my/wakatime-api-key
-          wakatime-cli-path "/home/mds/.wakatime/wakatime-cli")
-    (global-wakatime-mode))
 #+end_src
 
 
