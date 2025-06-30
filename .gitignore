@@ -48,3 +48,4 @@ straight/
 .aider*
 /projects
 /personal.el.gpg
+/oauth2-auto.plist
