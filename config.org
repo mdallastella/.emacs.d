@@ -859,12 +859,15 @@ Let's use the built-in module to manage different projects.
                                               :documentHighlightProvider)))
 #+end_src
 
+
+
 #+begin_src emacs-lisp
   (use-package eglot-booster
+    :vc
+    (eglot-booster :url "https://github.com/jdtsmith/eglot-booster")
     :after eglot
     :config
     (eglot-booster-mode))
-
 #+end_src
 
 [[https://github.com/flycheck/flycheck-eglot][flycheck-eglot]]: A simple “glue” minor mode that allows Flycheck and Eglot to work together.
