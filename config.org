@@ -1011,6 +1011,16 @@ I want the REPL always on the right side.
           ("C-c m c q" . clay-make-ns-quarto-html)))
 #+end_src
 
+** Lisp
+*** Sly
+[[https://joaotavora.github.io/sly][SLY]] is a Common Lisp IDE for Emacs.
+#+begin_src emacs-lisp
+  (use-package sly
+    :defer t
+    :config
+    (setq inferior-lisp-program "sbcl"))
+#+end_src
+
 ** JavaScript
 [[https://github.com/mooz/js2-mode][js2-mode]]: Improved JavaScript editing mode for GNU Emacs.
 
