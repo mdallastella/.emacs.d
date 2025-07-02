@@ -1183,7 +1183,6 @@ Tree Sitter support for Typst.
 ** markdown
 #+begin_src emacs-lisp
   (use-package markdown-mode
-    :defer t
     :init
     (setq markdown-hide-urls t
           markdown-asymmetric-header t)
