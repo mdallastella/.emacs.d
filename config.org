@@ -587,12 +587,9 @@ Tabspaces leverages tab-bar.el and project.el for workspaces.
     :config
     (setq tabspaces-use-filtered-buffers-as-default t
           tabspaces-default-tab "main"
-          tabspaces-session-project-session-store (no-littering-expand-var-file-name "tabspaces-sessions/")
-
           tabspaces-remove-to-default t
           tabspaces-include-buffers '("*scratch*")
           tabspaces-initialize-project-with-todo nil
-          tabspaces-session t
           tab-bar-new-tab-choice "*scratch*"))
 #+end_src
 
@@ -1196,7 +1193,8 @@ Tree Sitter support for Typst.
     (find-file (concat org-directory "/inbox.org")))
 
   (use-package org
-    :hook (org-mode . org-indent-mode)
+    :hook ((org-mode . org-indent-mode)
+           (org-mode . auto-fill-mode))
     :bind
     (("C-c t c" . org-capture)
      ("C-c t a" . org-agenda-list)
@@ -1353,10 +1351,52 @@ org-mode to typst configuration.
     :bind
     (("C-c a" . gptel-menu))
     :config
-    (setq gptel-model 'claude-3-sonnect-20240229
-          gptel-backend (gptel-make-anthropic "Claude"
-                          :key my/anthropic-api-key
+    (setq gptel-backend (gptel-make-gemini "Gemini"
+                          :key my/gemini-api-key
                           :stream t)))
+#+end_src
+** Denote
+[[https://protesilaos.com/emacs/denote][Denote]] configuration
+
+#+begin_src emacs-lisp
+  (use-package denote-org
+    :ensure t)
+
+  (use-package denote
+    :hook
+    (dired-mode . denote-dired-mode)
+    :bind
+    ((:map global-map
+           ("C-c n n" . denote-open-or-create)
+           ("C-c n d" . denote-dired)
+           ("C-c n g" . denote-grep)
+           ("C-c n e" . denote-region))
+     (:map org-mode-map
+           ("C-c n l" . denote-link)
+           ("C-c n L" . denote-add-links)
+           ("C-c n r" . denote-rename-file-using-front-matter)
+           ("C-c n E" . denote-org-extract-org-subtree)
+           ("C-c n I" . denote-org-dblock-insert-files-as-headings)))
+    :config
+    (setq denote-directory (expand-file-name "~/notes")
+          denote-file-type 'org
+          denote-save-buffers nil
+          denote-known-keywords '()
+          denote-prompts '(title)
+          denote-rename-confirmations '(rewrite-front-matter modify-file-name)))
+#+END_SRC
+
+
+* Initial buffers (homemade dashboard)
+#+begin_src emacs-lisp
+  (defun setup-initial-buffers ()
+    "Open inbox.org and todo.org at the start"
+    (interactive)
+    (find-file "~/org/inbox.org")
+    (split-window-right)
+    (find-file "~/org/todo.org"))
+
+  (add-hook 'after-init-hook 'setup-initial-buffers)
 #+end_src
 
 
