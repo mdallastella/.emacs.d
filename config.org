@@ -70,6 +70,10 @@ See [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Early-Init-File.
   (epa-file-enable)
   (load-file (locate-user-emacs-file "personal.el.gpg"))
   (require 'personal)
+
+  (require 'plstore)
+  (setq plstore-cache-passphrase-for-symmetric-encryption t)
+  (add-to-list 'plstore-encrypt-to my/gpg-key)
 #+end_src
 
 ** custom.el
@@ -472,15 +476,14 @@ Set my favorite font.
 #+end_src
 
 ** Theme
-[[https://github.com/doomemacs/themes][GitHub - doomemacs/themes: A megapack of themes for GNU Emacs.]]
-
 #+begin_src emacs-lisp
-  (use-package modus-themes
+  (use-package catppuccin-theme
+    :init
+    (setq catppuccin-flavor 'mocha)
     :config
-    (setq modus-themes-mixed-fonts nil
-          modus-themes-italic-constructs t
-          modus-themes-bold-constructs t)
-    (load-theme 'modus-vivendi-tinted t))
+    (setq catppuccin-italic-comments t
+          catppuccin-highlight-matches t)
+    (load-theme 'catppuccin t))
 #+end_src
 
 ** Modeline
