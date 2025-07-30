@@ -1231,7 +1231,8 @@ Tree Sitter support for Typst.
           org-fontify-quote-and-verse-blocks t
           org-src-tab-acts-natively t
           org-adapt-indentation t
-          org-use-sub-superscripts nil))
+          org-use-sub-superscripts nil
+          org-ascii-headline-spacing '(0 . 0)))
 #+end_src
 *** org-capture
 Org capture configuration
@@ -1243,7 +1244,11 @@ Org capture configuration
           ("i" "Inbox" entry (file "inbox.org")
            "* %? %^G")
           ("d" "Done" entry (file+olp+datetree "done.org")
-           "* %? %^G")))
+           "* %? %^G")
+          ("j" "Journal" entry (file denote-journal-path-to-new-or-existing-entry)
+           "* %U %?\n%i\n%a"
+           :kill-buffer t
+           :empty-lines 1)))
 #+end_src
 *** save org buffers after refile
 #+begin_src emacs-lisp
@@ -1365,7 +1370,10 @@ org-mode to typst configuration.
 
 #+begin_src emacs-lisp
   (use-package denote-org
-    :ensure t)
+    :ensure t
+    :after denote
+    :config
+    (setq denote-org-store-link-to-heading 'id))
 
   (use-package denote
     :hook
@@ -1385,11 +1393,23 @@ org-mode to typst configuration.
     :config
     (setq denote-directory (expand-file-name "~/notes")
           denote-file-type 'org
-          denote-save-buffers nil
-          denote-known-keywords '()
-          denote-prompts '(title)
-          denote-rename-confirmations '(rewrite-front-matter modify-file-name)))
+          denote-save-buffers nil)
+    (denote-rename-buffer-mode))
 #+END_SRC
+*** [[https://protesilaos.com/emacs/denote-journal][Denote Journal (denote-journal.el)]]
+#+begin_src emacs-lisp
+  (use-package denote-journal
+    :ensure t
+    :after denote
+    :commands (denote-journal-new-entry
+               denote-journal-new-or-existing-entry
+               denote-journal-link-or-create-entry)
+    :hook (calendar-mode . denote-journal-calendar-mode)
+    :config
+    (setq denote-journal-directory (expand-file-name "jrnl" denote-directory)
+          denote-journal-keyword "jrnl"
+          denote-journal-title-format "%Y %m %d"))
+#+end_src
 
 
 * Initial buffers (homemade dashboard)
