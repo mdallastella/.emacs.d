@@ -667,8 +667,10 @@ completing-read.
      ("C-c f g" . consult-ripgrep))
     :config
     (recentf-mode t)
-    (consult-customize consult--source-buffer :hidden t :default nil)
-    ;; (add-to-list 'consult-buffer-sources 'persp-consult-source)
+    (setq consult-buffer-sources '(consult--source-project-buffer
+                                   consult--source-buffer
+                                   consult--source-hidden-buffer
+                                   consult--source-project-recent-file))
     (setq consult-preview-key "M-."))
 #+end_src
 
