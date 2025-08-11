@@ -1379,17 +1379,7 @@ org-mode to typst configuration.
           wallabag-search-print-items '("title" "domain" "tag" "reading-time" "date")
           wallabag-search-page-max-rows 32))
 #+end_src
-** gptel
-[[https://github.com/karthink/gptel][gptel]]: a simple Large Language Model chat client for Emacs
-#+begin_src emacs-lisp
-  (use-package gptel
-    :bind
-    (("C-c a" . gptel-menu))
-    :config
-    (setq gptel-backend (gptel-make-gemini "Gemini"
-                          :key my/gemini-api-key
-                          :stream t)))
-#+end_src
+
 ** Denote
 [[https://protesilaos.com/emacs/denote][Denote]] configuration
 
@@ -1421,19 +1411,54 @@ org-mode to typst configuration.
           denote-save-buffers nil)
     (denote-rename-buffer-mode))
 #+END_SRC
-*** [[https://protesilaos.com/emacs/denote-journal][Denote Journal (denote-journal.el)]]
+
+
+* LLM
+** chatgpt-shell
+[[https://github.com/xenodium/chatgpt-shell][xenodium/chatgpt-shell: A multi-llm Emacs shell (ChatGPT, Claude, De...]]
+
 #+begin_src emacs-lisp
-  (use-package denote-journal
-    :ensure t
-    :after denote
-    :commands (denote-journal-new-entry
-               denote-journal-new-or-existing-entry
-               denote-journal-link-or-create-entry)
-    :hook (calendar-mode . denote-journal-calendar-mode)
+  (use-package chatgpt-shell
+    :defer t
+    :bind
+    ("C-c u a" . chatgpt-shell-transient)
+    :custom
+    (chatgpt-shell-openrouter-key my/openrouter-key)
     :config
-    (setq denote-journal-directory (expand-file-name "jrnl" denote-directory)
-          denote-journal-keyword "jrnl"
-          denote-journal-title-format "%Y %m %d"))
+    (setq chatgpt-shell-welcome-function nil
+          chatgpt-shell-model-version "anthropic/claude-3.7-sonnet"))
+#+end_src
+
+** gptel
+#+begin_src emacs-lisp
+  (use-package gptel
+    :defer t
+    :config
+    ;; OpenRouter offers an OpenAI compatible API
+    (setq gptel-model 'anthropic/claude-3.5-sonnet
+          gptel-backend (gptel-make-openai "OpenRouter"
+                          :host "openrouter.ai"
+                          :endpoint "/api/v1/chat/completions"
+                          :stream t
+                          :key my/openrouter-key
+                          :models '(openai/gpt-3.5-turbo
+                                    anthropic/claude-3.5-sonnet
+                                    google/gemini-pro))))
+#+end_src
+
+** aider
+[[https://github.com/MatthewZMD/aidermacs][aidermacs]] - AI Pair Programming in Emacs with Aider
+
+#+begin_src emacs-lisp
+  (use-package aidermacs
+    :defer t
+    :bind
+    (("C-c a" . aidermacs-transient-menu))
+    :config
+    (setenv "OPENROUTER_API_KEY" my/openrouter-key)
+    (setq aidermacs-default-model "openrouter/anthropic/claude-3.7-sonnet"
+          aidermacs-backend 'vterm
+          aidermacs-watch-files t))
 #+end_src
 
 
