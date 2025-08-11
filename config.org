@@ -761,6 +761,16 @@ Use built-in dictionary-el.
           dictionary-use-single-buffer t))
 #+end_src
 
+** Mastodon
+[[https://codeberg.org/martianh/mastodon.el][Mastodon.el]] - A mastodon client for Emacs
+
+#+begin_src emacs-lisp
+  (use-package mastodon
+    :config
+    (setq mastodon-instance-url "https://functional.cafe"
+          mastodon-active-user "mdallastella"))
+#+end_src
+
 
 * Programming
 ** Indenting
