@@ -1176,6 +1176,23 @@ Tree Sitter support for Typst.
     (keymap-set typst-ts-mode-map "C-c C-c" #'typst-ts-tmenu))
 #+end_src
 
+** KDL
+Major mode to edit [[https://kdl.dev/][The KDL Document Language]]
+
+#+begin_src emacs-lisp
+  (use-package kdl-mode
+    :defer t
+    :mode ("\\.kdl\\'"))
+#+end_src
+
+** Rust
+Rust setup
+
+#+begin_src emacs-lisp
+  (use-package rust-mode
+    :defer t)
+#+end_src
+
 
 * Productivity
 ** markdown
