@@ -1483,10 +1483,8 @@ Automatically tangle ~config.org~ file when saving.
     (when (string-equal (buffer-file-name) (expand-file-name "~/.emacs.d/config.org"))
       (message "** Tangle config.org file...")
       (let ((org-config-babel-evaluate nil))
-        (org-babel-tangle)
-        (message "** Compile early-init and init files...")
-        (byte-compile-file early-init-file)
-        (byte-compile-file user-init-file))))
+        (org-babel-tangle))))
+
 
   (add-hook 'org-mode-hook
             (lambda ()
