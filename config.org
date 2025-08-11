@@ -1,7 +1,7 @@
 #+title: Emacs configuration
 #+author: Marco Dalla Stella
 #+created: <2022-10-14 Fri>
-#+date: <2025-06-11 mer>
+#+date: <2025-07-30 Wed>
 #+property: header-args:emacs-lisp :result silent :tangle ./init.el :exports code :eval never-export
 #+startup: fold
 
@@ -110,31 +110,14 @@ Just good old [[https://github.com/jwiegley/use-package][use-package]] and [[htt
 
   (setq package-archives
         '(("gnu-elpa" . "https://elpa.gnu.org/packages/")
-          ("gnu-elpa-devel" . "https://elpa.gnu.org/devel/")
           ("nongnu" . "https://elpa.nongnu.org/nongnu/")
           ("melpa" . "https://melpa.org/packages/")))
 
   (setq package-archive-priorities
-        '(("gnu-elpa" . 3)
-          ("melpa" . 2)
+        '(("melpa" . 3)
+          ("gnu-elpa" . 2)
           ("nongnu" . 1)))
-
-  (setq package-install-upgrade-built-in nil
-        package-native-compile t)
-
-  (use-package use-package-ensure-system-package)
 #+end_src
-
-** Start server
-Start an Emacs daemon (server)
-
-#+begin_src emacs-lisp
-  (use-package server
-    :commands (server-running-p)
-    :init
-    (unless (server-running-p)
-      (server-start)))
- #+end_src
 
 ** Benchmark init
 Enable benchmarking only when needed.
@@ -434,7 +417,10 @@ braces, brackets, etc.
 decision tree.
 
 #+begin_src emacs-lisp
-  (use-package avy)
+  (use-package avy
+    :bind
+    (("M-g l" . avy-goto-line)
+     ("M-g j" . avy-goto-char-2)))
 #+end_src
 
 ** Symbol overlay
@@ -443,10 +429,12 @@ about highlighted symbols.
 
 #+begin_src emacs-lisp
   (use-package symbol-overlay
+    :command symbol-overlay-mode
     :bind-keymap
     ("C-c o" . symbol-overlay-map)
-    :hook
-    ((text-mode prog-mode) . symbol-overlay-mode))
+    :config
+    (add-hook 'prog-mode-hook #'symbol-overlay-mode)
+    (add-hook 'text-mode-hook #'symbol-overlay-mode))
 #+end_src
 
 
@@ -502,8 +490,9 @@ Set my favorite font.
     (show-paren-mode t))
 
   (use-package rainbow-delimiters
-    :hook
-    ((prog-mode cider-repl-mode) . rainbow-delimiters-mode))
+    :commands rainbow-delimiters-mode
+    :init
+    (add-hook 'prog-mode-hook 'rainbow-delimiters-mode))
 #+end_src
 
 ** Use icons
@@ -584,7 +573,7 @@ ace-window
 Tabspaces leverages tab-bar.el and project.el for workspaces.
 #+begin_src emacs-lisp
   (use-package tabspaces
-    :hook (after-init . tabspaces-mode) ;; use this only if you want the minor-mode loaded at startup.
+    :hook (after-init . tabspaces-mode)
     :commands (tabspaces-switch-or-create-workspace
                tabspaces-open-or-create-project-and-workspace)
     :config
@@ -606,7 +595,8 @@ Tabspaces leverages tab-bar.el and project.el for workspaces.
 I use [[https://mise.jdx.dev/][mise-en-place]] to manage my dev environments.
 #+begin_src emacs-lisp
   (use-package mise
-    :hook (after-init . global-mise-mode))
+    :config
+    (global-mise-mode))
 #+end_src
 
 ** vterm
@@ -653,11 +643,8 @@ completing-read.
   (use-package consult
     :bind
     (("M-g g" . consult-goto-line)
-     ("M-g G" . consult-goto-line-numbers)
-     ("M-g o" . consult-outline)
      ("M-g m" . consult-mark)
      ("M-g k" . consult-global-mark)
-     ("C-c h" . consult-history)
      ("C-c b b" . consult-buffer)
      ("C-c c c" . consult-imenu)
      ("C-c c f" . consult-flymake)
@@ -714,13 +701,12 @@ minibuffer for your completion candidates.
 *** jinx
 #+begin_src emacs-lisp
   (use-package jinx
-    :hook
-    (emacs-startup . global-jinx-mode)
     :bind
     ("C-c s s" . jinx-correct)
     ("C-c s l" . jinx-languages)
     :config
-    (setq jinx-languages "en_US it_IT"))
+    (setq jinx-languages "en_US it_IT")
+    (global-jinx-mode))
 #+end_src
 
 ** Completion
