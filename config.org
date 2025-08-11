@@ -1214,9 +1214,8 @@ Rust setup
     :hook ((org-mode . org-indent-mode)
            (org-mode . auto-fill-mode))
     :bind
-    (("C-c t c" . org-capture)
+    (("C-c t t" . org-capture)
      ("C-c t a" . org-agenda-list)
-     ("C-c t t" . org-todo-list)
      ("C-c t i" . my/open-inbox)
      (:map org-mode-map
            ("C-c m h" . consult-org-heading)
@@ -1258,10 +1257,10 @@ Org capture configuration
            "* %? %^G")
           ("d" "Done" entry (file+olp+datetree "done.org")
            "* %? %^G")
-          ("j" "Journal" entry (file denote-journal-path-to-new-or-existing-entry)
+          ("j" "Journal" entry (file+olp+datetree "journal.org")
            "* %U %?\n%i\n%a"
            :kill-buffer t
-           :empty-lines 1)))
+           :tree-type 'week)))
 #+end_src
 *** save org buffers after refile
 #+begin_src emacs-lisp
@@ -1298,9 +1297,22 @@ Org capture configuration
 [[https://github.com/spegoraro/org-alert][org-alert]]: Provides notifications for scheduled or deadlined agenda entries.
 #+begin_src emacs-lisp
   (use-package org-alert
+    :disabled
     :config
     (setq alert-default-style 'libnotify)
     (org-alert-enable))
+#+end_src
+
+*** org-wild-notifier
+[[https://github.com/akhramov/org-wild-notifier.el][org-wild-notifier]]: Adds notification support for org-agenda views. With this
+package you’ll get notifications for TODO entries.
+
+#+begin_src emacs-lisp
+  (use-package org-wild-notifier
+    :ensure t
+    :config
+    (setq alert-default-style 'libnotify)
+    (org-wild-notifier-mode))
 #+end_src
 
 *** org-cliplink
