@@ -917,6 +917,7 @@ Clojure settings for Emacs
 #+begin_src emacs-lisp
   (use-package cider
     :defer t
+    :mode "\\.bb\\'"
     :hook
     ((cider-mode . eldoc-mode)
      (clojure-mode . cider-mode)
@@ -1192,6 +1193,19 @@ Rust setup
 #+begin_src emacs-lisp
   (use-package rust-mode
     :defer t)
+#+end_src
+
+Cargo
+
+#+begin_src emacs-lisp
+  (use-package cargo-mode
+    :after rust-mode
+    :hook
+    (rust-mode . cargo-minor-mode)
+    :bind-keymap
+    ("C-c r" . cargo-mode-command-map)
+    :config
+    (setq compilation-scroll-output t))
 #+end_src
 
 
