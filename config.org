@@ -110,13 +110,11 @@ Just good old [[https://github.com/jwiegley/use-package][use-package]] and [[htt
 
   (setq package-archives
         '(("gnu-elpa" . "https://elpa.gnu.org/packages/")
-          ("nongnu" . "https://elpa.nongnu.org/nongnu/")
           ("melpa" . "https://melpa.org/packages/")))
 
-  (setq package-archive-priorities
-        '(("melpa" . 3)
-          ("gnu-elpa" . 2)
-          ("nongnu" . 1)))
+  (require 'use-package-ensure)
+    (setq use-package-always-ensure t)
+    (setq package-check-signature nil)
 #+end_src
 
 ** Benchmark init
@@ -418,9 +416,13 @@ decision tree.
 
 #+begin_src emacs-lisp
   (use-package avy
+    :init
+    (setq avy-background t
+          avy-styles-alist '((avy-go-to-char-timer . at-full))
+          avy-all-windows nil)
     :bind
     (("M-g l" . avy-goto-line)
-     ("M-g j" . avy-goto-char-2)))
+     ("M-g j" . avy-goto-char-timer)))
 #+end_src
 
 ** Symbol overlay
@@ -576,6 +578,9 @@ Tabspaces leverages tab-bar.el and project.el for workspaces.
     :hook (after-init . tabspaces-mode)
     :commands (tabspaces-switch-or-create-workspace
                tabspaces-open-or-create-project-and-workspace)
+    :bind
+    (("M-g w" . tabspaces-switch-or-create-workspace)
+     ("M-g q" . tabspaces-open-or-create-project-and-workspace))
     :config
     (setq tabspaces-use-filtered-buffers-as-default t
           tabspaces-default-tab "main"
@@ -640,25 +645,21 @@ the default completion system.
 completing-read.
 
 #+begin_src emacs-lisp
-  (use-package consult
-    :bind
-    (("M-g g" . consult-goto-line)
-     ("M-g m" . consult-mark)
-     ("M-g k" . consult-global-mark)
-     ("C-c b b" . consult-buffer)
-     ("C-c c c" . consult-imenu)
-     ("C-c c f" . consult-flymake)
-     ("C-c c r" . consult-recent-file)
-     ("C-c c e" . consult-compile-error)
-     ("C-c c m" . consult-mode-command)
-     ("C-c f g" . consult-ripgrep))
-    :config
-    (recentf-mode t)
-    (setq consult-buffer-sources '(consult--source-project-buffer
-                                   consult--source-buffer
-                                   consult--source-hidden-buffer
-                                   consult--source-project-recent-file))
-    (setq consult-preview-key "M-."))
+    (use-package consult
+      :bind
+      (("M-g l" . consult-goto-line)
+       ("M-g b" . consult-buffer)
+       ("M-g i" . consult-imenu)
+       ("M-g f" . consult-flymake)
+       ("M-g g" . consult-ripgrep)
+       ("M-g o" . consult-org-heading))
+      :config
+      (recentf-mode t)
+      (setq consult-buffer-sources '(consult--source-project-buffer
+                                     consult--source-buffer
+                                     consult--source-hidden-buffer
+                                     consult--source-project-recent-file))
+      (setq consult-preview-key "M-."))
 #+end_src
 
 *** Marginalia
