@@ -1272,6 +1272,10 @@ Org capture configuration
            "* %? %^G")
           ("d" "Done" entry (file+olp+datetree "done.org")
            "* %? %^G")
+          ("p" "Protocol" entry (file "inbox.org")
+          "* %^{Title}\nSource: %u, %c\n #+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?")
+              ("L" "Protocol Link" entry (file "inbox.org")
+           "* %? [[%:link][%:description]] \nCaptured On: %U")
           ("j" "Journal" entry (file+olp+datetree "journal.org")
            "* %U %?\n%i\n%a"
            :kill-buffer t
@@ -1306,16 +1310,6 @@ Org capture configuration
           org-agenda-current-time-string
           "⭠ now ─────────────────────────────────────────────────")
     (global-org-modern-mode))
-#+end_src
-
-*** org-alert
-[[https://github.com/spegoraro/org-alert][org-alert]]: Provides notifications for scheduled or deadlined agenda entries.
-#+begin_src emacs-lisp
-  (use-package org-alert
-    :disabled
-    :config
-    (setq alert-default-style 'libnotify)
-    (org-alert-enable))
 #+end_src
 
 *** org-wild-notifier
