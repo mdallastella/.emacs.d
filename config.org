@@ -422,7 +422,7 @@ braces, brackets, etc.
     (puni-global-mode))
 #+end_src
 
-** Jump around
+** Avy - Jump around
 [[https://github.com/abo-abo/avy][avy]] is a GNU Emacs package for jumping to visible text using a char-based
 decision tree.
 
@@ -434,7 +434,7 @@ decision tree.
           avy-all-windows nil)
     :bind
     (("M-g l" . avy-goto-line)
-     ("M-g j" . avy-goto-char-timer)))
+     ("M-j" . avy-goto-char-timer)))
 #+end_src
 
 ** Symbol overlay
@@ -452,6 +452,13 @@ about highlighted symbols.
 #+end_src
 
 
+** Expand region
+[[https://github.com/magnars/expand-region.el][expand-region.el]] — Expand region selection.
+
+#+begin_src emacs-lisp
+  (use-package expand-region
+    :bind ("C-/" . er/expand-region))
+#+end_src
 
 * UI
 ** Frame title
