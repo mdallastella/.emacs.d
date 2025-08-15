@@ -1238,7 +1238,7 @@ Cargo
     :mode ("\\.md" . gfm-mode))
 #+end_src
 ** org-mode
-*** settings
+*** Settings
 #+begin_src emacs-lisp
   (defun my/open-inbox ()
     (interactive)
@@ -1266,7 +1266,7 @@ Cargo
           org-archive-mark-done t
           org-refile-targets `((,(directory-files "~/org" t "\\.org$") . (:maxlevel . 2)))
           org-use-tag-inheritance t
-          org-refile-use-cache nil
+          org-refile-use-cache t
           org-refile-use-outline-path 'file
           org-refile-allow-creating-parent-nodes 'confirm
           org-outline-path-complete-in-steps nil
@@ -1278,7 +1278,12 @@ Cargo
           org-src-tab-acts-natively t
           org-adapt-indentation t
           org-use-sub-superscripts nil
-          org-ascii-headline-spacing '(0 . 0)))
+          org-ascii-headline-spacing '(0 . 0)
+          org-structure-template-alist '(("s" . "src")
+                                         ("e" . "src emacs-lisp")
+                                         ("x" . "example")
+                                         ("X" . "export")
+                                         ("q" . "quote"))))
 #+end_src
 *** org-capture
 Org capture configuration
@@ -1289,19 +1294,17 @@ Org capture configuration
            "* TODO %? %^G\nSCHEDULED: %^t")
           ("i" "Inbox" entry (file "inbox.org")
            "* %? %^G")
-          ("d" "Done" entry (file+olp+datetree "done.org")
-           "* %? %^G")
           ("p" "Protocol" entry (file "inbox.org")
-          "* %^{Title}\nSource: %u, %c\n #+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?")
-              ("L" "Protocol Link" entry (file "inbox.org")
+           "* %^{Title}\nSource: %u, %c\n #+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?")
+          ("L" "Protocol Link" entry (file "inbox.org")
            "* %? [[%:link][%:description]] \nCaptured On: %U")
           ("j" "Journal" entry (file+olp+datetree "journal.org")
-           "* %U %?\n%i\n%a"
-           :kill-buffer t
-           :tree-type 'week)))
+           "* %U %?\n%i\n%a" :kill-buffer t :tree-type week)))
 #+end_src
-*** save org buffers after refile
+*** save org buffers after refile, capture, and todo status change
 #+begin_src emacs-lisp
+  (add-hook 'org-capture-after-finalize-hook #'org-save-all-org-buffers)
+  (add-hook 'org-after-todo-state-change-hook #'org-save-all-org-buffers)
   (advice-add 'org-refile :after 'org-save-all-org-buffers)
 #+end_src
 
