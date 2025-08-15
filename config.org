@@ -84,7 +84,7 @@ Store ~custom.el~ in a separate file
   (load custom-file :no-error-if-file-is-missing)
 #+end_src
 
-** Maximize windows by default.
+** Maximize windows by default
 #+begin_src emacs-lisp
   (add-hook 'emacs-startup-hook 'toggle-frame-maximized)
 #+end_src
@@ -157,6 +157,18 @@ Store backups and autosave files in ~/tmp~.
                '("\\`\\*\\(Warnings\\|Compile-Log\\)\\*\\'"
                  (display-buffer-no-window)
                  (allow-no-window . t)))
+#+end_src
+
+** Server mode
+Emacs server mode.
+
+#+begin_src emacs-lisp
+  (use-package server
+    :ensure nil
+    :defer 1
+    :config
+    (unless (server-running-p)
+      (server-start)))
 #+end_src
 
 
