@@ -1256,16 +1256,16 @@ Cargo
            ("C-c m c" . org-cycle-global)))
     :config
     (setq org-directory "~/org"
-          org-todo-keywords '((sequence "TODO(t)" "WAITING(w)" "DOING(g)" "|" "DONE(d)" "CANCELLED(c)"))
+          org-todo-keywords '((sequence "TODO(t)" "WAITING(w)" "NEXT(n)" "|" "DONE(d)" "CANCELLED(c)"))
           org-log-repeat nil
           org-default-notes-file "~/org/inbox.org"
           org-agenda-files (list org-directory)
           org-agenda-restore-windows-after-quit t
           org-archive-location (concat org-directory "/archive/archive.org::datatree/")
           org-archive-mark-done t
-          org-refile-targets `((,(directory-files "~/org" t "\\.org$") . (:maxlevel . 2)))
+          org-refile-targets `((,(directory-files "~/org" t "\\.org$") . (:maxlevel . 3)))
           org-use-tag-inheritance t
-          org-refile-use-cache t
+          org-refile-use-cache nil
           org-refile-use-outline-path 'file
           org-refile-allow-creating-parent-nodes 'confirm
           org-outline-path-complete-in-steps nil
@@ -1292,7 +1292,7 @@ Org capture configuration
         '(("t" "Todo" entry (file "todo.org")
            "* TODO %? %^G\nSCHEDULED: %^t")
           ("i" "Inbox" entry (file "inbox.org")
-           "* %? %^G")
+           "* %? %^G\n:PROPERTIES:\n:ID: %(org-id-new)\n:END:")
           ("p" "Protocol" entry (file "inbox.org")
            "* %^{Title}\nSource: %u, %c\n #+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?")
           ("L" "Protocol Link" entry (file "inbox.org")
@@ -1300,10 +1300,11 @@ Org capture configuration
           ("j" "Journal" entry (file+olp+datetree "journal.org")
            "* %U %?\n%i\n%a" :kill-buffer t :tree-type week)))
 #+end_src
-*** save org buffers after refile, capture, and todo status change
+*** save org buffers after org operations
 #+begin_src emacs-lisp
   (add-hook 'org-capture-after-finalize-hook #'org-save-all-org-buffers)
   (add-hook 'org-after-todo-state-change-hook #'org-save-all-org-buffers)
+  (add-hook 'org-archive-hook #'org-save-all-org-buffers)
   (advice-add 'org-refile :after 'org-save-all-org-buffers)
 #+end_src
 
