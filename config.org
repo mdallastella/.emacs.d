@@ -604,13 +604,13 @@ Tabspaces leverages tab-bar.el and project.el for workspaces.
     :commands (tabspaces-switch-or-create-workspace
                tabspaces-open-or-create-project-and-workspace)
     :bind
-    (("M-g w" . tabspaces-switch-or-create-workspace)
+    (("M-g p" . tabspaces-switch-or-create-workspace)
      ("M-g q" . tabspaces-open-or-create-project-and-workspace))
     :config
     (setq tabspaces-use-filtered-buffers-as-default t
           tabspaces-default-tab "main"
           tabspaces-remove-to-default t
-          tabspaces-include-buffers '("*scratch*")
+          tabspaces-include-buffers '("*scratch*" "*Messages*")
           tabspaces-initialize-project-with-todo nil
           tab-bar-new-tab-choice "*scratch*"))
 #+end_src
