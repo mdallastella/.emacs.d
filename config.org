@@ -516,7 +516,7 @@ Set my favorite font.
     (add-hook 'prog-mode-hook 'rainbow-delimiters-mode))
 #+end_src
 
-** Use icons
+** Use icons and emoji
 [[https://github.com/domtronn/all-the-icons.el][all-the-icons.el]]: A utility package to collect various Icon Fonts and propertize them within Emacs.
 
 #+begin_src emacs-lisp
@@ -539,6 +539,12 @@ alternative to all-the-icons.  This is needed for ~doom-modeline~, sigh...
 
 #+begin_src emacs-lisp
   (use-package nerd-icons)
+#+end_src
+
+#+begin_src emacs-lisp
+  (use-package emojify
+    :config
+    (global-emojify-mode))
 #+end_src
 
 ** Increase line-spacing
