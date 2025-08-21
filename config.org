@@ -597,8 +597,8 @@ Tabspaces leverages tab-bar.el and project.el for workspaces.
     :commands (tabspaces-switch-or-create-workspace
                tabspaces-open-or-create-project-and-workspace)
     :bind
-    (("M-g p" . tabspaces-switch-or-create-workspace)
-     ("M-g q" . tabspaces-open-or-create-project-and-workspace))
+    (("M-g w" . tabspaces-switch-or-create-workspace)
+     ("M-g p" . tabspaces-open-or-create-project-and-workspace))
     :config
     (setq tabspaces-use-filtered-buffers-as-default t
           tabspaces-default-tab "main"
@@ -1251,7 +1251,6 @@ Cargo
      ("C-c t a" . org-agenda-list)
      ("C-c t i" . my/open-inbox)
      (:map org-mode-map
-           ("C-c m h" . consult-org-heading)
            ("C-c m t" . org-tags-view)
            ("C-c m c" . org-cycle-global)))
     :config
