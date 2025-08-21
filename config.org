@@ -1292,7 +1292,7 @@ Org capture configuration
         '(("t" "Todo" entry (file "todo.org")
            "* TODO %? %^G\nSCHEDULED: %^t")
           ("i" "Inbox" entry (file "inbox.org")
-           "* %? %^G\n:PROPERTIES:\n:ID: %(org-id-new)\n:END:")
+           "* NEXT %? %^G\n:PROPERTIES:\n:ID: %(org-id-new)\n:END:")
           ("p" "Protocol" entry (file "inbox.org")
            "* %^{Title}\nSource: %u, %c\n #+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?")
           ("L" "Protocol Link" entry (file "inbox.org")
