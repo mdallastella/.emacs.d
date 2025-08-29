@@ -1445,15 +1445,18 @@ org-mode to typst configuration.
                           :stream t
                           :key my/openrouter-key
                           :models '(openai/gpt-5-chat
-                                    google/gemini-2.5-pro))))
+                                    google/gemini-2.5-pro
+                                    google/gemini-2.5-flash
+                                    deepseek/deepseek-chat-v3.1:free))))
 #+end_src
 ** gptel-magit
 #+begin_src emacs-lisp
   (use-package gptel-magit
     :hook (magit-mode . gptel-magit-install)
     :config
-    (setq gptel-magit-model 'google/gemini-2.5-flash))
+    (setq gptel-magit-model 'deepseek/deepseek-chat-v3.1:free))
 #+end_src
+
 
 * Initial buffers (homemade dashboard)
 #+begin_src emacs-lisp
