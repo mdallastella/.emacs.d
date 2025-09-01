@@ -1397,37 +1397,6 @@ org-mode to typst configuration.
           wallabag-search-page-max-rows 32))
 #+end_src
 
-** Denote
-[[https://protesilaos.com/emacs/denote][Denote]] configuration
-
-#+begin_src emacs-lisp
-  (use-package denote-org
-    :ensure t
-    :after denote
-    :config
-    (setq denote-org-store-link-to-heading 'id))
-
-  (use-package denote
-    :hook
-    (dired-mode . denote-dired-mode)
-    :bind
-    ((:map global-map
-           ("C-c n n" . denote-open-or-create)
-           ("C-c n d" . denote-dired)
-           ("C-c n g" . denote-grep)
-           ("C-c n e" . denote-region))
-     (:map org-mode-map
-           ("C-c n l" . denote-link)
-           ("C-c n L" . denote-add-links)
-           ("C-c n r" . denote-rename-file-using-front-matter)
-           ("C-c n E" . denote-org-extract-org-subtree)
-           ("C-c n I" . denote-org-dblock-insert-files-as-headings)))
-    :config
-    (setq denote-directory (expand-file-name "~/notes")
-          denote-file-type 'org
-          denote-save-buffers nil)
-    (denote-rename-buffer-mode))
-#+END_SRC
 
 
 * LLM
