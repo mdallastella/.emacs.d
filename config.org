@@ -1397,7 +1397,17 @@ org-mode to typst configuration.
           wallabag-search-page-max-rows 32))
 #+end_src
 
+** TickTick
+[[https://github.com/polhuang/ticktick.el][ticktick.el]] enables two-way synchronization between TickTick.
 
+#+begin_src emacs-lisp
+  (use-package ticktick
+    :after org
+    :config
+    (setq ticktick-sync-file (concat org-directory "/ticktick.org")
+          ticktick-client-id my/ticktick-client
+          ticktick-client-secret my/ticktick-secret))
+#+end_src
 
 * LLM
 ** gptel
