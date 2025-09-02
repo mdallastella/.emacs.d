@@ -539,6 +539,11 @@ completion metadata functions.
 #+end_src
 
 #+begin_src emacs-lisp
+  (use-package all-the-icons-ibuffer
+    :hook (ibuffer-mode . all-the-icons-ibuffer-mode))
+#+end_src
+
+#+begin_src emacs-lisp
   (use-package emojify
     :config
     (global-emojify-mode))
@@ -589,6 +594,20 @@ ace-window
     :config
     (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)
           aw-dispatch-always t))
+#+end_src
+
+** iBuffer setup
+#+begin_src emacs-lisp
+  (use-package ibuffer
+    :ensure nil
+    :config
+    (setq ibuffer-expert t
+          ibuffer-display-summary nil
+          ibuffer-show-empty-filter-groups nil
+          ibuffer-use-header-line t))
+
+  (use-package ibuffer-vc
+    :after ibuffer)
 #+end_src
 
 
