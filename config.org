@@ -598,16 +598,17 @@ ace-window
 
 ** iBuffer setup
 #+begin_src emacs-lisp
+  (use-package ibuffer-vc
+    :defer t)
+
   (use-package ibuffer
     :ensure nil
     :config
     (setq ibuffer-expert t
           ibuffer-display-summary nil
           ibuffer-show-empty-filter-groups nil
-          ibuffer-use-header-line t))
-
-  (use-package ibuffer-vc
-    :after ibuffer)
+          ibuffer-use-header-line t
+          ibuffer-default-sorting-mode 'vc-status))
 #+end_src
 
 
