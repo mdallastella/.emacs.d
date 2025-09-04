@@ -1426,8 +1426,10 @@ org-mode to typst configuration.
     :config
     (setq ticktick-sync-file (concat org-directory "/ticktick.org")
           ticktick-client-id my/ticktick-client
-          ticktick-client-secret my/ticktick-secret))
+          ticktick-client-secret my/ticktick-secret
+          ticktick-sync-interval 5))
 #+end_src
+
 
 * LLM
 ** gptel
