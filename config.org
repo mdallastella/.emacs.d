@@ -1262,7 +1262,7 @@ Cargo
            ("C-c m c" . org-cycle-global)))
     :config
     (setq org-directory "~/org"
-          org-todo-keywords '((sequence "TODO(t)" "WAITING(w)" "NEXT(n)" "|" "DONE(d)" "CANCELLED(c)"))
+          org-todo-keywords '((sequence "TODO(t)" "NEXT(n)" "WAIT(w)" "|" "DONE(d)" "CANCELLED(c)"))
           org-log-repeat nil
           org-default-notes-file "~/org/inbox.org"
           org-agenda-files (list org-directory)
@@ -1298,7 +1298,7 @@ Org capture configuration
         '(("t" "Todo" entry (file "todo.org")
            "* TODO %? %^G\nSCHEDULED: %^t")
           ("i" "Inbox" entry (file "inbox.org")
-           "* NEXT %? %^G\n:PROPERTIES:\n:ID: %(org-id-new)\n:END:")
+           "* NEXT %? %^G\n:PROPERTIES:\n:ID: %(org-id-new)\n:END:" :prepend t)
           ("p" "Protocol" entry (file "inbox.org")
            "* %^{Title}\nSource: %u, %c\n #+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?")
           ("L" "Protocol Link" entry (file "inbox.org")
