@@ -814,7 +814,6 @@ Use built-in dictionary-el.
           mastodon-active-user "mdallastella"))
 #+end_src
 
-
 ** yankpad
 [[https://github.com/Kungsgeten/yankpad][yankpad]] - Organize snippets in a org-mode file
 
@@ -1455,7 +1454,6 @@ org-mode to typst configuration.
 #+begin_src emacs-lisp
   (use-package gptel
     :defer t
-    :bind ("C-c a" . gptel-menu)
     :config
     ;; OpenRouter offers an OpenAI compatible API
     (setq gptel-model 'google/gemini-2.5-pro
@@ -1465,6 +1463,8 @@ org-mode to typst configuration.
                           :stream t
                           :key my/openrouter-key
                           :models '(openai/gpt-5-chat
+                                    anthropic/claude-sonnet-4
+                                    qwen/qwen3-coder:free
                                     google/gemini-2.5-pro
                                     google/gemini-2.5-flash
                                     deepseek/deepseek-chat-v3.1:free))))
@@ -1474,14 +1474,19 @@ org-mode to typst configuration.
   (use-package gptel-magit
     :hook (magit-mode . gptel-magit-install)
     :config
-    (setq gptel-magit-model 'deepseek/deepseek-chat-v3.1:free))
+    (setq gptel-magit-model 'qwen/qwen3-coder:free))
 #+end_src
 ** ECA
 [[https://github.com/editor-code-assistant/eca-emacs][ECA]]: (Editor Code Assistant) Emacs is an AI-powered pair-programming client for
 Emacs.
 
 #+begin_src emacs-lisp
-  (use-package eca)
+  (use-package eca
+    :defer t
+    :bind (("C-c a a" . eca)
+           ("C-c a q" . eca-stop))
+    :config
+    (setq eca-chat-custom-model "openrouter/google/gemini-2.5-flash"))
 #+end_src
 
 
@@ -1494,6 +1499,7 @@ code, whether live coding music at algoraves or composing in the studio.
   (use-package tidal
     :defer t)
 #+end_src
+
 
 * Initial buffers (homemade dashboard)
 #+begin_src emacs-lisp
