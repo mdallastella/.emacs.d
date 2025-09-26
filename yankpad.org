@@ -1,0 +1,26 @@
+* org-mode
+** blog header
+#+TITLE: $1
+#+DATE:
+#+TAGS[]: work life
+#+SONG:
+** typist document
+#+TITLE: $1
+#+AUTHOR: Marco Dalla Stella <marco@dallastella.name>
+#+DATE:
+#+TYPST: #import "@local/ilm:1.4.1": *
+#+OPTIONS: toc:nil
+#+OPTIONS: f:nils
+
+#+begin_export typst
+#show: ilm.with(
+  title: "$1",
+  author: "Marco Dalla Stella",
+  date: datetime(year: 2025, month: 08, day: 27),
+  table-of-contents: none,
+  chapter-pagebreak: false,
+  figure-index: (enabled: true),
+  table-index: (enabled: false),
+  listing-index: (enabled: false)
+)
+#+end_export

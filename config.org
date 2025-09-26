@@ -815,6 +815,25 @@ Use built-in dictionary-el.
 #+end_src
 
 
+** yankpad
+[[https://github.com/Kungsgeten/yankpad][yankpad]] - Organize snippets in a org-mode file
+
+ #+begin_src emacs-lisp
+   (use-package yankpad
+     :bind
+     (("C-c y e" . yankpad-edit)
+      ("C-c y i" . yankpad-insert)
+      ("C-c y m" . yankpad-map)
+      ("C-c y r" . yankpad-reload)
+      ("C-c y x" . yankpad-expand))
+     :config
+     (setq yankpad-file (expand-file-name "yankpad.org"
+                                          user-emacs-directory)))
+ #+END_SRC
+
+
+
+
 * Programming
 ** Indenting
 #+begin_src emacs-lisp
@@ -1457,7 +1476,24 @@ org-mode to typst configuration.
     :config
     (setq gptel-magit-model 'deepseek/deepseek-chat-v3.1:free))
 #+end_src
+** ECA
+[[https://github.com/editor-code-assistant/eca-emacs][ECA]]: (Editor Code Assistant) Emacs is an AI-powered pair-programming client for
+Emacs.
 
+#+begin_src emacs-lisp
+  (use-package eca)
+#+end_src
+
+
+* Fun
+** Tidal Cycles
+Tidal Cycles (or just Tidal for short) is software for making patterns with
+code, whether live coding music at algoraves or composing in the studio.
+
+#+begin_src emacs-lisp
+  (use-package tidal
+    :defer t)
+#+end_src
 
 * Initial buffers (homemade dashboard)
 #+begin_src emacs-lisp
