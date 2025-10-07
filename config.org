@@ -320,6 +320,15 @@ I use 80 characters.
   (auto-fill-mode t)
 #+end_src
 
+** isearch settings
+#+begin_src emacs-lisp
+  (use-package isearch
+    :ensure nil
+    :config
+    (setq isearch-allow-motion t
+          isearch-allow-scroll t))
+#+end_src
+
 ** Default coding system
 #+begin_src emacs-lisp
   (set-charset-priority 'unicode)
@@ -869,7 +878,8 @@ Let's use the built-in module to manage different projects.
   (use-package magit
     :defer t
     :bind
-    (("C-c g g" . magit-status)
+    (("M-g m" . magit-status)
+     ("C-c g g" . magit-status)
      ("C-c g l" . magit-log)
      ("C-c g r" . vc-refresh-state))
     :config
