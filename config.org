@@ -159,21 +159,6 @@ Store backups and autosave files in ~/tmp~.
                  (allow-no-window . t)))
 #+end_src
 
-** Server mode
-Emacs server mode.
-
-#+begin_src emacs-lisp
-  (use-package server
-    :ensure nil
-    :defer 1
-    :config
-    (unless (server-running-p)
-      (server-start)))
-
-  (use-package org-protocol
-    :ensure nil)
-#+end_src
-
 
 * General settings
 ** Access to shell PATH
@@ -647,6 +632,7 @@ Tabspaces leverages tab-bar.el and project.el for workspaces.
     :config
     (envrc-global-mode))
 #+end_src
+
 ** mise
 I use [[https://mise.jdx.dev/][mise-en-place]] to manage my dev environments.
 #+begin_src emacs-lisp
@@ -727,8 +713,6 @@ minibuffer for your completion candidates.
 *** Embark
 #+begin_src emacs-lisp
   (use-package embark
-    :ensure t
-
     :bind
     (("C-." . embark-act)         ;; pick some comfortable binding
      ("C-;" . embark-dwim)        ;; good alternative: M-.
@@ -745,10 +729,10 @@ minibuffer for your completion candidates.
                    (window-parameters (mode-line-format . none)))))
 
   (use-package embark-consult
-    :ensure t ; only need to install it, embark loads it after consult if found
     :hook
     (embark-collect-mode . consult-preview-at-point-mode))
 #+end_src
+
 ** Spell checking
 *** jinx
 #+begin_src emacs-lisp
@@ -769,8 +753,8 @@ Corfu enhances completion at point with a small completion popup.
   (use-package corfu
     :config
     (setq corfu-auto t)
-    :init
-    (global-corfu-mode))
+    :hook ((prog-mode . corfu-mode)
+           (prog-mode . corfu-history-mode)))
 #+end_src
 
 *** hippie-expand
@@ -840,8 +824,6 @@ Use built-in dictionary-el.
  #+END_SRC
 
 
-
-
 * Programming
 ** Indenting
 #+begin_src emacs-lisp
@@ -900,7 +882,7 @@ Let's use the built-in module to manage different projects.
 
 ** LSP
 #+begin_src emacs-lisp
-  (use-package jsonrpc :ensure t)
+  (use-package jsonrpc)
 #+end_src
 
 [[https://joaotavora.github.io/eglot/][Eglot: The Emacs Client for the Language Server Protocol]]
@@ -933,6 +915,7 @@ Let's use the built-in module to manage different projects.
 
 #+begin_src emacs-lisp
   (use-package eglot-booster
+    :disable t
     :vc
     (eglot-booster :url "https://github.com/jdtsmith/eglot-booster")
     :after eglot
@@ -944,10 +927,8 @@ Let's use the built-in module to manage different projects.
 
 #+begin_src emacs-lisp
   (use-package flycheck-eglot
-    :ensure t
     :after (flycheck eglot)
-    :config
-    (global-flycheck-eglot-mode 1))
+    :hook ((eglot . flycheck-mode)))
 #+end_src
 
 ** Dape
@@ -1261,6 +1242,21 @@ Cargo
     (setq compilation-scroll-output t))
 #+end_src
 
+** csharp
+#+begin_src emacs-lisp
+  (use-package csharp-ts-mode
+    :defer t)
+#+end_src
+
+** golang
+#+begin_src emacs-lisp
+  (use-package go-mode
+    :mode "\\.go\\'"
+    :hook ((before-save . gofmt-before-save))
+    :config
+    (setq go-ts-mode-indent-offset 2))
+#+end_src
+
 
 * Productivity
 ** markdown
@@ -1374,10 +1370,9 @@ package you’ll get notifications for TODO entries.
 
 #+begin_src emacs-lisp
   (use-package org-wild-notifier
-    :ensure t
     :config
     (setq alert-default-style 'libnotify)
-    (org-wild-notifier-mode))
+    :hook ((org-mode . org-wild-notifier-mode)))
 #+end_src
 
 *** org-cliplink
@@ -1445,18 +1440,6 @@ org-mode to typst configuration.
           wallabag-search-page-max-rows 32))
 #+end_src
 
-** TickTick
-[[https://github.com/polhuang/ticktick.el][ticktick.el]] enables two-way synchronization between TickTick.
-
-#+begin_src emacs-lisp
-  (use-package ticktick
-    :after org
-    :config
-    (setq ticktick-sync-file (concat org-directory "/ticktick.org")
-          ticktick-client-id my/ticktick-client
-          ticktick-client-secret my/ticktick-secret
-          ticktick-sync-interval 5))
-#+end_src
 
 
 * LLM
@@ -1477,15 +1460,18 @@ org-mode to typst configuration.
                                     qwen/qwen3-coder:free
                                     google/gemini-2.5-pro
                                     google/gemini-2.5-flash
+                                    openai/gpt-5-nano
                                     deepseek/deepseek-chat-v3.1:free))))
 #+end_src
+
 ** gptel-magit
 #+begin_src emacs-lisp
   (use-package gptel-magit
     :hook (magit-mode . gptel-magit-install)
     :config
-    (setq gptel-magit-model 'qwen/qwen3-coder:free))
+    (setq gptel-magit-model 'deepseek/deepseek-chat-v3.1:free))
 #+end_src
+
 ** ECA
 [[https://github.com/editor-code-assistant/eca-emacs][ECA]]: (Editor Code Assistant) Emacs is an AI-powered pair-programming client for
 Emacs.
@@ -1493,10 +1479,22 @@ Emacs.
 #+begin_src emacs-lisp
   (use-package eca
     :defer t
-    :bind (("C-c a a" . eca)
-           ("C-c a q" . eca-stop))
+    :bind ("C-c a" . eca-transient-menu)
     :config
-    (setq eca-chat-custom-model "openrouter/google/gemini-2.5-flash"))
+    (setq eca-chat-custom-model "openrouter/google/gemini-2.5-pro"))
+#+end_src
+
+** Aider
+#+begin_src emacs-lisp
+  (use-package aidermacs
+    :command '(aidermacs-transient-menu)
+    :bind
+    (("C-c a" . aidermacs-transient-menu))
+    :config
+    (setenv "OPENROUTER_API_KEY" my/openrouter-key)
+    (setq aidermacs-default-model "openrouter/anthropic/claude-3.7-sonnet"
+          aidermacs-backend 'vterm
+          aidermacs-watch-files t))
 #+end_src
 
 
@@ -1518,7 +1516,7 @@ code, whether live coding music at algoraves or composing in the studio.
     (interactive)
     (find-file "~/org/inbox.org")
     (split-window-right)
-    (find-file "~/org/todo.org"))
+    (find-file "~/org/brain.org"))
 
   (add-hook 'after-init-hook 'setup-initial-buffers)
 #+end_src
