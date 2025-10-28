@@ -1,7 +1,6 @@
-#+title: Emacs configuration
 #+author: Marco Dalla Stella
+#+title: Emacs configuration
 #+created: <2022-10-14 Fri>
-#+date: <2025-07-30 Wed>
 #+property: header-args:emacs-lisp :result silent :tangle ./init.el :exports code :eval never-export
 #+startup: fold
 
@@ -40,7 +39,6 @@ See [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Early-Init-File.
 
   ;; Same idea as above for ~file-name-handler-alist~
   (defvar tmp--file-name-handler-alist file-name-handler-alist)
-
   (setq file-name-handler-alist nil)
 
   ;; Restore everything at the end
@@ -105,16 +103,16 @@ Just good old [[https://github.com/jwiegley/use-package][use-package]] and [[htt
   (require 'package)
 
   (setq package-vc-register-as-project nil) ; Emacs 30
-
   (add-hook 'package-menu-mode-hook #'hl-line-mode)
 
   (setq package-archives
-        '(("gnu-elpa" . "https://elpa.gnu.org/packages/")
+        '(("gnu-devel" . "https://elpa.gnu.org/devel/")
+          ("gnu-elpa" . "https://elpa.gnu.org/packages/")
           ("melpa" . "https://melpa.org/packages/")))
 
   (require 'use-package-ensure)
-    (setq use-package-always-ensure t)
-    (setq package-check-signature nil)
+  (setq use-package-always-ensure t)
+  (setq package-check-signature nil)
 #+end_src
 
 ** Benchmark init
@@ -122,7 +120,7 @@ Enable benchmarking only when needed.
 
 #+begin_src emacs-lisp
   (use-package benchmark-init
-    :disabled
+    :disabled t
     :config
     (add-hook 'after-init-hook 'benchmark-init/deactivate))
 #+end_src
@@ -133,7 +131,6 @@ Use =no-littering= to keep our directory clean.
 #+begin_src emacs-lisp
   ;; Keep .emacs.d clean
   (use-package no-littering
-    :ensure t
     :config
     (setq create-lockfiles nil
           delete-old-versions t
@@ -165,9 +162,9 @@ Store backups and autosave files in ~/tmp~.
 Ensure environment variables inside Emacs look the same as in the user’s shell.
 
 #+begin_src emacs-lisp
-  (use-package exec-path-from-shell
-    :config
-    (exec-path-from-shell-initialize))
+  ;; (use-package exec-path-from-shell
+  ;;   :config
+  ;;   (exec-path-from-shell-initialize))
 #+end_src
 
 ** Save history
@@ -260,6 +257,7 @@ major-modes and so on.
     (find-file (expand-file-name "config.org" user-emacs-directory)))
 
   (use-package emacs
+    :ensure nil
     :bind
     (;; Buffers
      ("C-c b k" . kill-current-buffer)
@@ -415,8 +413,7 @@ braces, brackets, etc.
           ("C-<right>" . puni-slurp-forward)
           ("C-<left>" . puni-barf-forward)
           ("C-<up>" . puni-raise))
-    :init
-    (puni-global-mode))
+    :hook (after-init-hook . puni-global-mode))
 #+end_src
 
 ** Avy - Jump around
@@ -440,14 +437,13 @@ about highlighted symbols.
 
 #+begin_src emacs-lisp
   (use-package symbol-overlay
-    :command symbol-overlay-mode
+    :commands symbol-overlay-mode
     :bind-keymap
     ("C-c o" . symbol-overlay-map)
     :config
     (add-hook 'prog-mode-hook #'symbol-overlay-mode)
     (add-hook 'text-mode-hook #'symbol-overlay-mode))
 #+end_src
-
 
 ** Expand region
 [[https://github.com/magnars/expand-region.el][expand-region.el]] — Expand region selection.
@@ -471,6 +467,7 @@ Set my favorite font.
 
 #+begin_src emacs-lisp
   (use-package emacs
+    :ensure nil
     :config
     (set-face-attribute 'default nil
                         :family "Iosevka NFM"
@@ -503,6 +500,7 @@ Set my favorite font.
 ** Show matching parenthesis
 #+begin_src emacs-lisp
   (use-package paren
+    :ensure nil
     :config
     (setq show-paren-when-point-inside-paren t
           show-paren-when-point-in-periphery t)
@@ -510,8 +508,7 @@ Set my favorite font.
 
   (use-package rainbow-delimiters
     :commands rainbow-delimiters-mode
-    :init
-    (add-hook 'prog-mode-hook 'rainbow-delimiters-mode))
+    :hook (prog-mode-hook . rainbow-delimiters-mode))
 #+end_src
 
 ** Use icons and emoji
@@ -527,9 +524,8 @@ completion metadata functions.
 #+begin_src emacs-lisp
   (use-package all-the-icons-completion
     :hook
-    (marginalia-mode . all-the-icons-completion-marginalia-setup)
-    :config
-    (all-the-icons-completion-mode))
+    ((marginalia-mode . all-the-icons-completion-marginalia-setup)
+     (after-init-hook . all-the-icons-completion-mode)))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -539,8 +535,7 @@ completion metadata functions.
 
 #+begin_src emacs-lisp
   (use-package emojify
-    :config
-    (global-emojify-mode))
+    :hook (after-init-hook . global-emojify-mode))
 #+end_src
 
 ** Increase line-spacing
@@ -573,9 +568,8 @@ programming.
 #+begin_src emacs-lisp
   (use-package diff-hl
     :hook ((magit-pre-refresh . diff-hl-magit-pre-refresh)
-           (magit-post-refresh . diff-hl-magit-post-refresh))
-    :config
-    (global-diff-hl-mode))
+           (magit-post-refresh . diff-hl-magit-post-refresh)
+           (after-init-hook . global-diff-hl-mode)))
 #+end_src
 
 ** ace-window
@@ -596,7 +590,6 @@ ace-window
     :defer t)
 
   (use-package ibuffer
-    :ensure nil
     :config
     (setq ibuffer-expert t
           ibuffer-display-summary nil
@@ -629,16 +622,15 @@ Tabspaces leverages tab-bar.el and project.el for workspaces.
 ** envrc
 #+begin_src emacs-lisp
   (use-package envrc
-    :config
-    (envrc-global-mode))
+    :hook (after-init . envrc-global-mode))
 #+end_src
 
 ** mise
 I use [[https://mise.jdx.dev/][mise-en-place]] to manage my dev environments.
 #+begin_src emacs-lisp
-  (use-package mise
-    :config
-    (global-mise-mode))
+  ;; (use-package mise
+  ;;   :config
+  ;;   (global-mise-mode))
 #+end_src
 
 ** vterm
@@ -674,7 +666,7 @@ the default completion system.
   (use-package vertico
     :config
     (setq vertico-sort-function 'vertico-sort-history-alpha)
-    (vertico-mode))
+    :hook (after-init-hook . vertico-mode))
 #+end_src
 
 *** Consult
@@ -682,21 +674,21 @@ the default completion system.
 completing-read.
 
 #+begin_src emacs-lisp
-    (use-package consult
-      :bind
-      (("M-g l" . consult-goto-line)
-       ("M-g b" . consult-buffer)
-       ("M-g i" . consult-imenu)
-       ("M-g f" . consult-flymake)
-       ("M-g g" . consult-ripgrep)
-       ("M-g o" . consult-org-heading))
-      :config
-      (recentf-mode t)
-      (setq consult-buffer-sources '(consult--source-project-buffer
-                                     consult--source-buffer
-                                     consult--source-hidden-buffer
-                                     consult--source-project-recent-file))
-      (setq consult-preview-key "M-."))
+  (use-package consult
+    :bind
+    (("M-g l" . consult-goto-line)
+     ("M-g b" . consult-buffer)
+     ("M-g i" . consult-imenu)
+     ("M-g f" . consult-flymake)
+     ("M-g g" . consult-ripgrep)
+     ("M-g o" . consult-org-heading))
+    :config
+    (recentf-mode t)
+    (setq consult-buffer-sources '(consult--source-project-buffer
+                                   consult--source-buffer
+                                   consult--source-hidden-buffer
+                                   consult--source-project-recent-file))
+    (setq consult-preview-key "M-."))
 #+end_src
 
 *** Marginalia
@@ -706,8 +698,7 @@ minibuffer for your completion candidates.
 
 #+begin_src emacs-lisp
   (use-package marginalia
-    :config
-    (marginalia-mode))
+    :hook (after-init-hook . marginalia-mode))
 #+end_src
 
 *** Embark
@@ -737,12 +728,12 @@ minibuffer for your completion candidates.
 *** jinx
 #+begin_src emacs-lisp
   (use-package jinx
+    :hook (after-init-hook . global-jinx-mode)
     :bind
     ("C-c s s" . jinx-correct)
     ("C-c s l" . jinx-languages)
     :config
-    (setq jinx-languages "en_US it_IT")
-    (global-jinx-mode))
+    (setq jinx-languages "en_US it_IT"))
 #+end_src
 
 ** Completion
@@ -788,23 +779,11 @@ Use built-in dictionary-el.
 
 #+begin_src emacs-lisp
   (use-package dictionary
-    :ensure nil
-    :defer t
     :bind
     ("C-c s d" . dictionary-search)
     :config
     (setq dictionary-server "dict.org"
           dictionary-use-single-buffer t))
-#+end_src
-
-** Mastodon
-[[https://codeberg.org/martianh/mastodon.el][Mastodon.el]] - A mastodon client for Emacs
-
-#+begin_src emacs-lisp
-  (use-package mastodon
-    :config
-    (setq mastodon-instance-url "https://functional.cafe"
-          mastodon-active-user "mdallastella"))
 #+end_src
 
 ** yankpad
@@ -832,16 +811,18 @@ Use built-in dictionary-el.
                 intent-tabs-mode nil
                 java-ts-mode-indent-offset 2)
 #+end_src
+
 ** Tree-Sitter
 Remap some major mode with their tree-sitter implementation.
 #+begin_src emacs-lisp
   (use-package treesit-auto
+    :hook (after-init-hook . global-treesit-auto-mode)
     :custom
     (treesit-auto-install 'prompt)
     :config
-    (treesit-auto-add-to-auto-mode-alist 'all)
-    (global-treesit-auto-mode))
+    (treesit-auto-add-to-auto-mode-alist 'all))
 #+end_src
+
 ** Project
 Let's use the built-in module to manage different projects.
 
@@ -875,22 +856,18 @@ Let's use the built-in module to manage different projects.
 ** eldoc
 #+begin_src emacs-lisp
   (use-package eldoc
+    :ensure nil
     :config
     (setq eldoc-echo-area-display-truncation-message nil
           eldoc-echo-area-use-multiline-p nil))
 #+end_src
 
 ** LSP
-#+begin_src emacs-lisp
-  (use-package jsonrpc)
-#+end_src
-
-[[https://joaotavora.github.io/eglot/][Eglot: The Emacs Client for the Language Server Protocol]]
+*** [[https://joaotavora.github.io/eglot/][Eglot: The Emacs Client for the Language Server Protocol]]
 
 #+begin_src emacs-lisp
-  (setq package-pinned-packages '((eglot . "gnu-devel")))
-
   (use-package eglot
+    :ensure nil
     :defer t
     :bind
     (("C-c l l" . eglot)
@@ -898,37 +875,28 @@ Let's use the built-in module to manage different projects.
      ("C-c l a" . eglot-code-actions)
      ("C-c l d" . xref-find-definitions)
      ("C-c l e" . eldoc-doc-buffer)
+     ("C-c l E" . eglot-events-buffer)
      ("C-c l q" . eglot-shutdown))
     :config
-    (setq eglot-send-changes-idle-time 0.2
+    (setq eglot-sync-connect 0
           eglot-autoshutdown t
-          read-process-output-max (* 1024 1024)
-          eglot-extend-to-xref t
-          eglot-connect-timeout 1200
-          eglot-inlay-hints-mode nil
-          eglot-ignored-server-capabilities '(:inlayHintProvider
-                                              :documentOnTypeFormattingProvider
-                                              :documentHighlightProvider)))
+          jsonrpc-event-hook nil
+          eglot-extend-to-xref t))
 #+end_src
 
-
-
-#+begin_src emacs-lisp
-  (use-package eglot-booster
-    :disable t
-    :vc
-    (eglot-booster :url "https://github.com/jdtsmith/eglot-booster")
-    :after eglot
-    :config
-    (eglot-booster-mode))
-#+end_src
-
-[[https://github.com/flycheck/flycheck-eglot][flycheck-eglot]]: A simple “glue” minor mode that allows Flycheck and Eglot to work together.
+*** [[https://github.com/flycheck/flycheck-eglot][flycheck-eglot]]: A simple “glue” minor mode that allows Flycheck and Eglot to work together.
 
 #+begin_src emacs-lisp
   (use-package flycheck-eglot
     :after (flycheck eglot)
-    :hook ((eglot . flycheck-mode)))
+    :hook (eglot . flycheck-mode))
+#+end_src
+
+*** mason
+#+begin_src emacs-lisp
+  (use-package mason
+    :hook
+    (after-init-hook . mason-ensure))
 #+end_src
 
 ** Dape
@@ -939,17 +907,9 @@ Let's use the built-in module to manage different projects.
     :defer t
     :config
     (setq dape-buffer-window-arrangement 'right)
-    (add-hook 'dape-on-stopped-hooks 'dape-info)
-    (add-hook 'dape-on-stopped-hooks 'dape-repl)
-
-    ;; By default dape uses gdb keybinding prefix
-    ;; If you do not want to use any prefix, set it to nil.
-    ;; (setq dape-key-prefix "\C-x\C-a")
-
-    (add-hook 'dape-compile-compile-hooks 'kill-buffer)
-    (add-hook 'dape-on-start-hooks
-               (defun dape--save-on-start ()
-                 (save-some-buffers t t))))
+    :hook ((dape-on-stopped-hooks . dape-info)
+           (dape-on-stopped-hooks . dape-repl)
+           (dape-compile-compile-hooks . kill-buffer)))
 #+end_src
 
 ** Clojure
@@ -1001,42 +961,18 @@ Clojure settings for Emacs
 Flycheck using clj-kondo.
 
 #+begin_src emacs-lisp
-  (use-package flycheck-clj-kondo)
+  (use-package flycheck-clj-kondo
+    :hook ((clojure-mode . 'flycheck-clj-kondo)))
 
   (use-package clojure-mode
-    :defer t
-    :config
-    (require 'flycheck-clj-kondo))
+    :mode ("\\.clj\\'" "\\.cljs\\'" "\\.bb\\'" "\\.edn\\'")
+    :defer t)
 #+end_src
 
 *** Font-locking for Clojure mode
 #+begin_src emacs-lisp
   (use-package clojure-mode-extra-font-locking
     :after clojure-mode)
-#+end_src
-
-*** Code formatting
-I like my code to be formatted following standard conventions. Thanks to [[https://manueluberti.eu/2022/10/27/cljformat.html][Manuel
-Uberti]].
-
-#+begin_src emacs-lisp
-  (defun my/cljfmt-format-buffer ()
-    "Format current buffer with `cljfmt'."
-    (when (derived-mode-p 'clojure-mode)
-      (let* ((pr (project-root (project-current)))
-             (cfg-dir (locate-dominating-file pr "cljfmt.edn"))
-             (cfg-edn (expand-file-name "cljfmt.edn" cfg-dir))
-             (cmd (if (file-exists-p cfg-edn)
-                      (format "cljfmt -c %s %s" cfg-edn buffer-file-name)
-                    (format "cljfmt %s" buffer-file-name))))
-        (shell-command-to-string cmd))
-      (revert-buffer t t)))
-
-  (defun my/cider-format-buffer ()
-    "Automatically format current buffer after saving."
-    (add-hook 'after-save-hook #'my/cljfmt-format-buffer nil t))
-
-  (add-hook 'cider-mode-hook #'my/cider-format-buffer)
 #+end_src
 
 *** TODO REPL buffer position
@@ -1193,8 +1129,7 @@ Derive vue-mode from web-mode and add lsp support.
 I have to deal with this s**t sometimes... :(
 
 #+begin_src emacs-lisp
-  (use-package php-mode
-    :defer t)
+  (use-package php-mode :defer t)
 #+end_src
 
 ** Typst
@@ -1217,7 +1152,6 @@ Major mode to edit [[https://kdl.dev/][The KDL Document Language]]
 
 #+begin_src emacs-lisp
   (use-package kdl-mode
-    :defer t
     :mode ("\\.kdl\\'"))
 #+end_src
 
@@ -1244,15 +1178,14 @@ Cargo
 
 ** csharp
 #+begin_src emacs-lisp
-  (use-package csharp-ts-mode
-    :defer t)
+  (use-package csharp-mode
+   :defer t)
 #+end_src
 
 ** golang
 #+begin_src emacs-lisp
   (use-package go-mode
-    :mode "\\.go\\'"
-    :hook ((before-save . gofmt-before-save))
+    :defer t
     :config
     (setq go-ts-mode-indent-offset 2))
 #+end_src
@@ -1343,6 +1276,7 @@ Org capture configuration
 
 #+begin_src emacs-lisp
   (use-package org-modern
+    :hook (after-init-hook . global-org-modern-mode)
     :config
     (setq org-auto-align-tags nil
           org-tags-column 0
@@ -1360,71 +1294,15 @@ Org capture configuration
             (800 1000 1200 1400 1600 1800 2000)
             " ┄┄┄┄┄ " "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")
           org-agenda-current-time-string
-          "⭠ now ─────────────────────────────────────────────────")
-    (global-org-modern-mode))
+          "⭠ now ─────────────────────────────────────────────────"))
 #+end_src
 
-*** org-wild-notifier
-[[https://github.com/akhramov/org-wild-notifier.el][org-wild-notifier]]: Adds notification support for org-agenda views. With this
-package you’ll get notifications for TODO entries.
-
-#+begin_src emacs-lisp
-  (use-package org-wild-notifier
-    :config
-    (setq alert-default-style 'libnotify)
-    :hook ((org-mode . org-wild-notifier-mode)))
-#+end_src
-
-*** org-cliplink
-A simple command that takes a URL from the clipboard and inserts an org-mode
-link with a title of a page found by the URL into the current buffer.
-
-#+begin_src emacs-lisp
-  (use-package org-cliplink
-    :after org
-    :bind
-    (:map org-mode-map
-          ("C-c m l" . org-cliplink)))
-#+end_src
-
-*** org-download
-[[https://github.com/abo-abo/org-download][org-download]] - This extension facilitates moving images from point A to point B.
-
-#+begin_src emacs-lisp
-  (use-package org-download
-    :defer t
-    :hook (org-mode . org-download-enable))
-#+end_src
-*** notes on documents
-**** pdf-tools
-#+begin_src emacs-lisp
-  (use-package pdf-tools
-    :defer t
-    :magic ("%PDF" . pdf-view-mode)
-    :config
-    (pdf-tools-install))
-#+end_src
-
-**** epub - nov.el
-#+begin_src emacs-lisp
-  (use-package nov
-    :defer t
-    :mode ("\\.epub\\'" . nov-mode))
-  #+end_src
-*** org-babel
-Configuration for literate programming (mainly clojure).
-#+begin_src emacs-lisp
-  (use-package ob-clojure
-    :ensure nil
-    :config
-    (setq org-babel-clojure-backend 'cider)
-    (require 'cider))
-#+end_src
 *** ox-typst
 org-mode to typst configuration.
 
 #+begin_src emacs-lisp
   (use-package ox-typst
+    :defer t
     :after org)
 #+end_src
 
@@ -1434,6 +1312,7 @@ org-mode to typst configuration.
 #+begin_src emacs-lisp
   (use-package wallabag
     :defer t
+    :commands wallabag
     :config
     (setq wallabag-host "https://wb.dallastella.name"
           wallabag-search-print-items '("title" "domain" "tag" "reading-time" "date")
@@ -1472,22 +1351,10 @@ org-mode to typst configuration.
     (setq gptel-magit-model 'deepseek/deepseek-chat-v3.1:free))
 #+end_src
 
-** ECA
-[[https://github.com/editor-code-assistant/eca-emacs][ECA]]: (Editor Code Assistant) Emacs is an AI-powered pair-programming client for
-Emacs.
-
-#+begin_src emacs-lisp
-  (use-package eca
-    :defer t
-    :bind ("C-c a" . eca-transient-menu)
-    :config
-    (setq eca-chat-custom-model "openrouter/google/gemini-2.5-pro"))
-#+end_src
-
 ** Aider
 #+begin_src emacs-lisp
   (use-package aidermacs
-    :command '(aidermacs-transient-menu)
+    :commands aidermacs-transient-menu
     :bind
     (("C-c a" . aidermacs-transient-menu))
     :config
@@ -1504,21 +1371,7 @@ Tidal Cycles (or just Tidal for short) is software for making patterns with
 code, whether live coding music at algoraves or composing in the studio.
 
 #+begin_src emacs-lisp
-  (use-package tidal
-    :defer t)
-#+end_src
-
-
-* Initial buffers (homemade dashboard)
-#+begin_src emacs-lisp
-  (defun setup-initial-buffers ()
-    "Open inbox.org and todo.org at the start"
-    (interactive)
-    (find-file "~/org/inbox.org")
-    (split-window-right)
-    (find-file "~/org/brain.org"))
-
-  (add-hook 'after-init-hook 'setup-initial-buffers)
+  (use-package tidal :defer t)
 #+end_src
 
 
