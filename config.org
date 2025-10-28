@@ -1348,7 +1348,7 @@ org-mode to typst configuration.
   (use-package gptel-magit
     :hook (magit-mode . gptel-magit-install)
     :config
-    (setq gptel-magit-model 'deepseek/deepseek-chat-v3.1:free))
+    (setq gptel-magit-model 'google/gemini-2.5-flash))
 #+end_src
 
 ** Aider
@@ -1360,7 +1360,6 @@ org-mode to typst configuration.
     :config
     (setenv "OPENROUTER_API_KEY" my/openrouter-key)
     (setq aidermacs-default-model "openrouter/anthropic/claude-3.7-sonnet"
-          aidermacs-backend 'vterm
           aidermacs-watch-files t))
 #+end_src
 
