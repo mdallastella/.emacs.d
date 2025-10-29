@@ -823,6 +823,13 @@ Remap some major mode with their tree-sitter implementation.
     (treesit-auto-add-to-auto-mode-alist 'all))
 #+end_src
 
+** Flycheck
+[[https://www.flycheck.org/en/latest/][Flycheck]] is a modern on-the-fly syntax checking extension.
+#+begin_src emacs-lisp
+  (use-package flycheck
+    :defer t)
+#+end_src
+
 ** Project
 Let's use the built-in module to manage different projects.
 
@@ -881,20 +888,26 @@ Let's use the built-in module to manage different projects.
     (setq eglot-sync-connect 0
           eglot-autoshutdown t
           jsonrpc-event-hook nil
-          eglot-extend-to-xref t))
+          eglot-extend-to-xref t
+          eglot-ignored-server-capabilities '(:inlayHintProvider))
+    (add-to-list 'eglot-stay-out-of 'flymake))
 #+end_src
 
-*** [[https://github.com/flycheck/flycheck-eglot][flycheck-eglot]]: A simple “glue” minor mode that allows Flycheck and Eglot to work together.
-
+*** Flycheck-eglot
 #+begin_src emacs-lisp
   (use-package flycheck-eglot
     :after (flycheck eglot)
-    :hook (eglot . flycheck-mode))
+    :config
+    (global-flycheck-eglot-mode 1))
 #+end_src
 
 *** mason
 #+begin_src emacs-lisp
   (use-package mason
+    :bind
+    (("C-c u l l" . mason-manager)
+     ("C-c u l d" . mason-doctor)
+     ("C-c u l u" . mason-update))
     :hook
     (after-init-hook . mason-ensure))
 #+end_src
