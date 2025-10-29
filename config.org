@@ -105,10 +105,11 @@ Just good old [[https://github.com/jwiegley/use-package][use-package]] and [[htt
   (setq package-vc-register-as-project nil) ; Emacs 30
   (add-hook 'package-menu-mode-hook #'hl-line-mode)
 
-  (setq package-archives
-        '(("gnu-devel" . "https://elpa.gnu.org/devel/")
-          ("gnu-elpa" . "https://elpa.gnu.org/packages/")
-          ("melpa" . "https://melpa.org/packages/")))
+  (add-to-list 'package-archives
+               '("gnu-devel" . "https://elpa.gnu.org/devel/"))
+
+  (add-to-list 'package-archives
+               '("melpa" . "https://melpa.org/packages/"))
 
   (require 'use-package-ensure)
   (setq use-package-always-ensure t)
@@ -130,22 +131,21 @@ Use =no-littering= to keep our directory clean.
 
 #+begin_src emacs-lisp
   ;; Keep .emacs.d clean
+  (unless (package-installed-p 'no-littering)
+      (package-install 'no-littering))
+
   (use-package no-littering
     :config
     (setq create-lockfiles nil
           delete-old-versions t
           kept-new-versions 6
           kept-old-versions 2
-          version-control t))
-#+end_src
-
-Store backups and autosave files in ~/tmp~.
-
-#+begin_src emacs-lisp
-  (setq backup-directory-alist
-        `((".*" . ,(no-littering-expand-var-file-name "backup/")))
-        auto-save-file-name-transforms
-        `((".*" ,(no-littering-expand-var-file-name "auto-save/") t)))
+          version-control t)
+    ;; Store backups and autosaves files in /tmp.
+    (setq backup-directory-alist
+          `((".*" . ,(no-littering-expand-var-file-name "backup/")))
+          auto-save-file-name-transforms
+          `((".*" ,(no-littering-expand-var-file-name "auto-save/") t))))
 #+end_src
 
 ** Hide byte compiler warnings
@@ -162,9 +162,9 @@ Store backups and autosave files in ~/tmp~.
 Ensure environment variables inside Emacs look the same as in the user’s shell.
 
 #+begin_src emacs-lisp
-  ;; (use-package exec-path-from-shell
-  ;;   :config
-  ;;   (exec-path-from-shell-initialize))
+  (use-package exec-path-from-shell
+    :config
+    (exec-path-from-shell-initialize))
 #+end_src
 
 ** Save history
@@ -646,6 +646,16 @@ outputs.
     (setq vterm-kill-buffer-on-exit t))
 #+end_src
 
+** eat
+[[https://codeberg.org/akib/emacs-eat][Eat]] is a terminal emulator. It can run most (if not all) full-screen terminal
+programs, including Emacs.
+
+#+begin_src emacs-lisp
+  (use-package eat
+    :defer t
+    :bind ("C-c u T" . eat))
+#+end_src
+
 ** Vertico, Orderless, Consult, Marginalia, Embark
 *** Orderless
 [[https://github.com/oantolin/orderless][Orderless]] provides an ~orderless~ completion style that divides the pattern into
@@ -720,6 +730,7 @@ minibuffer for your completion candidates.
                    (window-parameters (mode-line-format . none)))))
 
   (use-package embark-consult
+    :after (consult embark)
     :hook
     (embark-collect-mode . consult-preview-at-point-mode))
 #+end_src
@@ -808,7 +819,7 @@ Use built-in dictionary-el.
 #+begin_src emacs-lisp
   (setq-default c-basic-offset 2
                 tab-width 2
-                intent-tabs-mode nil
+                indent-tabs-mode nil
                 java-ts-mode-indent-offset 2)
 #+end_src
 
@@ -870,15 +881,25 @@ Let's use the built-in module to manage different projects.
 #+end_src
 
 ** LSP
-*** [[https://joaotavora.github.io/eglot/][Eglot: The Emacs Client for the Language Server Protocol]]
+*** mason
+#+begin_src emacs-lisp
+  (use-package mason
+    :bind
+    (("C-c u l l" . mason-manager)
+     ("C-c u l d" . mason-doctor)
+     ("C-c u l u" . mason-update))
+    :hook
+    (after-init-hook . mason-ensure))
+#+end_src
 
+*** [[https://joaotavora.github.io/eglot/][Eglot: The Emacs Client for the Language Server Protocol]]
 #+begin_src emacs-lisp
   (use-package eglot
-    :ensure nil
+    :pin gnu-devel
     :defer t
     :bind
     (("C-c l l" . eglot)
-     ("C-c l e" . eglot-rename)
+     ("C-c l r" . eglot-rename)
      ("C-c l a" . eglot-code-actions)
      ("C-c l d" . xref-find-definitions)
      ("C-c l e" . eldoc-doc-buffer)
@@ -899,17 +920,6 @@ Let's use the built-in module to manage different projects.
     :after (flycheck eglot)
     :config
     (global-flycheck-eglot-mode 1))
-#+end_src
-
-*** mason
-#+begin_src emacs-lisp
-  (use-package mason
-    :bind
-    (("C-c u l l" . mason-manager)
-     ("C-c u l d" . mason-doctor)
-     ("C-c u l u" . mason-update))
-    :hook
-    (after-init-hook . mason-ensure))
 #+end_src
 
 ** Dape
@@ -933,6 +943,7 @@ Clojure settings for Emacs
 #+begin_src emacs-lisp
   (use-package neil
     :defer t
+    :after clojure-mode
     :config
     (setq neil-prompt-for-version-p nil
           neil-inject-dep-to-project-p t))
@@ -942,6 +953,7 @@ Clojure settings for Emacs
 #+begin_src emacs-lisp
   (use-package cider
     :defer t
+    :after clojure-mode
     :mode "\\.bb\\'"
     :hook
     ((cider-mode . eldoc-mode)
@@ -1208,11 +1220,12 @@ Cargo
 ** markdown
 #+begin_src emacs-lisp
   (use-package markdown-mode
-    :init
+    :config
     (setq markdown-hide-urls t
           markdown-asymmetric-header t)
     :mode ("\\.md" . gfm-mode))
 #+end_src
+
 ** org-mode
 *** Settings
 #+begin_src emacs-lisp
@@ -1319,6 +1332,7 @@ org-mode to typst configuration.
     :after org)
 #+end_src
 
+
 ** Wallabag
 [[https://github.com/chenyanming/wallabag.el][wallabag.el]] - Emacs Wallabag client.
 
@@ -1364,16 +1378,18 @@ org-mode to typst configuration.
     (setq gptel-magit-model 'google/gemini-2.5-flash))
 #+end_src
 
-** Aider
+** claude-code
 #+begin_src emacs-lisp
-  (use-package aidermacs
-    :commands aidermacs-transient-menu
-    :bind
-    (("C-c a" . aidermacs-transient-menu))
+  (use-package claude-code
+    :hook (after-init-hook . claude-code-mode)
+    :vc (:url "https://github.com/stevemolitor/claude-code.el" :rev :newest)
     :config
-    (setenv "OPENROUTER_API_KEY" my/openrouter-key)
-    (setq aidermacs-default-model "openrouter/anthropic/claude-3.7-sonnet"
-          aidermacs-watch-files t))
+    ;; optional IDE integration with Monet
+    ;; (add-hook 'claude-code-process-environment-functions #'monet-start-server-function)
+    ;; (monet-mode 1)
+    (setq claude-code-terminal-backend 'vterm
+          claude-code-program "~/.local/bin/ccr-code.sh")
+    :bind-keymap ("C-c a" . claude-code-command-map))
 #+end_src
 
 
