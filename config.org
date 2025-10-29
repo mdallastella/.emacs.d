@@ -646,16 +646,6 @@ outputs.
     (setq vterm-kill-buffer-on-exit t))
 #+end_src
 
-** eat
-[[https://codeberg.org/akib/emacs-eat][Eat]] is a terminal emulator. It can run most (if not all) full-screen terminal
-programs, including Emacs.
-
-#+begin_src emacs-lisp
-  (use-package eat
-    :defer t
-    :bind ("C-c u T" . eat))
-#+end_src
-
 ** Vertico, Orderless, Consult, Marginalia, Embark
 *** Orderless
 [[https://github.com/oantolin/orderless][Orderless]] provides an ~orderless~ completion style that divides the pattern into
