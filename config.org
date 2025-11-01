@@ -791,6 +791,8 @@ Use built-in dictionary-el.
 [[https://github.com/Kungsgeten/yankpad][yankpad]] - Organize snippets in a org-mode file
 
  #+begin_src emacs-lisp
+   (use-package yasnippet)
+
    (use-package yankpad
      :bind
      (("C-c y e" . yankpad-edit)
@@ -800,7 +802,8 @@ Use built-in dictionary-el.
       ("C-c y x" . yankpad-expand))
      :config
      (setq yankpad-file (expand-file-name "yankpad.org"
-                                          user-emacs-directory)))
+                                          user-emacs-directory)
+           yankpad-use-yasnippet t))
  #+END_SRC
 
 
