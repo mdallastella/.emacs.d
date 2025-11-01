@@ -1370,6 +1370,9 @@ org-mode to typst configuration.
 
 ** claude-code
 #+begin_src emacs-lisp
+  (defun my/claude-code-display-on-right (buffer)
+    (display-buffer '((display-buffer-in-direction 'right))))
+
   (use-package claude-code
     :hook (after-init-hook . claude-code-mode)
     :vc (:url "https://github.com/stevemolitor/claude-code.el" :rev :newest)
@@ -1378,7 +1381,8 @@ org-mode to typst configuration.
     ;; (add-hook 'claude-code-process-environment-functions #'monet-start-server-function)
     ;; (monet-mode 1)
     (setq claude-code-terminal-backend 'vterm
-          claude-code-program "~/.local/bin/ccr-code.sh")
+          claude-code-program "~/.local/bin/ccr-code.sh"
+          claude-code-display-buffer-below #'my/claude-code-display-on-right)
     :bind-keymap ("C-c a" . claude-code-command-map))
 #+end_src
 
