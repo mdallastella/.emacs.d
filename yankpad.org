@@ -4,6 +4,18 @@
 #+DATE:
 #+TAGS[]: work life
 #+SONG:
+
+- Personal
+- Code
+- Notable links
+
+** blog picture
+#+CAPTION: $1
+#+ATTR_HTML: :width auto
+#+ATTR_HTML: :alt $2
+#+ATTR_HTML: :loading lazy
+$3
+
 ** typist document
 #+TITLE: $1
 #+AUTHOR: Marco Dalla Stella <marco@dallastella.name>

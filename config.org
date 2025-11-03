@@ -598,6 +598,25 @@ ace-window
           ibuffer-default-sorting-mode 'vc-status))
 #+end_src
 
+** Window and buffers management
+A couple of custom function to ease my workflow.
+
+#+begin_src emacs-lisp
+  (defun my/split-window-vertically-and-focus ()
+    "Split the current window vertically and move focus to the new window."
+    (interactive)
+    (split-window-vertically)
+    (other-window 1))
+
+  (defun my/split-window-horizontally-and-focus ()
+    "Split the current window horizontally and move focus to the new window."
+    (interactive)
+    (split-window-horizontally)
+    (other-window 1))
+
+  (global-set-key (kbd "C-c v") 'my/split-window-vertically-and-focus)
+  (global-set-key (kbd "C-c h") 'my/split-window-horizontally-and-focus)
+#+end_src
 
 * Tools
 ** Tabspaces
