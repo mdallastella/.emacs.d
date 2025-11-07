@@ -164,6 +164,8 @@ Ensure environment variables inside Emacs look the same as in the user’s shell
 #+begin_src emacs-lisp
   (use-package exec-path-from-shell
     :config
+    (dolist (var '("SSH_AUTH_SOCK" "SSH_AGENT_PID" "GPG_AGENT_INFO" "LANG" "LC_CTYPE" "NPM_CONFIG_PREFIX"))
+      (add-to-list 'exec-path-from-shell-variables var))
     (exec-path-from-shell-initialize))
 #+end_src
 
@@ -896,18 +898,7 @@ Let's use the built-in module to manage different projects.
 #+end_src
 
 ** LSP
-*** mason
-#+begin_src emacs-lisp
-  (use-package mason
-    :bind
-    (("C-c u l l" . mason-manager)
-     ("C-c u l d" . mason-doctor)
-     ("C-c u l u" . mason-update))
-    :hook
-    (after-init-hook . mason-ensure))
-#+end_src
-
-*** [[https://joaotavora.github.io/eglot/][Eglot: The Emacs Client for the Language Server Protocol]]
+[[https://joaotavora.github.io/eglot/][Eglot: The Emacs Client for the Language Server Protocol]]
 #+begin_src emacs-lisp
   (use-package jsonrpc :ensure nil)
 
@@ -927,16 +918,10 @@ Let's use the built-in module to manage different projects.
           eglot-autoshutdown t
           jsonrpc-event-hook nil
           eglot-extend-to-xref t
+          eglot-code-action-indicator "⋅"
           eglot-ignored-server-capabilities '(:inlayHintProvider)))
 #+end_src
 
-*** Flycheck-eglot
-#+begin_src emacs-lisp
-  (use-package flycheck-eglot
-    :after (flycheck eglot)
-    :config
-    (global-flycheck-eglot-mode 1))
-#+end_src
 
 ** Dape
 [[https://github.com/svaante/dape][Dape]] - Debug Adapter Protocol for Emacs
@@ -953,13 +938,23 @@ Let's use the built-in module to manage different projects.
 
 ** Clojure
 Clojure settings for Emacs
+*** Clojure mode
+
+#+begin_src emacs-lisp
+  (use-package clojure-ts-mode
+    :mode ("\\.clj\\'" "\\.cljs\\'" "\\.bb\\'" "\\.edn\\'")
+    :hook
+    ((clojure-ts-mode . cider-mode)
+     (clojure-ts-mode . subword-mode)))
+#+end_src
+
 *** Neil
 [[https://github.com/babashka/neil][Neil]] - A CLI to add common aliases and features to deps.edn-based projects.
 
 #+begin_src emacs-lisp
   (use-package neil
     :defer t
-    :after clojure-mode
+    :after clojure-ts-mode
     :config
     (setq neil-prompt-for-version-p nil
           neil-inject-dep-to-project-p t))
@@ -969,12 +964,9 @@ Clojure settings for Emacs
 #+begin_src emacs-lisp
   (use-package cider
     :defer t
-    :after clojure-mode
-    :mode "\\.bb\\'"
+    :after clojure-ts-mode
     :hook
     ((cider-mode . eldoc-mode)
-     (clojure-mode . cider-mode)
-     (clojure-mode . subword-mode)
      (cider-repl-mode . eldoc-mode)
      (cider-repl-mode . subword-mode)
      (cider-mode . cider-enable-flex-completion)
@@ -996,18 +988,6 @@ Clojure settings for Emacs
           cider-repl-pop-to-buffer-on-connect 'display-only
           cider-repl-history-file (locate-user-emacs-file "cider-repl-history")
           cider-repl-display-help-banner nil))
-#+end_src
-
-*** Clojure Flycheck
-Flycheck using clj-kondo.
-
-#+begin_src emacs-lisp
-  (use-package flycheck-clj-kondo
-    :hook ((clojure-mode . 'flycheck-clj-kondo)))
-
-  (use-package clojure-mode
-    :mode ("\\.clj\\'" "\\.cljs\\'" "\\.bb\\'" "\\.edn\\'")
-    :defer t)
 #+end_src
 
 *** Font-locking for Clojure mode
@@ -1097,18 +1077,30 @@ I want the REPL always on the right side.
 #+end_src
 ** VUE
 Derive vue-mode from web-mode and add lsp support.
-#+begin_src emacs-lisp
-  ;; (define-derived-mode vue-mode web-mode "Vue mode")
-  ;; (add-to-list 'auto-mode-alist '("\\.vue\\'" . vue-mode))
+NOTE: As November 2025, this works only with vue-language-server [[https://github.com/vuejs/language-tools/releases/tag/v2.2.8][2.2.8]], not with
+the new 3.x.
 
-  (use-package vue-ts-mode
-    :defer t
-    :vc (vue-ts-mode :url "https://github.com/8uff3r/vue-ts-mode"))
+#+begin_src emacs-lisp
+  (define-derived-mode vue-mode web-mode "Vue mode")
+  (add-to-list 'auto-mode-alist '("\\.vue\\'" . vue-mode))
+
+  (defun vue-eglot-init-options ()
+    (let* ((no-warnings "NODE_NO_WARNINGS=1 ")
+           (filter "| head -n1")
+           (base "npm list --parseable typescript ")
+           (global "npm list --global --parseable typescript ")
+           (tsdk-base-path (string-trim-right (shell-command-to-string (concat no-warnings base filter))))
+           (tsdk-global-path (string-trim-right (shell-command-to-string (concat no-warnings global filter))))
+           (tsdk-path (expand-file-name "lib" (if (string-empty-p tsdk-base-path)
+                                                  tsdk-global-path
+                                                tsdk-base-path))))
+      `(:typescript (:tsdk ,tsdk-path)
+                    :vue (:hybridMode :json-false))))
 
   (with-eval-after-load 'eglot
-    (push `(vue-ts-mode . ("vue-language-server" "--stdio"
-                        :initializationOptions '(:vue (:hybridMode :json-false))))
-          eglot-server-programs))
+    (add-to-list 'eglot-server-programs
+                 `(vue-mode . ("vue-language-server" "--stdio"
+                               :initializationOptions ,(vue-eglot-init-options)))))
 #+end_src
 ** YAML
 #+begin_src emacs-lisp
