@@ -918,7 +918,7 @@ Let's use the built-in module to manage different projects.
           eglot-autoshutdown t
           jsonrpc-event-hook nil
           eglot-extend-to-xref t
-          eglot-code-action-indicator "⋅"
+          eglot-code-action-indicator " ⋅"
           eglot-ignored-server-capabilities '(:inlayHintProvider)))
 #+end_src
 
@@ -1373,6 +1373,16 @@ org-mode to typst configuration.
                           :key my/openrouter-key
                           :models '(z-ai/glm-4.5-air:free
                                     qwen/qwen3-coder:free))))
+#+end_src
+
+** gptel-commit
+[[https://github.com/lakkiy/gptel-commit][gptel-commit]]: AI-powered Git commit message generator for Emacs
+
+#+begin_src emacs-lisp
+  (use-package gptel-commit
+    :after (gptel magit)
+    :custom
+    (gptel-commit-stream t))
 #+end_src
 
 ** gptel-magit
