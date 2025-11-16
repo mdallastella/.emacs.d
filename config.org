@@ -247,6 +247,26 @@ Some Dired settings I find useful.
 #+end_src
 
 
+** Utility functions
+*** Read file to string
+#+begin_src emacs-lisp
+  (defun my/read-file-contents (file)
+    "Read the content of a file and return a string"
+    (with-temp-buffer
+      (insert-file-contents file)
+      (buffer-string)))
+#+end_src
+*** Notifications
+Use ~notify-send~ to send notifications.
+#+begin_src emacs-lisp
+  (defun my/notify (title message)
+    "Display a Linux notification using notify-send."
+    (if (executable-find "notify-send")
+        (call-process "notify-send" nil nil nil title message)
+      (message "%s: %s" title message)))
+#+end_src
+
+
 * Keybindings
 The most frequent keybindings are structured in a mnemonic way for me. ~C-c~ is
 the "leader", then a letter that identify the scope: ~c~ for generic functions, ~b~
@@ -1362,53 +1382,65 @@ org-mode to typst configuration.
 ** gptel
 #+begin_src emacs-lisp
   (use-package gptel
-    :defer t
     :config
     ;; OpenRouter offers an OpenAI compatible API
-    (setq gptel-model 'google/gemini-2.5-pro
+    (setq gptel-model 'mistralai/mistral-nemo
           gptel-backend (gptel-make-openai "OpenRouter"
                           :host "openrouter.ai"
                           :endpoint "/api/v1/chat/completions"
-                          :stream t
                           :key my/openrouter-key
-                          :models '(z-ai/glm-4.5-air:free
-                                    qwen/qwen3-coder:free))))
-#+end_src
-
-** gptel-commit
-[[https://github.com/lakkiy/gptel-commit][gptel-commit]]: AI-powered Git commit message generator for Emacs
-
-#+begin_src emacs-lisp
-  (use-package gptel-commit
-    :after (gptel magit)
-    :custom
-    (gptel-commit-stream t))
+                          :models '(qwen/qwen3-4b:free
+                                    mistralai/mixtral-8x7b-instruct))))
 #+end_src
 
 ** gptel-magit
 #+begin_src emacs-lisp
+  (defun my/gptel-magit-set-prompt (filename)
+    "Read the content of filename and set gptel-magit-commit-prompt"
+    (let* ((path (expand-file-name (concat "prompts/" filename) user-emacs-directory))
+        (content (my/read-file-contents path)))
+      (setq gptel-magit-commit-prompt content)))
+
+  (defun my/gptel-english-commit ()
+    "Set commit prompt to English, Zed style"
+    (interactive)
+    (my/gptel-magit-set-prompt "commit-message"))
+
+  (defun my/gptel-italian-commit ()
+    "Set commit prompt to Italian, Zed style"
+    (interactive)
+    (my/gptel-magit-set-prompt "commit-message-ita"))
+
   (use-package gptel-magit
+    :after (magit gptel)
     :hook (magit-mode . gptel-magit-install)
     :config
-    (setq gptel-magit-model 'qwen/qwen3-coder:free))
+    (setq gptel-magit-model 'mistralai/mixtral-8x7b-instruct))
 #+end_src
 
 ** claude-code
 #+begin_src emacs-lisp
   (defun my/claude-code-display-on-right (buffer)
-    (display-buffer '((display-buffer-in-direction 'right))))
+    "Display Claude buffer in right side window."
+    (display-buffer buffer '((display-buffer-in-side-window)
+                             (side . right)
+                             (window-width . 90))))
+
+  ;; install required inheritenv dependency:
+  (use-package inheritenv
+    :vc (:url "https://github.com/purcell/inheritenv" :rev :newest))
 
   (use-package claude-code
-    :hook (after-init-hook . claude-code-mode)
     :vc (:url "https://github.com/stevemolitor/claude-code.el" :rev :newest)
+    :bind
+    (:repeat-map my-claude-code-map ("M" . claude-code-cycle-mode))
+    :bind-keymap ("C-c a" . claude-code-command-map)
     :config
-    ;; optional IDE integration with Monet
-    ;; (add-hook 'claude-code-process-environment-functions #'monet-start-server-function)
-    ;; (monet-mode 1)
     (setq claude-code-terminal-backend 'vterm
           claude-code-program "~/.local/bin/ccr-code.sh"
-          claude-code-display-buffer-below #'my/claude-code-display-on-right)
-    :bind-keymap ("C-c a" . claude-code-command-map))
+          claude-code-notification-function #'my/notify
+          claude-code-display-window-fn #'my/claude-code-display-on-right)
+    (claude-code-mode))
 #+end_src
 
 
