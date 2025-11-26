@@ -1377,14 +1377,6 @@ org-mode to typst configuration.
 
 
 
-** Instapaper
-[[https://github.com/emacsmirror/insta-pocket][insta-pocket.el]]: Instapaper client for Emacs
-#+begin_src emacs-lisp
-  (use-package insta-pocket
-    :config
-    (setq insta-pocket-consumer-key my/instapaper-key
-          insta-pocket-consumer-secret my/instapaper-secret))
-#+end_src
 
 * LLM
 ** gptel
