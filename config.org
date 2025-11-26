@@ -942,7 +942,6 @@ Let's use the built-in module to manage different projects.
           eglot-ignored-server-capabilities '(:inlayHintProvider)))
 #+end_src
 
-
 ** Dape
 [[https://github.com/svaante/dape][Dape]] - Debug Adapter Protocol for Emacs
 
@@ -1415,7 +1414,8 @@ org-mode to typst configuration.
     :after (magit gptel)
     :hook (magit-mode . gptel-magit-install)
     :config
-    (setq gptel-magit-model 'mistralai/mixtral-8x7b-instruct))
+    (setq gptel-magit-model 'mistralai/mixtral-8x7b-instruct)
+    (my/gptel-english-commit))
 #+end_src
 
 ** claude-code
@@ -1447,7 +1447,7 @@ org-mode to typst configuration.
 * Fun
 ** Tidal Cycles
 Tidal Cycles (or just Tidal for short) is software for making patterns with
-code, whether live coding music at algoraves or composing in the studio.
+code, whether live coding music at algo-raves or composing in the studio.
 
 #+begin_src emacs-lisp
   (use-package tidal :defer t)
