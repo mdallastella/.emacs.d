@@ -657,6 +657,8 @@ Tabspaces leverages tab-bar.el and project.el for workspaces.
     :config
     (setq tabspaces-use-filtered-buffers-as-default t
           tabspaces-default-tab "main"
+          tabspaces-session nil
+          tabspaces-session-auto-restore nil
           tabspaces-remove-to-default t
           tabspaces-include-buffers '("*scratch*" "*Messages*")
           tabspaces-initialize-project-with-todo nil
