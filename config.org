@@ -1377,6 +1377,18 @@ org-mode to typst configuration.
 
 
 
+** Elfeed
+[[https://github.com/skeeto/elfeed][Elfeed]] is an extensible web feed reader for Emacs
+
+#+begin_src emacs-lisp
+  (use-package elfeed
+    :defer t
+    :bind (("C-c u e" . elfeed))
+    :config
+    (setq elfeed-feeds '("https://ld.dallastella.name/feeds/da3d421812cf2636f84d9a024e2c3b0d749b194d/unread")
+          elfeed-search-filter "@3-week-ago"))
+#+end_src
+
 * LLM
 ** gptel
 #+begin_src emacs-lisp
