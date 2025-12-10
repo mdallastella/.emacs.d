@@ -535,8 +535,8 @@ Set my favorite font.
     :hook (prog-mode-hook . rainbow-delimiters-mode))
 #+end_src
 
-** Use icons and emoji
-[[https://github.com/domtronn/all-the-icons.el][all-the-icons.el]]: A utility package to collect various Icon Fonts and propertize them within Emacs.
+** Use icons
+[[https://github.com/domtronn/all-the-icons.el][all-the-icons.el]]: A utility package to collect various Icon Fonts.
 
 #+begin_src emacs-lisp
   (use-package all-the-icons)
@@ -555,11 +555,6 @@ completion metadata functions.
 #+begin_src emacs-lisp
   (use-package all-the-icons-ibuffer
     :hook (ibuffer-mode . all-the-icons-ibuffer-mode))
-#+end_src
-
-#+begin_src emacs-lisp
-  (use-package emojify
-    :hook (after-init-hook . global-emojify-mode))
 #+end_src
 
 ** Increase line-spacing
@@ -1390,6 +1385,7 @@ org-mode to typst configuration.
     (setq elfeed-feeds '("https://ld.dallastella.name/feeds/da3d421812cf2636f84d9a024e2c3b0d749b194d/unread")
           elfeed-search-filter "@3-week-ago"))
 #+end_src
+
 
 * LLM
 ** gptel
